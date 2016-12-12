@@ -112,7 +112,6 @@
         </TopLevelControl>
 
 
-          
         <Backdrop name="ListGertTpl" virtual="true" centerColor="00000000" edgeColor="00000000">
             <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" />
             <Dimensions x="390" y="180"/>

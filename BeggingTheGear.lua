@@ -28,6 +28,14 @@ local init_savedef = {
 	gearlist = {},
 	daddylist = {},
 }
+local ValueList_EquipType = {1,2,3,4,8,9,10,12,13}
+local ValueList_EquipTrait = {11,12,13,14,15,16,17,18,25}
+local ValueList_WeaponType = {1,2,3,4,5,6,8,9,11,12,13,14,15}
+local ValueList_WeaponTrait = {1,2,3,4,5,6,7,8,26}
+
+
+
+-- manavortex @manavortex
  
 function dev_reloadui()
     SLASH_COMMANDS["/reloadui"]()
@@ -153,6 +161,20 @@ function BTG.ListGertInitializeRow(control, data)
 	local filter = BTG.savedata.gearlist[data.key]
 	-- 暫存著偷偷用
 	control.keyid = data.key
+
+	-- 因為會莫名其妙自己亮起來 只好強迫全關一次
+	for key, val in pairs(ValueList_EquipType) do
+		control:GetNamedChild("FilterGearBoxEquipType_"..val):SetCenterColor(0,0,0,0)
+	end
+	for key, val in pairs(ValueList_EquipTrait) do
+		control:GetNamedChild("FilterGearTraitBoxEquipTrait_"..val):SetCenterColor(0,0,0,0)
+	end
+	for key, val in pairs(ValueList_WeaponType) do
+		control:GetNamedChild("FilterWeaponBoxWeaponType_"..val):SetCenterColor(0,0,0,0)
+	end
+	for key, val in pairs(ValueList_WeaponTrait) do
+		control:GetNamedChild("FilterWeaponTraitBoxWeaponTrait_"..val):SetCenterColor(0,0,0,0)
+	end
 	-- 初始 savedata 值
 	control:GetNamedChild("InputKeyword"):SetText(filter.keyword)
 	control:GetNamedChild("InputPrice"):SetText(filter.price)
