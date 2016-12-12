@@ -150,36 +150,28 @@ end
 -- ZO_ScrollList @ ListGert Start
 ----------------------------------------
 function BTG.ListGertInitializeRow(control, data)
-	d(data.key)
 	local filter = BTG.savedata.gearlist[data.key]
-	d(filter)
-	d('------------')
 	-- 暫存著偷偷用
 	control.keyid = data.key
 	-- 初始 savedata 值
 	control:GetNamedChild("InputKeyword"):SetText(filter.keyword)
 	control:GetNamedChild("InputPrice"):SetText(filter.price)
 	for key, val in pairs(filter.equiptype) do
-		d('equiptype : '..val)
 		control:GetNamedChild("FilterGearBoxEquipType_"..val):SetCenterColor(255,134,0,1)
 		control:GetNamedChild("FilterGearBoxEquipType_"..val.."Btn").status = 1
 	end
 	for key, val in pairs(filter.equiptrait) do
-		d('equiptrait : '..val)
 		control:GetNamedChild("FilterGearTraitBoxEquipTrait_"..val):SetCenterColor(255,134,0,1)
 		control:GetNamedChild("FilterGearTraitBoxEquipTrait_"..val.."Btn").status = 1
 	end
 	for key, val in pairs(filter.weapontype) do
-		d('weapontype : '..val)
 		control:GetNamedChild("FilterWeaponBoxWeaponType_"..val):SetCenterColor(255,134,0,1)
 		control:GetNamedChild("FilterWeaponBoxWeaponType_"..val.."Btn").status = 1
 	end
 	for key, val in pairs(filter.weapontrait) do
-		d('weapontrait : '..val)
 		control:GetNamedChild("FilterWeaponTraitBoxWeaponTrait_"..val):SetCenterColor(255,134,0,1)
 		control:GetNamedChild("FilterWeaponTraitBoxWeaponTrait_"..val.."Btn").status = 1
 	end
-	d('=================')
 end
 
 function BTG.UpdateListGertBox()
@@ -328,7 +320,6 @@ function BTG.PriceDaddyListRow(tar , act)
 	local daddy = BTG.savedata.daddylist[keyid]
 
 	local re = BTG.MatchItemFilter(daddy.itemlink)
-	d(re)
 	if re.match then
 		if act == 1 then
 			local isay = strformat("|cff9900 BTG :: |r<<1>> !!  Can I offer $<<2>> to buy your <<t:3>> ?", daddy.username , re.price , daddy.itemlink)
@@ -381,7 +372,6 @@ function BTG.toggleBTGPanelView(open)
 end
 
 function BTG.moveCloseBTGPanelView(eventCode)
-	d(eventCode);
 	if BTGPanelView:IsHidden() then
 		-- SM:ToggleTopLevel(BTGPanelView)
 		-- SM:HideTopLevel(BTGPanelView)
