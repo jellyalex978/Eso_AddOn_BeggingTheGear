@@ -18,38 +18,38 @@ function SLGD:GetKeys()
     return keys
 end
 
-function SLGD:HasNotes()
-    return next(self.notes) ~= nil
-end
+-- function SLGD:HasNotes()
+--     return next(self.notes) ~= nil
+-- end
 
-function SLGD:GetNote(key)
-    return self.notes[key]
-end
+-- function SLGD:GetNote(key)
+--     return self.notes[key]
+-- end
 
-function SLGD:HasNote(key)
-    return self.notes[key] ~= nil
-end
+-- function SLGD:HasNote(key)
+--     return self.notes[key] ~= nil
+-- end
 
-function SLGD:SetNote(key, note)
-    local keyExists = self:HasNote(key)
-    self.notes[key] = note
-    if(not keyExists) then
-        self:FireCallbacks("OnKeysUpdated")
-    end
-end
+-- function SLGD:SetNote(key, note)
+--     local keyExists = self:HasNote(key)
+--     self.notes[key] = note
+--     if(not keyExists) then
+--         self:FireCallbacks("OnKeysUpdated")
+--     end
+-- end
 
-function SLGD:DeleteNote(key)
-    local keyExists = self:HasNote(key)
-    self.notes[key] = nil
-    if(keyExists) then
-        self:FireCallbacks("OnKeysUpdated")
-    end
-end
+-- function SLGD:DeleteNote(key)
+--     local keyExists = self:HasNote(key)
+--     self.notes[key] = nil
+--     if(keyExists) then
+--         self:FireCallbacks("OnKeysUpdated")
+--     end
+-- end
 
-function SLGD:DeleteAllNotes()
-    local hadNotes = self:HasNotes()
-    ZO_ClearTable(self.notes)
-    if(hadNotes) then
-        self:FireCallbacks("OnKeysUpdated")
-    end
-end
+-- function SLGD:DeleteAllNotes()
+--     local hadNotes = self:HasNotes()
+--     ZO_ClearTable(self.notes)
+--     if(hadNotes) then
+--         self:FireCallbacks("OnKeysUpdated")
+--     end
+-- end

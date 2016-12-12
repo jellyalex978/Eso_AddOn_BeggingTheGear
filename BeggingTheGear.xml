@@ -33,14 +33,14 @@
                             <Textures mouseOver="esoui/art/buttons/decline_over.dds" normal="esoui/art/buttons/decline_up.dds" pressed="esoui/art/buttons/decline_down.dds"/>
                             <OnClicked>BTG.toggleBTGPanelView()</OnClicked>
                         </Button>
-                        <!--
+                        
                         <Button name="$(parent)BtnTest" clickSound="Click" tier="1">
                             <Anchor offsetX="5" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                             <Dimensions x="20" y="20"/>
-                            <Textures mouseOver="esoui/art/buttons/decline_over.dds" normal="esoui/art/buttons/decline_up.dds" pressed="esoui/art/buttons/decline_down.dds"/>
+                            <Textures normal="esoui\art\achievements\achievements_reward_earned.dds"/>
                             <OnClicked>BTG.TestByJelly()</OnClicked>
                         </Button>
-                        -->
+                        <!---->
                         <!--
                         <Button name="$(parent)BtnTestListGertTpl" clickSound="Click" tier="1">
                             <Anchor offsetX="5" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>

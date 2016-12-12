@@ -417,6 +417,7 @@ function BTG.TestListDaddyTpl()
 end
 
 function BTG.TestByJelly()
+	BTG.UpdateListGertBox()
 	-- d(BTG.savedata.gearlist)
 	-- BTG.UpdateListGertBox()
 	-- BTG.UpdateListDaddyBox()
@@ -457,47 +458,47 @@ function BTG.MatchItemFilter(itemlink)
 end
 
 function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound, lootType, lootedBySelf, isPickpocketLoot, questItemIcon, itemId)
-	local icon
-	local equipType = 1
-	-- fix Icon for missing quest items
-	if lootType == LOOT_TYPE_QUEST_ITEM then
-		icon = questItemIcon
-	elseif lootType == LOOT_TYPE_COLLECTIBLE then
-		local collectibleId = GetCollectibleIdFromLink(itemName)
-		local _,_,collectibleIcon = GetCollectibleInfo(collectibleId)
-		icon = collectibleIcon
-	else
-		-- get Icon and Equipment Type
-		local itemIcon,_,_,itemEquipType,_ = GetItemLinkInfo(itemName)
-		icon = itemIcon
-		equipType = itemEquipType
-	end
-	-- create Icon string if icon exists and corresponding setting is ON
-	icon = ( 1 and icon and icon ~= '' ) and ('|t16:16:'..icon..'|t') or ''
-	if lootedBySelf then
-		-- Rough Ruby Ash
-		-- receivedBy = ojelly^Fx //JJ-L
-		-- receivedBy = rolycc^Fx //JJ-L
-		printToChat( strformat("|cff9900<<1>> [<<4>><<t:3>>|c0B610B]<<2[// x|cBEF781$d]>>|r", (receivedBy == nil) and "JJ-R" or isPickpocketLoot and "JJ-P" or "JJ-L", quantity, itemName, icon ) )
-	elseif 1 and lootType == LOOT_TYPE_ITEM then
-		local quality = GetItemLinkQuality(itemName)
-		if ( equipType ~= 0 ) and ( quality >= 3 ) then
-			printToChat( strformat("|cff9900<<1>> Got: [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
-		end
-		if ( equipType ~= 0 ) and ( quality == 0 ) then
-			printToChat( strformat("|cff9900<<1>> Q0 : [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
-		end
-		if ( equipType ~= 0 ) and ( quality == 1 ) then
-			-- 白的
-			printToChat( strformat("|cff9900<<1>> Q1 : [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
-		end
-		if ( equipType ~= 0 ) and ( quality == 2 ) then
-			-- 綠的
-			printToChat( strformat("|cff9900<<1>> Q2 : [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
-		end
-	end
+	-- local icon
+	-- local equipType = 1
+	-- -- fix Icon for missing quest items
+	-- if lootType == LOOT_TYPE_QUEST_ITEM then
+	-- 	icon = questItemIcon
+	-- elseif lootType == LOOT_TYPE_COLLECTIBLE then
+	-- 	local collectibleId = GetCollectibleIdFromLink(itemName)
+	-- 	local _,_,collectibleIcon = GetCollectibleInfo(collectibleId)
+	-- 	icon = collectibleIcon
+	-- else
+	-- 	-- get Icon and Equipment Type
+	-- 	local itemIcon,_,_,itemEquipType,_ = GetItemLinkInfo(itemName)
+	-- 	icon = itemIcon
+	-- 	equipType = itemEquipType
+	-- end
+	-- -- create Icon string if icon exists and corresponding setting is ON
+	-- icon = ( 1 and icon and icon ~= '' ) and ('|t16:16:'..icon..'|t') or ''
+	-- if lootedBySelf then
+	-- 	-- Rough Ruby Ash
+	-- 	-- receivedBy = ojelly^Fx //JJ-L
+	-- 	-- receivedBy = rolycc^Fx //JJ-L
+	-- 	printToChat( strformat("|cff9900<<1>> [<<4>><<t:3>>|c0B610B]<<2[// x|cBEF781$d]>>|r", (receivedBy == nil) and "JJ-R" or isPickpocketLoot and "JJ-P" or "JJ-L", quantity, itemName, icon ) )
+	-- elseif 1 and lootType == LOOT_TYPE_ITEM then
+	-- 	local quality = GetItemLinkQuality(itemName)
+	-- 	if ( equipType ~= 0 ) and ( quality >= 3 ) then
+	-- 		printToChat( strformat("|cff9900<<1>> Got: [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
+	-- 	end
+	-- 	if ( equipType ~= 0 ) and ( quality == 0 ) then
+	-- 		printToChat( strformat("|cff9900<<1>> Q0 : [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
+	-- 	end
+	-- 	if ( equipType ~= 0 ) and ( quality == 1 ) then
+	-- 		-- 白的
+	-- 		printToChat( strformat("|cff9900<<1>> Q1 : [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
+	-- 	end
+	-- 	if ( equipType ~= 0 ) and ( quality == 2 ) then
+	-- 		-- 綠的
+	-- 		printToChat( strformat("|cff9900<<1>> Q2 : [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
+	-- 	end
+	-- end
 
-	d('test - '..itemName..' : '..itemId)
+	-- d('test - '..itemName..' : '..itemId)
 	-- local str_itemName = GetItemLinkName(itemName);
 	-- d('str - '..str_itemName)
 
@@ -506,7 +507,6 @@ function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound
 	-- BTGCombatTipViewLabel:SetText(itemName)
 	-- d(icon)
 	
-
 	-- if str_itemName == 'rough ruby ash' then
 	-- 	d('yes loot him')
 	-- 	BTGCombatTipViewLabel:SetText('yes loot him')
@@ -518,18 +518,16 @@ function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound
 
 
 
-
-
-
-
-
 	-- 比對字串
 	local re = BTG.MatchItemFilter(itemName)
+	local name = 'yourself'
+	if receivedBy == nil then
+		name = receivedBy
+	end
 	if re.match then
-		BTG.AddDaddyListRow('someone' , itemName)
+		BTG.AddDaddyListRow(name , itemName)
 		BTGLootTipView:SetHidden(false)
 	end
-
 
 end
 
