@@ -1,0 +1,662 @@
+<GuiXml>
+    <Font font="$(MEDIUM_FONT)|18" name="BTGFont"/>
+    <Font font="$(BOLD_FONT)|14" name="BTGFontSmall"/>
+    <Font font="$(BOLD_FONT)|22" name="BTGFontBold"/>
+    <Font font="$(BOLD_FONT)|18|soft-shadow-thick" name="BTGFontBig"/>
+    <Controls>
+        <TopLevelControl name="BTGPanelView" hidden="true" allowBringToTop="true" clampedToScreen="true" mouseEnabled="true" movable="true">
+            <Anchor point="CENTER" relativePoint="CENTER" relativeTo="GuiRoot"/>
+            <Dimensions x="800" y="600"/>
+            <OnMouseUp>BTG.OnUiPosSave('BTGPanelView')</OnMouseUp>
+            <Controls>
+                <Backdrop name="$(parent)Bg" inherits="ZO_DefaultBackdrop">
+                    <AnchorFill/>
+                </Backdrop>
+                <Backdrop name="$(parent)Header" centerColor="00000000" edgeColor="00000000">
+                    <Anchor point="TOPLEFT" offsetX="0" offsetY="0" />
+                    <Anchor point="TOPRIGHT" offsetX="0" offsetY="0" />
+                    <Dimensions y="30"/>
+                    <Controls>
+                        <!--
+                        <Backdrop name="$(parent)Bg" centerColor="ff9900" edgeColor="000000" alpha="0.9">
+                            <AnchorFill/>
+                            <Edge edgeSize="1"/>
+                        </Backdrop>
+                        -->
+                        <Label name="$(parent)Title" color="FFFFFF" font="BTGFont">
+                            <Anchor offsetY="4" point="TOP" relativePoint="TOP" relativeTo="$(parent)"/>
+                            <OnInitialized>self:SetText(&quot;|cFFAA33&quot;..BTG.name..&quot;|r &quot;..BTG.version)</OnInitialized>
+                        </Label>
+                        <Button name="$(parent)BtnClose" clickSound="Click" tier="1">
+                            <Anchor offsetX="-5" offsetY="5" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
+                            <Dimensions x="20" y="20"/>
+                            <Textures mouseOver="esoui/art/buttons/decline_over.dds" normal="esoui/art/buttons/decline_up.dds" pressed="esoui/art/buttons/decline_down.dds"/>
+                            <OnClicked>BTG.toggleBTGPanelView()</OnClicked>
+                        </Button>
+                        <!--
+                        <Button name="$(parent)BtnTest" clickSound="Click" tier="1">
+                            <Anchor offsetX="5" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Dimensions x="20" y="20"/>
+                            <Textures mouseOver="esoui/art/buttons/decline_over.dds" normal="esoui/art/buttons/decline_up.dds" pressed="esoui/art/buttons/decline_down.dds"/>
+                            <OnClicked>BTG.TestByJelly()</OnClicked>
+                        </Button>
+                        -->
+                        <!--
+                        <Button name="$(parent)BtnTestListGertTpl" clickSound="Click" tier="1">
+                            <Anchor offsetX="5" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Dimensions x="20" y="20"/>
+                            <Textures normal="esoui/art/buttons/left_normal.dds" pressed="esoui/art/buttons/left_mousedown.dds"/>
+                            <OnClicked>BTG.TestListGertTpl()</OnClicked>
+                        </Button>
+                        <Button name="$(parent)BtnTestListDaddyTpl" clickSound="Click" tier="1">
+                            <Anchor offsetX="35" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Dimensions x="20" y="20"/>
+                            <Textures normal="esoui/art/buttons/right_normal.dds" pressed="esoui/art/buttons/right_mousedown.dds"/>
+                            <OnClicked>BTG.TestListDaddyTpl()</OnClicked>
+                        </Button>
+                        -->
+                    </Controls>
+                </Backdrop>
+                <Backdrop name="$(parent)InputTxtBox" centerColor="00000000" edgeColor="00000000">
+                    <Anchor offsetX="10" offsetY="40" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="315" y="30"/>
+                    <Edge edgeSize="1"/>
+                    <Controls>
+                        <Backdrop name="$(parent)Bg" centerColor="43443D" edgeColor="00000000" alpha="0.9">
+                            <AnchorFill/>
+                            <Edge edgeSize="1"/>
+                        </Backdrop>
+                        <EditBox name="$(parent)InputTxt" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
+                            <Anchor offsetX="10" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Dimensions x="300" y="30"/>
+                            <OnEnter>BTG.AddGearListFilter()</OnEnter>
+                        </EditBox>
+                        <Button clickSound="Click" name="$(parent)BtnAdd" tier="1">
+                            <Anchor offsetX="320" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Dimensions x="20" y="20"/>
+                            <Textures mouseOver="esoui/art/buttons/pointsplus_over.dds" normal="esoui/art/buttons/pointsplus_up.dds" pressed="esoui/art/buttons/pointsplus_down.dds"/>
+                            <OnClicked>BTG.AddGearListFilter()</OnClicked>
+                        </Button>
+                    </Controls>
+                </Backdrop>
+                <Control name="$(parent)ListGertBox" inherits="ZO_ScrollList">
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="10" offsetY="80" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" offsetX="420" offsetY="-10" />
+                </Control>
+                <Control name="$(parent)ListDaddyBox" inherits="ZO_ScrollList">
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="425" offsetY="80" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" offsetX="-10" offsetY="-10" />
+                </Control>
+            </Controls>
+        </TopLevelControl>
+        <TopLevelControl name="BTGLootTipView" hidden="true" allowBringToTop="true" clampedToScreen="true" mouseEnabled="true" movable="true">
+            <Anchor offsetX="-100" offsetY="-100" point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="GuiRoot"/>
+            <Dimensions x="80" y="80" />
+            <OnMouseUp>BTG.OnUiPosSave('BTGLootTipView')</OnMouseUp>
+            <Controls>
+                <Backdrop name="$(parent)Bg" inherits="ZO_DefaultBackdrop">
+                    <AnchorFill/>
+                </Backdrop>
+                <Backdrop name="$(parent)BtnBox" centerColor="00000000" edgeColor="00000000">
+                    <Anchor offsetX="0" offsetY="0" point="CENTER" relativePoint="CENTER" relativeTo="$(parent)" />
+                    <Dimensions x="50" y="50"/>
+                    <Controls>
+                        <Button clickSound="Click" name="$(parent)Btn">
+                            <AnchorFill/>
+                            <Textures normal="esoui/art/vendor/vendor_tabicon_fence_down.dds" />
+                            <OnClicked>BTG.toggleBTGPanelView(1)</OnClicked>
+                        </Button>
+                    </Controls>
+                </Backdrop>
+            </Controls>
+        </TopLevelControl>
+
+
+          
+        <Backdrop name="ListGertTpl" virtual="true" centerColor="00000000" edgeColor="00000000">
+            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" />
+            <Dimensions x="390" y="180"/>
+            <Edge edgeSize="1"/>
+            <Controls>
+                <Backdrop name="$(parent)Bg" centerColor="232323" edgeColor="00000000" alpha="0.9">
+                    <AnchorFill/>
+                </Backdrop>
+                <Button name="$(parent)BtnDel" clickSound="Click">
+                    <Anchor offsetX="4" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="25" y="25"/>
+                    <Textures normal="esoui/art/buttons/cancel_up.dds" />
+                    <Textures mouseOver="esoui/art/buttons/cancel_over.dds" normal="esoui/art/buttons/cancel_up.dds" pressed="esoui/art/buttons/cancel_down.dds"/>
+                    <OnClicked>BTG.DelGearListFilter(self)</OnClicked>
+                </Button>
+                <Backdrop name="$(parent)InputKeywordBg" centerColor="43443D" edgeColor="00000000">
+                    <Anchor offsetX="35" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="215" y="30"/>
+                </Backdrop>
+                <EditBox name="$(parent)InputKeyword" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
+                    <Anchor offsetX="45" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                    <Dimensions x="195" y="30"/>
+                    <OnEnter>BTG.UpdateGearListKeyword(self)</OnEnter>
+                </EditBox>
+                <Button name="$(parent)IconPrice" clickSound="Click">
+                    <Anchor offsetX="255" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="25" y="25"/>
+                    <Textures normal="esoui/art/bank/bank_tabicon_gold_up.dds" />
+                </Button>
+                <Backdrop name="$(parent)InputPriceBg" centerColor="43443D" edgeColor="00000000">
+                    <Anchor offsetX="0" offsetY="0" point="TOPRIGHT" relativePoint="TOPRIGHT" />
+                    <Dimensions x="105" y="30"/>
+                </Backdrop>
+                <EditBox name="$(parent)InputPrice" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
+                    <Anchor offsetX="-10" offsetY="4" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
+                    <Dimensions x="85" y="30"/>
+                    <OnEnter>BTG.UpdateGearListPrice(self)</OnEnter>
+                </EditBox>
+                <Backdrop name="$(parent)FilterGearBox" centerColor="00000000" edgeColor="00000000">
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="35" offsetY="35" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="65" />
+                    <Controls>
+                        <Backdrop name="$(parent)EquipType_1" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/medium_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'EType' , 1)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipType_3" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="35" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/chest_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'EType' , 3)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipType_4" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="70" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/shoulders_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'EType' , 4)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipType_8" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="105" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/belt_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'EType' , 8)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipType_9" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="140" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/legs_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'EType' , 9)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipType_10" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="175" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/feet_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'EType' , 10)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipType_13" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="210" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/hands_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'EType' , 13)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+
+                        <Backdrop name="$(parent)EquipType_2" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="290" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/neck_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'EType' , 2)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipType_12" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="325" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/ring_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'EType' , 12)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                    </Controls>
+                </Backdrop>
+                <Backdrop name="$(parent)FilterGearTraitBox" centerColor="00000000" edgeColor="00000000">
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="35" offsetY="70" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="65" />
+                    <Controls>
+                        <Backdrop name="$(parent)EquipTrait_11" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_runecrafter_plug_component_002.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 11)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipTrait_12" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="35" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_jewelry_base_diamond_r3.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 12)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipTrait_13" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="70" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_enchantment_base_sardonyx_r2.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 13)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipTrait_14" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="105" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_accessory_sp_names_002.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 14)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipTrait_15" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="140" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_jewelry_base_emerald_r2.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 15)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipTrait_16" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="175" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_enchantment_baxe_bloodstone_r2.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 16)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipTrait_17" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="210" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_jewelry_base_garnet_r3.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 17)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipTrait_18" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="245" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_accessory_sp_names_001.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 18)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)EquipTrait_25" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="280" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_potent_nirncrux_stone.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 25)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                    </Controls>
+                </Backdrop>
+                <Backdrop name="$(parent)FilterWeaponBox" centerColor="00000000" edgeColor="00000000">
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="35" offsetY="105" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="65" />
+                    <Controls>
+                        <Backdrop name="$(parent)WeaponType_11" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="-35" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/dagger_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 11)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponType_1" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/axe_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 1)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponType_2" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="35" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/mace_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 2)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponType_3" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="70" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/twohand_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 3)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponType_14" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="250" offsetY="-70" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/shield_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 14)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+
+                        <Backdrop name="$(parent)WeaponType_8" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="-35" offsetY="35" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/bow_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 8)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponType_12" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="110" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/fire_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 12)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponType_13" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="145" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/ice_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 13)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponType_15" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="180" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/lightning_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 15)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponType_9" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="215" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/restoration_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 9)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+
+                        <Backdrop name="$(parent)WeaponType_5" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="255" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/axe_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 5)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponType_6" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="290" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/mace_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 6)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponType_4" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="325" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="BeggingTheGear/images/AwesomeGuildStore/twohand_up.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WType' , 4)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                    </Controls>
+                </Backdrop>
+                <Backdrop name="$(parent)FilterWeaponTraitBox" centerColor="00000000" edgeColor="00000000">
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="35" offsetY="140" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="65" />
+                    <Controls>
+                        <Backdrop name="$(parent)WeaponTrait_1" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_runecrafter_potion_008.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 1)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponTrait_2" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="35" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_jewelry_base_amethyst_r3.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 2)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponTrait_3" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="70" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_jewelry_base_ruby_r3.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 3)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponTrait_4" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="105" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_enchantment_base_jade_r3.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 4)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponTrait_5" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="140" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_jewelry_base_turquoise_r3.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 5)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponTrait_6" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="175" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_runecrafter_armor_component_004.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 6)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponTrait_7" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="210" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_enchantment_base_fire_opal_r3.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 7)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponTrait_8" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="245" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_smith_potion__sp_names_003.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 8)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                        <Backdrop name="$(parent)WeaponTrait_26" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="280" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="/esoui/art/icons/crafting_potent_nirncrux_dust.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 26)</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                    </Controls>
+                </Backdrop>
+            </Controls>
+        </Backdrop>
+        <Backdrop name="ListDaddyTpl" virtual="true" centerColor="00000000" edgeColor="00000000" >
+            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" />
+            <Dimensions x="300" y="120"/>
+            <Edge edgeSize="1"/>
+            <Controls>
+                <Backdrop name="$(parent)Bg" centerColor="232323" edgeColor="00000000" alpha="0.9">
+                    <AnchorFill/>
+                </Backdrop>
+                <Label name="$(parent)TxtDaddy" color="5EB9D7" font="BTGFont">
+                    <Anchor offsetX="10" offsetY="10" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="300" y="30"/>
+                    <OnInitialized>self:SetText('daddy')</OnInitialized>
+                </Label>
+                <Label name="$(parent)TxtItemlink" color="FFFFFF" font="BTGFont">
+                    <Anchor offsetX="10" offsetY="45" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="300" y="30"/>
+                    <OnInitialized>self:SetText('itemlink')</OnInitialized>
+                </Label>
+                <Button name="$(parent)BtnDel" clickSound="Click">
+                    <Anchor offsetX="-4" offsetY="4" point="TOPRIGHT" relativePoint="TOPRIGHT" />
+                    <Dimensions x="25" y="25"/>
+                    <Textures normal="esoui/art/buttons/cancel_up.dds" />
+                    <Textures mouseOver="esoui/art/buttons/cancel_over.dds" normal="esoui/art/buttons/cancel_up.dds" pressed="esoui/art/buttons/cancel_down.dds"/>
+                    <OnClicked>BTG.DelDaddyListRow(self)</OnClicked>
+                </Button>
+
+                <Button name="$(parent)BtnBegging" text="Begging" inherits="ZO_DefaultButton" font="BTGFontSmall">
+                    <Anchor offsetX="10" offsetY="80" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                    <Dimensions x="100" y="30"/>
+                    <OnClicked>BTG.BeggingDaddyListRow(self , 1)</OnClicked>
+                </Button>
+                <Button name="$(parent)BtnPrice" text="Price" inherits="ZO_DefaultButton" font="BTGFontSmall" >
+                    <Anchor offsetX="120" offsetY="80" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                    <Dimensions x="100" y="30"/>
+                    <OnClicked>BTG.PriceDaddyListRow(self , 1)</OnClicked>
+                </Button>
+            </Controls>
+        </Backdrop>
+    </Controls>
+</GuiXml>

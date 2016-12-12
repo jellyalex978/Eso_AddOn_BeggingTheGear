@@ -1,0 +1,14 @@
+## Title: |cFF9900BeggingTheGear|r 1.0
+## APIVersion: 100017
+## Version: 1.0
+## Author: oJelly
+## Description: Add the gear name to the list , Auto listen to your teammates
+
+## SavedVariables: BTG_savedata
+
+BeggingTheGear.lua
+ListGear.lua
+ListDaddy.lua
+
+BeggingTheGear.xml
+Bindings.xml

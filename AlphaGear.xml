@@ -1,0 +1,463 @@
+
+local 
+EM, EVENT_MANAGER
+WM, WINDOW_MANAGER
+SM, SCENE_MANAGER
+ICON, {}
+MARK, {}
+PREBAG = nil, , , , , 
+
+
+<GuiXml>
+	<Font font="$(MEDIUM_FONT)|18" name="AGFont"/>
+	<Font font="$(BOLD_FONT)|14" name="AGFontSmall"/>
+	<Font font="$(BOLD_FONT)|22" name="AGFontBold"/>
+	<Font font="$(BOLD_FONT)|18|soft-shadow-thick" name="AGFontBig"/>
+	<Controls>
+		<Backdrop alpha="0" centerColor="40FF0000" clampedToScreen="true" edgeColor="60FF0000" mouseEnabled="true" movable="true" name="AG_UI_ButtonBg">
+			<Anchor offsetX="50" offsetY="100" point="3" relativePoint="3" relativeTo="GuiRoot"/>
+			<Dimensions x="60" y="60"/>
+			<Edge edgeSize="1"/>
+			<OnInitialized>self:SetParent(ZO_MainMenu)</OnInitialized>
+			<OnMouseEnter>WINDOW_MANAGER:SetMouseCursor(12);self:SetAlpha(1)</OnMouseEnter>
+			<OnMouseExit>WINDOW_MANAGER:SetMouseCursor(0);self:SetAlpha(0)</OnMouseExit>
+			<OnMouseUp>AG.account.button={self:GetLeft(),self:GetTop()}</OnMouseUp>
+		</Backdrop>
+		<Button name="AG_UI_Button" topmost="true">
+			<Anchor point="128" relativePoint="128" relativeTo="AG_UI_ButtonBg"/>
+			<Dimensions x="40" y="40"/>
+			<OnInitialized>self:SetParent(ZO_MainMenu)</OnInitialized>
+			<Textures normal="AlphaGear/ag.dds"/>
+			<OnMouseEnter>AG.Tooltip(self,true)</OnMouseEnter>
+			<OnMouseExit>AG.Tooltip(self,false)</OnMouseExit>
+			<OnClicked>AG.ShowMain()</OnClicked>
+		</Button>
+		<TopLevelControl allowBringToTop="true" clampedToScreen="true" hidden="true" mouseEnabled="true" movable="true" name="AG_Panel">
+			<Anchor point="128" relativePoint="128" relativeTo="GuiRoot"/>
+			<OnMouseUp>AG.account.pos={self:GetLeft(),self:GetTop()}</OnMouseUp>
+			<Dimensions x="670" y="819"/>
+			<Controls>
+				<Backdrop centerColor="282828" edgeColor="00000000" name="$(parent)Bg">
+					<AnchorFill/>
+					<Edge edgeSize="1"/>
+				</Backdrop>
+				<Backdrop centerColor="598527" edgeColor="00000000" hidden="true" name="$(parent)OptionPanel" tier="1">
+					<Anchor offsetX="-10" offsetY="35" point="9" relativePoint="9" relativeTo="$(parent)"/>
+					<Edge edgeSize="1"/>
+					<Controls>
+						<Button>
+							<AnchorFill/>
+						</Button>
+						<Button clickSound="Click" name="$(parent)Plus" tier="2">
+							<Anchor offsetX="10" offsetY="0" point="8" relativePoint="8" relativeTo="$(parent)"/>
+							<Dimensions x="20" y="20"/>
+							<Textures mouseOver="esoui/art/buttons/pointsplus_over.dds" normal="esoui/art/buttons/pointsplus_up.dds" pressed="esoui/art/buttons/pointsplus_down.dds"/>
+							<OnClicked>AG.SetAmount(1)</OnClicked>
+						</Button>
+						<Label color="FFFFFF" font="AGFont" horizontalAlignment="1" name="$(parent)Amount" tier="2" verticalAlignment="1">
+							<Anchor point="8" relativePoint="2" relativeTo="$(parent)Plus"/>
+							<Dimensions x="24" y="20"/>
+						</Label>
+						<Button clickSound="Click" name="$(parent)Minus" tier="2">
+							<Anchor offsetY="1" point="8" relativePoint="2" relativeTo="$(parent)Amount"/>
+							<Dimensions x="17" y="20"/>
+							<Textures mouseOver="esoui/art/buttons/pointsminus_over.dds" normal="esoui/art/buttons/pointsminus_up.dds" pressed="esoui/art/buttons/pointsminus_down.dds"/>
+							<OnClicked>AG.SetAmount(-1)</OnClicked>
+						</Button>
+					</Controls>
+				</Backdrop>
+				<Backdrop centerColor="598527" edgeColor="00000000" hidden="true" name="$(parent)Menu" tier="2">
+					<Anchor point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions x="250"/>
+					<Edge edgeSize="1"/>
+					<Controls>
+						<Button clickSound="Click" font="ZoFontGame" hidden="true" horizontalAlignment="0" name="$(parent)Button1" verticalAlignment="1">
+							<Anchor offsetX="10" offsetY="10" point="3" relativePoint="3" relativeTo="$(parent)"/>
+							<FontColors mouseOverColor="FFAA33" normalColor="FFFFFF"/>
+							<Dimensions x="230"/>
+							<OnInitialized>self:SetText(AG[GetCVar('language.2')].Copy)</OnInitialized>
+							<OnClicked>AG.MenuAction(1)</OnClicked>
+						</Button>
+						<Button clickSound="Click" font="ZoFontGame" hidden="true" horizontalAlignment="0" name="$(parent)Button2" verticalAlignment="1">
+							<Anchor point="3" relativePoint="6" relativeTo="$(parent)Button1"/>
+							<FontColors mouseOverColor="FFAA33" normalColor="FFFFFF"/>
+							<Dimensions x="230"/>
+							<OnInitialized>self:SetText(AG[GetCVar('language.2')].Paste)</OnInitialized>
+							<OnClicked>AG.MenuAction(2)</OnClicked>
+						</Button>
+						<Button clickSound="Click" font="ZoFontGame" hidden="true" horizontalAlignment="0" name="$(parent)Button3" verticalAlignment="1">
+							<Anchor point="3" relativePoint="6" relativeTo="$(parent)Button2"/>
+							<FontColors mouseOverColor="FFAA33" normalColor="FFFFFF"/>
+							<Dimensions x="230"/>
+							<OnInitialized>self:SetText(AG[GetCVar('language.2')].Insert)</OnInitialized>
+							<OnClicked>AG.MenuAction(3)</OnClicked>
+						</Button>
+						<Button clickSound="Click" font="ZoFontGame" hidden="true" horizontalAlignment="0" name="$(parent)Button4" verticalAlignment="1">
+							<Anchor point="3" relativePoint="6" relativeTo="$(parent)Button3"/>
+							<FontColors mouseOverColor="FFAA33" normalColor="FFFFFF"/>
+							<Dimensions x="230"/>
+							<OnInitialized>self:SetText(AG[GetCVar('language.2')].Clear)</OnInitialized>
+							<OnClicked>AG.MenuAction(4)</OnClicked>
+						</Button>
+					</Controls>
+				</Backdrop>
+				<Backdrop centerColor="598527" edgeColor="00000000" hidden="true" inherits="ZO_ScrollContainerBase" name="$(parent)Icons" tier="2">
+					<Anchor point="6" relativePoint="9" relativeTo="$(parent)"/>
+					<Dimensions x="233" y="217"/>
+					<Edge edgeSize="1"/>
+					<OnInitialized>ZO_Scroll_Initialize(self)</OnInitialized>
+					<Controls>
+						<Control name="$(parent)ScrollChild">
+							<OnInitialized>self:SetParent(self:GetParent():GetNamedChild(&quot;Scroll&quot;));self:SetAnchor(3,nil,3,0,0)</OnInitialized>
+						</Control>
+					</Controls>
+				</Backdrop>
+				<Label color="FFFFFF" font="AGFont" name="$(parent)Headline">
+					<Anchor offsetY="6" point="1" relativePoint="1" relativeTo="$(parent)"/>
+					<OnInitialized>self:SetText(&quot;|cFFAA33&quot;..AG.name..&quot;|r &quot;..AG.version)</OnInitialized>
+				</Label>
+				<Button clickSound="Click" name="$(parent)CloseButton">
+					<Anchor offsetX="-10" offsetY="4" point="9" relativePoint="9" relativeTo="$(parent)"/>
+					<Dimensions x="25" y="25"/>
+					<Textures mouseOver="esoui/art/buttons/decline_over.dds" normal="esoui/art/buttons/decline_up.dds" pressed="esoui/art/buttons/decline_down.dds"/>
+					<OnClicked>AG.ShowMain()</OnClicked>
+				</Button>
+				<Button clickSound="Click" name="$(parent)UndressArmor">
+					<Anchor offsetX="7" offsetY="4" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions x="30" y="30"/>
+					<OnMouseEnter>AG.Tooltip(self,true)</OnMouseEnter>
+					<OnMouseExit>AG.Tooltip(self,false)</OnMouseExit>
+					<Textures mouseOver="esoui/art/progression/progression_indexicon_armor_over.dds" normal="esoui/art/progression/progression_indexicon_armor_up.dds" pressed="esoui/art/progression/progression_indexicon_armor_down.dds"/>
+					<OnClicked>AG.Undress(1)</OnClicked>
+				</Button>
+				<Button clickSound="Click" name="$(parent)UndressAll">
+					<Anchor offsetX="33" offsetY="4" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions x="30" y="30"/>
+					<OnMouseEnter>AG.Tooltip(self,true)</OnMouseEnter>
+					<OnMouseExit>AG.Tooltip(self,false)</OnMouseExit>
+					<Textures mouseOver="esoui/art/mainmenu/menubar_character_over.dds" normal="esoui/art/mainmenu/menubar_character_up.dds" pressed="esoui/art/mainmenu/menubar_character_down.dds"/>
+					<OnClicked>AG.Undress(2)</OnClicked>
+				</Button>
+				<Button clickSound="Click" name="$(parent)OptionButton">
+					<Anchor point="8" relativePoint="2" relativeTo="$(parent)CloseButton"/>
+					<Dimensions x="35" y="35"/>
+					<Textures mouseOver="esoui/art/chatwindow/chat_options_over.dds" normal="esoui/art/chatwindow/chat_options_up.dds" pressed="esoui/art/chatwindow/chat_options_down.dds"/>
+					<OnClicked>AG_PanelOptionPanel:ToggleHidden()</OnClicked>
+				</Button>
+				<Backdrop centerColor="282828" edgeColor="00000000" inherits="ZO_ScrollContainerBase" name="$(parent)GearPanel">
+					<Anchor offsetX="10" offsetY="35" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions x="650" y="224"/>
+					<Edge edgeSize="1"/>
+					<OnInitialized>ZO_Scroll_Initialize(self)</OnInitialized>
+					<Controls>
+						<Control name="$(parent)ScrollChild" resizeToFitDescendents="true">
+							<OnInitialized>self:SetParent(self:GetParent():GetNamedChild(&quot;Scroll&quot;));self:SetAnchor(3,nil,3,0,0)</OnInitialized>
+						</Control>
+					</Controls>
+				</Backdrop>
+				<Backdrop centerColor="282828" edgeColor="00000000" inherits="ZO_ScrollContainerBase" name="$(parent)SkillPanel">
+					<Anchor offsetX="346" offsetY="269" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions x="314" y="539"/>
+					<Edge edgeSize="1"/>
+					<OnInitialized>ZO_Scroll_Initialize(self)</OnInitialized>
+					<Controls>
+						<Control name="$(parent)ScrollChild" resizeToFitDescendents="true">
+							<OnInitialized>self:SetParent(self:GetParent():GetNamedChild(&quot;Scroll&quot;));self:SetAnchor(3,nil,3,0,0)</OnInitialized>
+						</Control>
+					</Controls>
+				</Backdrop>
+				<Backdrop centerColor="282828" edgeColor="00000000" inherits="ZO_ScrollContainerBase" name="$(parent)SetPanel">
+					<Anchor offsetX="10" offsetY="269" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions x="327" y="539"/>
+					<Edge edgeSize="1"/>
+					<OnInitialized>ZO_Scroll_Initialize(self)</OnInitialized>
+					<Controls>
+						<Control name="$(parent)ScrollChild" resizeToFitDescendents="true">
+							<OnInitialized>self:SetParent(self:GetParent():GetNamedChild(&quot;Scroll&quot;));self:SetAnchor(3,nil,3,0,0)</OnInitialized>
+							<Controls>
+								<Control hidden="true" name="$(parent)EditPanel" tier="1">
+									<Dimensions x="307" y="330"/>
+									<Controls>
+										<Button clickSound="Click" font="AGFontBold" horizontalAlignment="1" name="$(parent)GearConnector" verticalAlignment="1">
+											<Anchor point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="48" y="82"/>
+											<Textures mouseOver="AlphaGear/light.dds" normal="AlphaGear/grey1.dds"/>
+											<MouseButton button="2" enabled="true"/>
+											<OnMouseEnter>AG.Tooltip(self,true)</OnMouseEnter>
+											<OnMouseExit>AG.Tooltip(self,false)</OnMouseExit>
+											<OnMouseDown>AG.SetConnection(...)</OnMouseDown>
+										</Button>
+										<Button clickSound="Click" name="$(parent)GearLock">
+											<Anchor offsetX="50" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="47" y="82"/>
+											<Textures mouseOver="AlphaGear/light.dds" normal="AlphaGear/grey1.dds"/>
+											<OnClicked>AG.SetSetLock()</OnClicked>
+											<OnMouseEnter>AG.Tooltip(self,true)</OnMouseEnter>
+											<OnMouseExit>AG.Tooltip(self,false)</OnMouseExit>
+											<Controls>
+												<Texture name="$(parent)Tex">
+													<Anchor point="128"/>
+													<Dimensions x="32" y="32"/>
+												</Texture>
+											</Controls>
+										</Button>
+										<Control name="$(parent)Gear1Box">
+											<Anchor offsetX="99" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="208" y="40"/>
+										</Control>
+										<Control name="$(parent)Gear2Box">
+											<Anchor offsetX="99" offsetY="42" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="208" y="40"/>
+										</Control>
+										<Backdrop centerColor="30000000" edgeColor="00000000" name="$(parent)Bar1Name">
+											<Edge edgeSize="1"/>
+											<Anchor offsetY="92" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="307" y="30"/>
+											<Controls>
+												<EditBox color="FFFFFF" font="AGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" name="$(parent)Edit">
+													<Anchor offsetY="4" point="128" relativePoint="128" relativeTo="$(parent)"/>
+													<Dimensions x="293" y="30"/>
+													<OnFocusLost>AG.SetSetName(2,self:GetText())</OnFocusLost>
+													<OnEscape>self:LoseFocus()</OnEscape>
+													<OnEnter>self:LoseFocus()</OnEnter>
+												</EditBox>
+											</Controls>
+										</Backdrop>
+										<Button clickSound="Click" font="AGFontBold" horizontalAlignment="1" name="$(parent)Bar1Connector" verticalAlignment="1">
+											<Anchor offsetY="124" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="48" y="82"/>
+											<Textures mouseOver="AlphaGear/light.dds" normal="AlphaGear/grey1.dds"/>
+											<MouseButton button="2" enabled="true"/>
+											<OnMouseEnter>AG.Tooltip(self,true)</OnMouseEnter>
+											<OnMouseExit>AG.Tooltip(self,false)</OnMouseExit>
+											<OnMouseDown>AG.SetConnection(...)</OnMouseDown>
+										</Button>
+										<Button clickSound="Click" name="$(parent)Bar1Icon">
+											<Anchor offsetX="50" offsetY="124" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="89" y="82"/>
+											<Textures mouseOver="AlphaGear/light.dds" normal="AlphaGear/grey1.dds"/>
+											<OnClicked>AG.ShowIconMenu(self,1)</OnClicked>
+											<Controls>
+												<Texture name="$(parent)Tex">
+													<Anchor point="128" relativeTo="$(parent)"/>
+													<Dimensions x="64" y="64"/>
+												</Texture>
+											</Controls>
+										</Button>
+										<Control name="$(parent)Weap1Box">
+											<Anchor offsetX="141" offsetY="124" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="40" y="82"/>
+										</Control>
+										<Control name="$(parent)Skill11Box">
+											<Anchor offsetX="183" offsetY="124" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="124" y="40"/>
+										</Control>
+										<Control name="$(parent)Skill12Box">
+											<Anchor offsetX="183" offsetY="166" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="124" y="40"/>
+										</Control>
+										<Backdrop centerColor="30000000" edgeColor="00000000" name="$(parent)Bar2Name">
+											<Edge edgeSize="1"/>
+											<Anchor offsetY="216" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="307" y="30"/>
+											<Controls>
+												<EditBox color="FFFFFF" font="AGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" name="$(parent)Edit">
+													<Anchor offsetY="4" point="128" relativePoint="128" relativeTo="$(parent)"/>
+													<Dimensions x="293" y="30"/>
+													<OnFocusLost>AG.SetSetName(3,self:GetText())</OnFocusLost>
+													<OnEscape>self:LoseFocus()</OnEscape>
+													<OnEnter>self:LoseFocus()</OnEnter>
+												</EditBox>
+											</Controls>
+										</Backdrop>
+										<Button clickSound="Click" font="AGFontBold" horizontalAlignment="1" name="$(parent)Bar2Connector" verticalAlignment="1">
+											<Anchor offsetY="248" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="48" y="82"/>
+											<Textures mouseOver="AlphaGear/light.dds" normal="AlphaGear/grey1.dds"/>
+											<MouseButton button="2" enabled="true"/>
+											<OnMouseEnter>AG.Tooltip(self,true)</OnMouseEnter>
+											<OnMouseExit>AG.Tooltip(self,false)</OnMouseExit>
+											<OnClicked>AG.SetConnection(...)</OnClicked>
+										</Button>
+										<Button clickSound="Click" name="$(parent)Bar2Icon">
+											<Anchor offsetX="50" offsetY="248" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="89" y="82"/>
+											<Textures mouseOver="AlphaGear/light.dds" normal="AlphaGear/grey1.dds"/>
+											<OnClicked>AG.ShowIconMenu(self,2)</OnClicked>
+											<Controls>
+												<Texture name="$(parent)Tex">
+													<Anchor point="128" relativeTo="$(parent)"/>
+													<Dimensions x="64" y="64"/>
+												</Texture>
+											</Controls>
+										</Button>
+										<Control name="$(parent)Weap2Box">
+											<Anchor offsetX="141" offsetY="248" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="40" y="82"/>
+										</Control>
+										<Control name="$(parent)Skill21Box">
+											<Anchor offsetX="183" offsetY="248" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="124" y="40"/>
+										</Control>
+										<Control name="$(parent)Skill22Box">
+											<Anchor offsetX="183" offsetY="290" point="3" relativePoint="3" relativeTo="$(parent)"/>
+											<Dimensions x="124" y="40"/>
+										</Control>
+									</Controls>
+								</Control>
+							</Controls>
+						</Control>
+					</Controls>
+				</Backdrop>
+			</Controls>
+		</TopLevelControl>
+		<Button clickSound="Click" hidden="true" name="AG_Repair">
+			<Anchor offsetX="5" point="3" relativePoint="9" relativeTo="ActionButton8"/>
+			<Dimensions x="50" y="50"/>
+			<OnInitialized>self:SetParent(ZO_ActionBar1)</OnInitialized>
+			<Controls>
+				<Backdrop edgeColor="00000000" name="$(parent)Bg">
+					<Center file="AlphaGear/info.dds"/>
+					<AnchorFill/>
+					<Edge edgeSize="1"/>
+				</Backdrop>
+				<Label color="FFFFFF" font="ZoFontGameSmall" horizontalAlignment="1" name="$(parent)Cost" verticalAlignment="1">
+					<Anchor offsetY="-5" point="4" relativePoint="1" relativeTo="$(parent)"/>
+					<Dimensions x="50" y="12"/>
+				</Label>
+				<Texture color="00FF00" name="$(parent)Tex" textureFile="AlphaGear/gear.dds">
+					<Anchor point="128"/>
+					<Dimensions x="40" y="40"/>
+				</Texture>
+			</Controls>
+		</Button>
+		<Label color="FFFFFF" font="ZoFontGameSmall" horizontalAlignment="1" name="AG_RepairValue" verticalAlignment="1">
+			<OnInitialized>self:SetParent(ZO_ActionBar1)</OnInitialized>
+			<Anchor offsetY="-1" point="1" relativePoint="4" relativeTo="AG_Repair"/>
+			<Dimensions x="99" y="12"/>
+		</Label>
+		<Button clickSound="Click" hidden="true" name="AG_Charge1">
+			<Anchor offsetX="5" point="3" relativePoint="9" relativeTo="AG_Repair"/>
+			<Dimensions x="50" y="50"/>
+			<OnInitialized>self:SetParent(ZO_ActionBar1)</OnInitialized>
+			<Controls>
+				<Backdrop edgeColor="00000000" name="$(parent)Bg">
+					<Center file="AlphaGear/info.dds"/>
+					<AnchorFill/>
+					<Edge edgeSize="1"/>
+				</Backdrop>
+				<Label color="FFFFFF" font="ZoFontGameSmall" horizontalAlignment="1" name="$(parent)Cost" verticalAlignment="1">
+					<Anchor offsetY="-5" point="4" relativePoint="1" relativeTo="$(parent)"/>
+					<Dimensions x="50" y="12"/>
+				</Label>
+				<Label color="FFFFFF" font="ZoFontGameSmall" horizontalAlignment="1" name="$(parent)Value" verticalAlignment="1">
+					<Anchor offsetY="-1" point="1" relativePoint="4" relativeTo="$(parent)"/>
+					<Dimensions x="50" y="12"/>
+				</Label>
+				<Texture color="FFFFFF" name="$(parent)Tex">
+					<Anchor point="128"/>
+					<Dimensions x="40" y="40"/>
+				</Texture>
+			</Controls>
+		</Button>
+		<Button clickSound="Click" hidden="true" name="AG_Charge2">
+			<Anchor offsetX="5" point="3" relativePoint="9" relativeTo="AG_Charge1"/>
+			<Dimensions x="50" y="50"/>
+			<OnInitialized>self:SetParent(ZO_ActionBar1)</OnInitialized>
+			<Controls>
+				<Backdrop edgeColor="00000000" name="$(parent)Bg">
+					<Center file="AlphaGear/info.dds"/>
+					<AnchorFill/>
+					<Edge edgeSize="1"/>
+				</Backdrop>
+				<Label color="FFFFFF" font="ZoFontGameSmall" horizontalAlignment="1" name="$(parent)Cost" verticalAlignment="1">
+					<Anchor offsetY="-5" point="4" relativePoint="1" relativeTo="$(parent)"/>
+					<Dimensions x="50" y="12"/>
+				</Label>
+				<Label color="FFFFFF" font="ZoFontGameSmall" horizontalAlignment="1" name="$(parent)Value" verticalAlignment="1">
+					<Anchor offsetY="-1" point="1" relativePoint="4" relativeTo="$(parent)"/>
+					<Dimensions x="50" y="12"/>
+				</Label>
+				<Texture color="FFFFFF" name="$(parent)Tex">
+					<Anchor point="128"/>
+					<Dimensions x="40" y="40"/>
+				</Texture>
+			</Controls>
+		</Button>
+		<Control hidden="true" name="AG_SwapMessage">
+			<Anchor offsetX="800" point="2" relativePoint="8" relativeTo="AG_Charge2"/>
+			<OnInitialized>self:SetParent(ZO_ActionBar1)</OnInitialized>
+			<Controls>
+				<Texture name="$(parent)Icon">
+					<Anchor point="3" relativePoint="3" relativeTo="AG_SwapMessage"/>
+					<Dimensions x="64" y="64"/>
+				</Texture>
+				<Button color="FFAA33" font="AGFontSmall" horizontalAlignment="1" name="$(parent)Number" verticalAlignment="1">
+					<Anchor offsetY="-2" point="6" relativePoint="6" relativeTo="$(parent)Icon"/>
+					<Dimensions x="20" y="20"/>
+					<Textures normal="AlphaGear/circ.dds"/>
+				</Button>
+				<Label color="FFAA33" font="AGFontBig" horizontalAlignment="0" name="$(parent)Name" verticalAlignment="1">
+					<Anchor offsetX="10" point="2" relativePoint="8" relativeTo="$(parent)Icon"/>
+					<Dimensions x="350" y="64"/>
+				</Label>
+			</Controls>
+		</Control>
+		<Backdrop alpha="0" centerColor="40FF0000" clampedToScreen="true" edgeColor="60FF0000" mouseEnabled="true" movable="true" name="AG_SetButtonBg" topmost="true">
+			<Anchor point="3" relativePoint="3" relativeTo="AG_Charge1"/>
+			<Dimensions x="247" y="73"/>
+			<Edge edgeSize="1"/>
+			<OnInitialized>self:SetParent(ZO_ActionBar1)</OnInitialized>
+			<OnMouseEnter>WINDOW_MANAGER:SetMouseCursor(12);self:SetAlpha(1)</OnMouseEnter>
+			<OnMouseExit>WINDOW_MANAGER:SetMouseCursor(0);self:SetAlpha(0)</OnMouseExit>
+			<OnMouseUp>AG.account.setbuttons={self:GetLeft()-AG_Charge1:GetLeft(),self:GetTop()-AG_Charge1:GetTop()}</OnMouseUp>
+		</Backdrop>
+		<Control hidden="true" name="AG_SetButtonFrame">
+			<Anchor point="128" relativePoint="128" relativeTo="AG_SetButtonBg"/>
+			<Dimensions x="227" y="53"/>
+			<OnInitialized>self:SetParent(ZO_ActionBar1)</OnInitialized>
+		</Control>
+		<TopLevelControl hidden="true" name="AG_SetTip">
+			<Anchor point="6" relativePoint="3" relativeTo="AG_Charge1"/>
+			<Dimensions x="350" y="188"/>
+			<Controls>
+				<Backdrop centerColor="EE101010" edgeColor="00000000" name="$(parent)Bg">
+					<Edge edgeSize="1"/>
+					<AnchorFill/>
+				</Backdrop>
+				<Label color="FFAA33" font="AGFontBold" horizontalAlignment="0" name="$(parent)Name" verticalAlignment="1">
+					<Anchor offsetX="5" offsetY="7" point="1" relativePoint="1" relativeTo="$(parent)" wrapMode="1"/>
+					<Dimensions x="340" y="25"/>
+				</Label>
+				<Texture name="$(parent)Skill1Icon">
+					<Anchor offsetX="10" offsetY="40" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions x="64" y="64"/>
+				</Texture>
+				<Label color="FFFFFF" font="AGFont" name="$(parent)Bar1Name" verticalAlignment="1">
+					<Anchor offsetX="79" offsetY="40" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions y="24"/>
+				</Label>
+				<Label color="FFFFFF" font="AGFont" name="$(parent)Bar1Skills" verticalAlignment="1">
+					<Anchor offsetX="79" offsetY="65" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions x="265" y="40"/>
+				</Label>
+				<Texture name="$(parent)Skill2Icon">
+					<Anchor offsetX="10" offsetY="109" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions x="64" y="64"/>
+				</Texture>
+				<Label color="FFFFFF" font="AGFont" name="$(parent)Bar2Name" verticalAlignment="1">
+					<Anchor offsetX="79" offsetY="109" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions y="24"/>
+				</Label>
+				<Label color="FFFFFF" font="AGFont" name="$(parent)Bar2Skills" verticalAlignment="1">
+					<Anchor offsetX="79" offsetY="134" point="3" relativePoint="3" relativeTo="$(parent)"/>
+					<Dimensions x="265" y="40"/>
+				</Label>
+			</Controls>
+		</TopLevelControl>
+		<TopLevelControl name="AlphaGear">
+			<OnInitialized/>
+			<OnUpdate>AG.Queue()</OnUpdate>
+		</TopLevelControl>
+	</Controls>
+</GuiXml>
