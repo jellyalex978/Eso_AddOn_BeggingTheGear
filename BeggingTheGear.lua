@@ -34,7 +34,7 @@ local ValueList_WeaponType = {1,2,3,4,5,6,8,9,11,12,13,14,15}
 local ValueList_WeaponTrait = {1,2,3,4,5,6,7,8,26}
 local W_width = 0
 local BTG_max_left = 0
-local debug_mode = false
+local debug_mode = true
 
 
 
@@ -112,7 +112,7 @@ end
 function BTG:Initialize()
 
 	SLASH_COMMANDS["/j123"] = function()
-    	d('j123') 
+    	d('j123')
     end
 
 	-- SM:RegisterTopLevel(BTGPanelView,false)
@@ -162,7 +162,7 @@ function BTG:Initialize()
 	--    button:SetAnchor(RIGHT, row, LEFT, 50, 0)
 	--    button:SetText(tostring(i))
 	-- end
-	 
+
 	-- DynamicButton2:SetText("2")
 
 	EM:RegisterForEvent(self.ename, EVENT_LOOT_RECEIVED, self.OnLootReceived)
@@ -243,7 +243,7 @@ function BTG.AddGearListFilter()
 		}
 		filter.keyword = keyword
 		table.insert(BTG.savedata.gearlist , filter)
-		BTG.UpdateListGertBox()	
+		BTG.UpdateListGertBox()
 	end
 	BTGPanelViewInputTxtBoxInputTxt:LoseFocus()
 end
@@ -284,7 +284,7 @@ function BTG.OnFilterClick(tar , filterType , filterId)
 	local keyid = tar:GetParent():GetParent():GetParent().keyid
 	local status = tar.status
 	local findArrThenBack_curl = 'c'
-	-- 
+	--
 	if status == 1 then
 		status = 0
 		findArrThenBack_curl = 'd'
@@ -296,7 +296,7 @@ function BTG.OnFilterClick(tar , filterType , filterId)
 		tar:GetParent():SetCenterColor(255,134,0,1)
 		tar.status = status
 	end
-	-- 
+	--
 	if filterType == 'EType' then
 		BTG.savedata.gearlist[keyid].equiptype = findArrThenBack( findArrThenBack_curl , BTG.savedata.gearlist[keyid].equiptype , filterId )
 	end
@@ -352,13 +352,14 @@ function BTG.UpdateListDaddyBox()
 end
 
 function BTG.AddDaddyListRow(user , itemlink)
+	if debug_mode then d('= AddDaddyListRow =') end
 	if user ~= '' and itemlink ~= '' then
 		local daddy = {
 			username = user,
 			itemlink = itemlink,
 		}
 		table.insert(BTG.savedata.daddylist , daddy)
-		BTG.UpdateListDaddyBox()	
+		BTG.UpdateListDaddyBox()
 	end
 end
 
@@ -381,7 +382,7 @@ function BTG.BeggingDaddyListRow(tar , act)
 	if act == 1 then
 		local isay = "BTG :: "..zo_strformat("<<!aC:1>>", daddy.username).." !!  Can I have your "..zo_strformat("<<!aC:1>>", daddy.itemlink).." ?"
 		local channel = IsUnitGrouped('player') and "/p " or "/say "
-		
+
 		isayToChat(channel..isay)
 	else
 		-- StartChatInput(isay, channel, target)
@@ -448,13 +449,13 @@ function BTG.OnUiPosSave(tag)
 end
 
 function BTG.toggleBTGPanelView(open)
-	if open == 1 then 
+	if open == 1 then
 		BTGPanelView:SetHidden(false)
 		BTGLootTipView:SetHidden(true)
 	else
 		if BTGPanelView:IsHidden() then
 			BTGPanelView:SetHidden(false)
-		else 
+		else
 			BTGPanelView:SetHidden(true)
 		end
 	end
@@ -464,9 +465,8 @@ function BTG.moveCloseBTGPanelView(eventCode)
 	if BTGPanelView:IsHidden() then
 		-- SM:ToggleTopLevel(BTGPanelView)
 		-- SM:HideTopLevel(BTGPanelView)
-	else 
+	else
 		BTGPanelView:SetHidden(true)
-
 	end
 end
 ----------------------------------------
@@ -486,6 +486,12 @@ function BTG.TestByJelly()
 	-- d(BTG.savedata.gearlist)
 	-- BTG.UpdateListGertBox()
 	-- BTG.UpdateListDaddyBox()
+	local itemlink = BTGPanelViewInputTxtBoxInputTxt:GetText()
+	if itemlink == '' then
+		d(BTG.MatchItemFilter('|H1:item:97022:4:22:0:0:0:0:0:0:0:0:0:0:0:0:11:0:0:0:10000:0|h|h'))
+	else
+		d(BTG.MatchItemFilter(itemlink))
+	end
 end
 ----------------------------------------
 -- TEST End
@@ -520,7 +526,7 @@ function BTG.MatchItemFilter(itemlink)
 	end
 	-- 整理資料
 	local str_search = string.lower(itemName)
-	
+
 	-- 不是 武器 裝備 不比對
 	if itemType == 1 or itemType == 2 then
 		if debug_mode then d('itemType :'..itemType) end
@@ -549,27 +555,36 @@ function BTG.MatchItemFilter(itemlink)
 			end
 
 			-- 只判斷有文字的
-			if filter.keyword ~= '' then 
+			if filter.keyword ~= '' then
 				re.match_keyword = (string.match(str_search, str_keyword) ~= nil)
 				-- 字串需要優先成立
 				if re.match_keyword then
-					d('match_keyword : true , keyword = '..str_keyword)
+					if debug_mode then d('match_keyword : true , keyword = '..str_keyword) end
 					-- 裝備位置
 					if itemType == 1 then
-						if need_weapontype > 0 then 
+						if need_weapontype > 0 then
 							re.match_weapontype = in_array( itemKind , filter.weapontype )
 						end
-						if need_weapontrait > 0 then 
+						if need_weapontrait > 0 then
 							re.match_weapontrait = in_array( itemTrait , filter.weapontrait )
 						end
 					elseif itemType == 2 then
-						if need_equiptype > 0 then 
+						if need_equiptype > 0 then
+
 							re.match_equiptype = in_array( itemKind , filter.equiptype )
+							if re.debug_mode then d('equiptype : '..equiptype) end
+							if re.debug_mode then d('itemKind : '..itemKind) end
 						end
-						if need_equiptrait > 0 then 
+						if need_equiptrait > 0 then
 							re.match_equiptrait = in_array( itemTrait , filter.equiptrait )
 						end
 					end
+					if debug_mode then
+						if re.match_equiptype then d('equiptype : Y') else d('equiptype : N') end
+						if re.match_equiptrait then d('equiptrait : Y') else d('equiptrait : N') end
+						if re.match_weapontype then d('weapontype : Y') else d('weapontype : N') end
+						if re.match_weapontrait then d('weapontrait : Y') else d('weapontrait : N') end
+					 end
 				end
 			end
 			-- 若全部成立 修改 match 值
@@ -577,6 +592,7 @@ function BTG.MatchItemFilter(itemlink)
 				re.match = true
 				re.filterid = k
 				re.price = filter.price
+				findmax = 0
 			else
 				-- 洗掉
 				re.match_equiptype = false
@@ -586,7 +602,8 @@ function BTG.MatchItemFilter(itemlink)
 				re.match = false
 				re.filterid = ''
 				re.price = ''
-			end 	
+			end
+			if debug_mode then if re.match then d('match : Y') else d('match : N') end end
 			if debug_mode then d(' - - - - - - - - - - - ') end
 		end
 	end
@@ -645,7 +662,7 @@ function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound
 	-- d(GetItemLinkInfo(itemName)) -- ok
 	-- BTGCombatTipViewLabel:SetText(itemName)
 	-- d(icon)
-	
+
 	-- if str_itemName == 'rough ruby ash' then
 	-- 	d('yes loot him')
 	-- 	BTGCombatTipViewLabel:SetText('yes loot him')
@@ -663,6 +680,7 @@ function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound
 	if receivedBy ~= nil then
 		name = receivedBy
 	end
+	if debug_mode then d('= = = = '..zo_strformat("<<1>>" , re.match)..' = = = =') end
 	if re.match then
 		BTG.AddDaddyListRow(name , itemName)
 		BTGLootTipView:SetHidden(false)
