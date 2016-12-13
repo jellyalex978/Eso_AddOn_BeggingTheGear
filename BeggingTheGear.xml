@@ -13,78 +13,78 @@
                     <AnchorFill/>
                 </Backdrop>
                 <Backdrop name="$(parent)Header" centerColor="00000000" edgeColor="00000000">
-                    <Anchor point="TOPLEFT" offsetX="0" offsetY="0" />
-                    <Anchor point="TOPRIGHT" offsetX="0" offsetY="0" />
-                    <Dimensions y="30"/>
+                    <Anchor offsetX="450" offsetY="15" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Anchor offsetX="0" offsetY="45" point="BOTTOMRIGHT" relativePoint="TOPRIGHT" />
                     <Controls>
-                        <!--
-                        <Backdrop name="$(parent)Bg" centerColor="ff9900" edgeColor="000000" alpha="0.9">
-                            <AnchorFill/>
-                            <Edge edgeSize="1"/>
-                        </Backdrop>
-                        -->
                         <Label name="$(parent)Title" color="FFFFFF" font="BTGFont">
-                            <Anchor offsetY="4" point="TOP" relativePoint="TOP" relativeTo="$(parent)"/>
+                            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                             <OnInitialized>self:SetText(&quot;|cFFAA33&quot;..BTG.name..&quot;|r &quot;..BTG.version)</OnInitialized>
                         </Label>
-                        <Button name="$(parent)BtnClose" clickSound="Click" tier="1">
-                            <Anchor offsetX="-5" offsetY="5" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
-                            <Dimensions x="20" y="20"/>
-                            <Textures mouseOver="esoui/art/buttons/decline_over.dds" normal="esoui/art/buttons/decline_up.dds" pressed="esoui/art/buttons/decline_down.dds"/>
-                            <OnClicked>BTG.toggleBTGPanelView()</OnClicked>
-                        </Button>
-                        
+                        <Backdrop name="$(parent)CloseBox" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="0" offsetY="-40" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)" />
+                            <Dimensions x="27" y="27"/>
+                            <Controls>
+                                <Backdrop name="$(parent)Bg" inherits="ZO_DefaultBackdrop">
+                                    <AnchorFill/>
+                                </Backdrop>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <Anchor offsetX="-1" offsetY="0" point="CENTER" relativePoint="CENTER" relativeTo="$(parent)"/>
+                                    <Dimensions x="25" y="25"/>
+                                    <Textures mouseOver="esoui/art/buttons/decline_over.dds" normal="esoui/art/buttons/decline_up.dds" pressed="esoui/art/buttons/decline_down.dds"/>
+                                    <OnClicked>BTG.toggleBTGPanelView()</OnClicked>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
                         <Button name="$(parent)BtnTest" clickSound="Click" tier="1">
-                            <Anchor offsetX="5" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
-                            <Dimensions x="20" y="20"/>
-                            <Textures normal="esoui\art\achievements\achievements_reward_earned.dds"/>
+                            <Anchor offsetX="-28" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Dimensions x="25" y="25"/>
+                            <Textures normal="esoui\art\icons\mapkey\mapkey_areaofinterest.dds"/>
                             <OnClicked>BTG.TestByJelly()</OnClicked>
                         </Button>
-                        <!---->
-                        <!--
-                        <Button name="$(parent)BtnTestListGertTpl" clickSound="Click" tier="1">
-                            <Anchor offsetX="5" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
-                            <Dimensions x="20" y="20"/>
-                            <Textures normal="esoui/art/buttons/left_normal.dds" pressed="esoui/art/buttons/left_mousedown.dds"/>
-                            <OnClicked>BTG.TestListGertTpl()</OnClicked>
-                        </Button>
-                        <Button name="$(parent)BtnTestListDaddyTpl" clickSound="Click" tier="1">
-                            <Anchor offsetX="35" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
-                            <Dimensions x="20" y="20"/>
-                            <Textures normal="esoui/art/buttons/right_normal.dds" pressed="esoui/art/buttons/right_mousedown.dds"/>
-                            <OnClicked>BTG.TestListDaddyTpl()</OnClicked>
-                        </Button>
-                        -->
                     </Controls>
                 </Backdrop>
                 <Backdrop name="$(parent)InputTxtBox" centerColor="00000000" edgeColor="00000000">
-                    <Anchor offsetX="10" offsetY="40" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="315" y="30"/>
+                    <Anchor offsetX="220" offsetY="15" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="184" y="30"/>
                     <Edge edgeSize="1"/>
                     <Controls>
                         <Backdrop name="$(parent)Bg" centerColor="43443D" edgeColor="00000000" alpha="0.9">
                             <AnchorFill/>
                             <Edge edgeSize="1"/>
                         </Backdrop>
+                        <Label name="$(parent)Title" text="Type Keyword" color="FFFFFF" font="BTGFont">
+                            <Anchor offsetX="-115" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Dimensions x="115" y="30"/>
+                        </Label>
                         <EditBox name="$(parent)InputTxt" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
-                            <Anchor offsetX="10" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
-                            <Dimensions x="300" y="30"/>
+                            <Anchor offsetX="5" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" />
+                            <Anchor offsetX="-28" offsetY="34" point="BOTTOMRIGHT" relativePoint="TOPRIGHT" />
                             <OnEnter>BTG.AddGearListFilter()</OnEnter>
                         </EditBox>
                         <Button clickSound="Click" name="$(parent)BtnAdd" tier="1">
-                            <Anchor offsetX="320" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Anchor offsetX="-3" offsetY="5" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
                             <Dimensions x="20" y="20"/>
                             <Textures mouseOver="esoui/art/buttons/pointsplus_over.dds" normal="esoui/art/buttons/pointsplus_up.dds" pressed="esoui/art/buttons/pointsplus_down.dds"/>
                             <OnClicked>BTG.AddGearListFilter()</OnClicked>
                         </Button>
                     </Controls>
                 </Backdrop>
+                <Button name="$(parent)BtnDelListGert" text="Clear All" inherits="ZO_DefaultButton" font="BTGFontSmall" >
+                    <Anchor offsetX="5" offsetY="15" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                    <Dimensions x="100" y="30"/>
+                    <OnClicked>BTG.DelAllGearListFilter()</OnClicked>
+                </Button>
                 <Control name="$(parent)ListGertBox" inherits="ZO_ScrollList">
-                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="10" offsetY="80" />
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="10" offsetY="55" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" offsetX="420" offsetY="-10" />
                 </Control>
+                <Button name="$(parent)BtnDelListDaddy" text="Clear All" inherits="ZO_DefaultButton" font="BTGFontSmall" >
+                    <Anchor offsetX="-15" offsetY="15" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
+                    <Dimensions x="100" y="30"/>
+                    <OnClicked>BTG.DelAllDaddyListRow()</OnClicked>
+                </Button>
                 <Control name="$(parent)ListDaddyBox" inherits="ZO_ScrollList">
-                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="425" offsetY="80" />
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="425" offsetY="55" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" offsetX="-10" offsetY="-10" />
                 </Control>
             </Controls>
@@ -103,14 +103,19 @@
                     <Controls>
                         <Button clickSound="Click" name="$(parent)Btn">
                             <AnchorFill/>
-                            <Textures normal="esoui/art/vendor/vendor_tabicon_fence_down.dds" />
+                            <Textures normal="esoui\art\icons\mapkey\mapkey_areaofinterest.dds" />
                             <OnClicked>BTG.toggleBTGPanelView(1)</OnClicked>
                         </Button>
                     </Controls>
                 </Backdrop>
             </Controls>
         </TopLevelControl>
-
+        
+        <TopLevelControl name="BTGTooltipTopLevel" inherits="TooltipTopLevel">
+            <Controls>
+                <Tooltip name="BTGTooltip" inherits="ZO_ItemIconTooltip" />
+            </Controls>
+        </TopLevelControl>
 
         <Backdrop name="ListGertTpl" virtual="true" centerColor="00000000" edgeColor="00000000">
             <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" />
@@ -134,6 +139,8 @@
                 <EditBox name="$(parent)InputKeyword" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
                     <Anchor offsetX="45" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                     <Dimensions x="195" y="30"/>
+                    <OnFocusGained>BTG.GearListInputTip(1 , self)</OnFocusGained>
+                    <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
                     <OnEnter>BTG.UpdateGearListKeyword(self)</OnEnter>
                 </EditBox>
                 <Button name="$(parent)IconPrice" clickSound="Click">
@@ -148,6 +155,8 @@
                 <EditBox name="$(parent)InputPrice" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
                     <Anchor offsetX="-10" offsetY="4" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
                     <Dimensions x="85" y="30"/>
+                    <OnFocusGained>BTG.GearListInputTip(1 , self)</OnFocusGained>
+                    <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
                     <OnEnter>BTG.UpdateGearListPrice(self)</OnEnter>
                 </EditBox>
                 <Backdrop name="$(parent)FilterGearBox" centerColor="00000000" edgeColor="00000000">
@@ -632,11 +641,28 @@
                     <Dimensions x="300" y="30"/>
                     <OnInitialized>self:SetText('daddy')</OnInitialized>
                 </Label>
+
+
+                <Button name="$(parent)TxtItemlink" font="BTGFontSmall" >
+                    <Anchor offsetX="10" offsetY="45" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="300" y="30"/>
+                    <OnInitialized>self:SetText('itemlink')</OnInitialized>
+                    <OnMouseEnter>BTG.DaddyOnMouseEnter(self)</OnMouseEnter>
+                    <OnMouseExit>BTG.DaddyOnMouseExit(self)</OnMouseExit>
+                </Button>
+
+
+                <!--
                 <Label name="$(parent)TxtItemlink" color="FFFFFF" font="BTGFont">
                     <Anchor offsetX="10" offsetY="45" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="300" y="30"/>
                     <OnInitialized>self:SetText('itemlink')</OnInitialized>
+
                 </Label>
+                -->
+
+
+
                 <Button name="$(parent)BtnDel" clickSound="Click">
                     <Anchor offsetX="-4" offsetY="4" point="TOPRIGHT" relativePoint="TOPRIGHT" />
                     <Dimensions x="25" y="25"/>

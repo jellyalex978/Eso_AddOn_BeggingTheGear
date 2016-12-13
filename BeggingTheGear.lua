@@ -32,11 +32,12 @@ local ValueList_EquipType = {1,2,3,4,8,9,10,12,13}
 local ValueList_EquipTrait = {11,12,13,14,15,16,17,18,25}
 local ValueList_WeaponType = {1,2,3,4,5,6,8,9,11,12,13,14,15}
 local ValueList_WeaponTrait = {1,2,3,4,5,6,7,8,26}
+local W_width = 0
+local BTG_max_left = 0
+local debug_mode = false
 
 
 
--- manavortex @manavortex
- 
 function dev_reloadui()
     SLASH_COMMANDS["/reloadui"]()
 end
@@ -53,6 +54,28 @@ local function printToChat(msg)
 	if pc.windows[1].buffer == pc.currentBuffer then
 		pc:SyncScrollToBuffer()
 	end
+end
+local function isayToChat(msg)
+	CHAT_SYSTEM.textEntry:SetText( msg )
+	CHAT_SYSTEM:Maximize()
+	CHAT_SYSTEM.textEntry:Open()
+	CHAT_SYSTEM.textEntry:FadeIn()
+	-- strformat("|cff9900 BTG :: |r<<1>> !!  Can I have your <<t:2>> ?", daddy.username , daddy.itemlink)
+	-- StartChatInput(isay, channel, target)
+	-- StartChatInput(isay, CHAT_CHANNEL_SAY)
+	-- printToChat(isay)
+	-- StartChatInput("", CHAT_CHANNEL_WHISPER, data.displayName)
+end
+
+-- 亂寫一個 in array
+function in_array( val , arr )
+	local findstatus = false
+	for k,v in pairs(arr) do
+		if v == val then
+			findstatus = true
+		end
+	end
+	return findstatus
 end
 -- 亂寫一個n陣列處理
 function findArrThenBack( curl , arr , val )
@@ -231,6 +254,13 @@ function BTG.DelGearListFilter(tar)
 	BTG.UpdateListGertBox()
 end
 
+function BTG.DelAllGearListFilter()
+	for i=1,table.getn(BTG.savedata.gearlist) do
+		table.remove(BTG.savedata.gearlist , 1)
+	end
+	BTG.UpdateListGertBox()
+end
+
 function BTG.UpdateGearListKeyword(tar)
 	local keyid = tar:GetParent().keyid
 	local keyword = tar:GetText()
@@ -280,6 +310,18 @@ function BTG.OnFilterClick(tar , filterType , filterId)
 		BTG.savedata.gearlist[keyid].weapontrait = findArrThenBack( findArrThenBack_curl , BTG.savedata.gearlist[keyid].weapontrait , filterId )
 	end
 end
+
+
+function BTG.GearListInputTip(type , tar)
+	if type == 1 then
+		ZO_Tooltips_ShowTextTooltip(tar, BOTTOM, 'press enter to save')
+	end
+	if type == 0 then
+		ZO_Tooltips_HideTextTooltip()
+	end
+end
+
+
 ----------------------------------------
 -- ZO_ScrollList @ ListGert End
 ----------------------------------------
@@ -326,13 +368,21 @@ function BTG.DelDaddyListRow(tar)
 	BTG.UpdateListDaddyBox()
 end
 
+function BTG.DelAllDaddyListRow()
+	for i=1,table.getn(BTG.savedata.daddylist) do
+		table.remove(BTG.savedata.daddylist , 1)
+	end
+	BTG.UpdateListDaddyBox()
+end
+
 function BTG.BeggingDaddyListRow(tar , act)
 	local keyid = tar:GetParent().keyid
 	local daddy = BTG.savedata.daddylist[keyid]
-
 	if act == 1 then
-		local isay = strformat("|cff9900 BTG :: |r<<1>> !!  Can I have your <<t:2>> ?", daddy.username , daddy.itemlink)
-		printToChat(isay)
+		local isay = "BTG :: "..zo_strformat("<<!aC:1>>", daddy.username).." !!  Can I have your "..zo_strformat("<<!aC:1>>", daddy.itemlink).." ?"
+		local channel = IsUnitGrouped('player') and "/p " or "/say "
+		
+		isayToChat(channel..isay)
 	else
 		-- StartChatInput(isay, channel, target)
 	end
@@ -344,12 +394,31 @@ function BTG.PriceDaddyListRow(tar , act)
 	local re = BTG.MatchItemFilter(daddy.itemlink)
 	if re.match then
 		if act == 1 then
-			local isay = strformat("|cff9900 BTG :: |r<<1>> !!  Can I offer $<<2>> to buy your <<t:3>> ?", daddy.username , re.price , daddy.itemlink)
-			printToChat(isay)
+			local isay = "BTG :: "..zo_strformat("<<!aC:1>>", daddy.username).." !!  Can I offer $"..zo_strformat("<<!aC:1>>", re.price).." to buy your "..zo_strformat("<<!aC:1>>", daddy.itemlink).." ?"
+			local channel = IsUnitGrouped('player') and "/p " or "/say "
+
+			isayToChat(channel..isay)
 		else
 			-- StartChatInput(isay, channel, target)
 		end
 	end
+end
+function BTG.DaddyOnMouseEnter(tar)
+	local keyid = tar:GetParent().keyid
+	local daddy = BTG.savedata.daddylist[keyid]
+	if W_width == 0 then
+		W_width = GuiRoot:GetRight()
+		BTG_max_left = W_width - 800 - 420
+	end
+	if BTGPanelView:GetLeft() > BTG_max_left then
+		InitializeTooltip(BTGTooltip, BTGPanelView, TOPRIGHT, -20, 0, TOPLEFT)
+	else
+		InitializeTooltip(BTGTooltip, BTGPanelView, TOPLEFT, 5, 0, TOPRIGHT)
+	end
+	BTGTooltip:SetLink(daddy.itemlink);
+end
+function BTG.DaddyOnMouseExit(tar)
+	ClearTooltip(BTGTooltip);
 end
 ----------------------------------------
 -- ZO_ScrollList @ ListDaddy End
@@ -365,8 +434,6 @@ function BTG:OnUiPosLoad()
 	BTGPanelView:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, BTG.savedata.gearlist_pos[0], BTG.savedata.gearlist_pos[1])
 	BTGLootTipView:ClearAnchors()
 	BTGLootTipView:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, BTG.savedata.combattip_pos[0], BTG.savedata.combattip_pos[1])
-	--BTG.TestListGertTpl()
-	--BTG.TestListDaddyTpl()
 end
 
 function BTG.OnUiPosSave(tag)
@@ -409,27 +476,13 @@ end
 
 
 
+
+
 ----------------------------------------
 -- TEST Start
 ----------------------------------------
-function BTG.TestListGertTpl()
-	-- local NextControlId = 'xxxxxx'
-	-- tpl_WM = WM:CreateControlFromVirtual(NextControlId, BTGPanelView, 'ListGertTpl')
-	-- tpl_WM:SetAnchor(0,BTGPanelView,0,10,80)
-	-- tpl_WM:GetNamedChild("txt"):SetText(NextControlId)
-	-- 換顏色 FFC400
-	-- tpl_WM:GetNamedChild("FilterGearBoxEquipType_4"):SetCenterColor(255,134,0,1)
-end
-
-function BTG.TestListDaddyTpl()
-	-- local NextControlId = 'oooooo'
-	-- tpl_WM = WM:CreateControlFromVirtual(NextControlId, BTGPanelView, 'ListDaddyTpl')
-	-- tpl_WM:SetAnchor(0,BTGPanelView,0,470,80)
-	-- tpl_WM:GetNamedChild("txt"):SetText(NextControlId)
-end
-
 function BTG.TestByJelly()
-	BTG.UpdateListGertBox()
+	-- BTG.UpdateListGertBox()
 	-- d(BTG.savedata.gearlist)
 	-- BTG.UpdateListGertBox()
 	-- BTG.UpdateListDaddyBox()
@@ -443,32 +496,106 @@ end
 
 
 
-----------------------------------------
--- listen Loot EVENT , copy LuiExtended
-----------------------------------------
+
 function BTG.MatchItemFilter(itemlink)
+	local findmax = 1
 	local re = {
+		match_keyword = false,
+		match_equiptype = false,
+		match_equiptrait = false,
+		match_weapontype = false,
+		match_weapontrait = false,
 		match = false,
 		filterid = '',
 		price = '',
 	}
-
+	-- 取得物品資料
 	local itemName = GetItemLinkName(itemlink)
+	local itemType = GetItemLinkItemType(itemlink) -- 1 武器 2 裝備
+	local itemTrait = GetItemLinkTraitInfo(itemlink) -- 1 - 8 + 26 武器 11 - 18 + 25 裝備
+	if itemType == 1 then
+		local itemKind = GetItemLinkWeaponType(itemlink) -- 1 單手斧 2 單手槌 3 單手劍 14 盾 11 匕首 8 弓 9 回杖 12 火杖 13 冰杖 15 電杖 4 雙手劍 5 雙手斧 6 雙手槌
+	elseif itemType == 2 then
+		local itemKind = GetItemLinkEquipType(itemlink) -- 1 頭 3 身 8 腰 9 褲 4 肩 10 腳 13 手 2 項鍊 12 戒指
+	end
+	-- 整理資料
 	local str_search = string.lower(itemName)
-	local onlyfind = 1
+	
+	-- 不是 武器 裝備 不比對
+	if itemType == 1 or itemType == 2 then
+		if debug_mode then d('itemType :'..itemType) end
+		-- 輪巡 gearlist
+		for k,filter in pairs(BTG.savedata.gearlist) do
+			if findmax < 1 then break end -- 如果已經找到了 就不找了
 
-	for k,filter in pairs(BTG.savedata.gearlist) do
-		local str_keyword = string.lower(filter.keyword)
-		re.match = (string.match(str_search, str_keyword) ~= nil)
-		if re.match and onlyfind then
-			re.filterid = k
-			re.price = filter.price
+			-- 整理資料
+			local str_keyword = string.lower(filter.keyword)
+			local need_equiptype = table.getn(filter.equiptype)
+			local need_equiptrait = table.getn(filter.equiptrait)
+			local need_weapontype = table.getn(filter.weapontype)
+			local need_weapontrait = table.getn(filter.weapontrait)
+
+			-- 只處理 對應 如果沒有勾選 就直接當成比對成功
+			if itemType == 1 then
+				if need_weapontype == 0 then re.match_weapontype = true end
+				if need_weapontrait == 0 then re.match_weapontrait = true end
+				re.match_equiptype = true
+				re.match_equiptrait = true
+			elseif itemType == 2 then
+				if need_equiptype == 0 then re.match_equiptype = true end
+				if need_equiptrait == 0 then re.match_equiptrait = true end
+				re.match_weapontype = true
+				re.match_weapontrait = true
+			end
+
+			-- 只判斷有文字的
+			if filter.keyword ~= '' then 
+				re.match_keyword = (string.match(str_search, str_keyword) ~= nil)
+				-- 字串需要優先成立
+				if re.match_keyword then
+					d('match_keyword : true , keyword = '..str_keyword)
+					-- 裝備位置
+					if itemType == 1 then
+						if need_weapontype > 0 then 
+							re.match_weapontype = in_array( itemKind , filter.weapontype )
+						end
+						if need_weapontrait > 0 then 
+							re.match_weapontrait = in_array( itemTrait , filter.weapontrait )
+						end
+					elseif itemType == 2 then
+						if need_equiptype > 0 then 
+							re.match_equiptype = in_array( itemKind , filter.equiptype )
+						end
+						if need_equiptrait > 0 then 
+							re.match_equiptrait = in_array( itemTrait , filter.equiptrait )
+						end
+					end
+				end
+			end
+			-- 若全部成立 修改 match 值
+			if re.match_keyword and  re.match_equiptype and  re.match_equiptrait and  re.match_weapontype and  re.match_weapontrait then
+				re.match = true
+				re.filterid = k
+				re.price = filter.price
+			else
+				-- 洗掉
+				re.match_equiptype = false
+				re.match_equiptrait = false
+				re.match_weapontype = false
+				re.match_weapontrait = false
+				re.match = false
+				re.filterid = ''
+				re.price = ''
+			end 	
+			if debug_mode then d(' - - - - - - - - - - - ') end
 		end
 	end
-
+	if debug_mode then d('===============================') end
 	return re;
 end
-
+----------------------------------------
+-- listen Loot EVENT , copy LuiExtended
+----------------------------------------
 function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound, lootType, lootedBySelf, isPickpocketLoot, questItemIcon, itemId)
 	-- local icon
 	-- local equipType = 1
@@ -533,7 +660,7 @@ function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound
 	-- 比對字串
 	local re = BTG.MatchItemFilter(itemName)
 	local name = 'yourself'
-	if receivedBy == nil then
+	if receivedBy ~= nil then
 		name = receivedBy
 	end
 	if re.match then
@@ -556,8 +683,6 @@ function BTG.OnAddOnLoaded(event, addonName)
 	end
 end
 EM:RegisterForEvent(BTG.ename, EVENT_ADD_ON_LOADED, BTG.OnAddOnLoaded);
-
-
 
 
 
