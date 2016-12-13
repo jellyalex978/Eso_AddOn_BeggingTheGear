@@ -334,7 +334,7 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_accessory_sp_names_002.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 14)</OnClicked>
-                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Well')</OnMouseEnter>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'well-fitted')</OnMouseEnter>
                                     <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
@@ -735,12 +735,12 @@
                     <Textures mouseOver="esoui/art/buttons/cancel_over.dds" normal="esoui/art/buttons/cancel_up.dds" pressed="esoui/art/buttons/cancel_down.dds"/>
                     <OnClicked>BTG.DelDaddyListRow(self)</OnClicked>
                 </Button>
-                <Button name="$(parent)BtnBegging" text="Begging" inherits="ZO_DefaultButton" font="BTGFontSmall">
+                <Button name="$(parent)BtnBegging" text="Beg" inherits="ZO_DefaultButton" font="BTGFontSmall">
                     <Anchor offsetX="10" offsetY="80" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                     <Dimensions x="100" y="30"/>
                     <OnClicked>BTG.BeggingDaddyListRow(self , 1)</OnClicked>
                 </Button>
-                <Button name="$(parent)BtnPrice" text="Price" inherits="ZO_DefaultButton" font="BTGFontSmall" >
+                <Button name="$(parent)BtnPrice" text="Offer" inherits="ZO_DefaultButton" font="BTGFontSmall" >
                     <Anchor offsetX="120" offsetY="80" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                     <Dimensions x="100" y="30"/>
                     <OnClicked>BTG.PriceDaddyListRow(self , 1)</OnClicked>

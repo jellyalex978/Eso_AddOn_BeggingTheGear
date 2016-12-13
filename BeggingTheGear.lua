@@ -2,6 +2,7 @@ BTG = {}
 
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear'
+-- sugar daddy
 BTG.version = '1.0'
 BTG.init = false
 BTG.savedata = {}
@@ -384,7 +385,7 @@ function BTG.BeggingDaddyListRow(tar , act)
 	local keyid = tar:GetParent().keyid
 	local daddy = BTG.savedata.daddylist[keyid]
 	if act == 1 then
-		local isay = "BTG :: "..zo_strformat("<<!aC:1>>", daddy.username).." !!  Can I have your "..zo_strformat("<<!aC:1>>", daddy.itemlink).." ?"
+		local isay = "BTG :: "..zo_strformat("<<!aC:1>>", daddy.username).." !!  Can I have your "..zo_strformat("<<!aC:1>>", daddy.itemlink).." if you don't need?"
 		local channel = IsUnitGrouped('player') and "/p " or "/say "
 
 		isayToChat(channel..isay)
@@ -399,7 +400,7 @@ function BTG.PriceDaddyListRow(tar , act)
 	local re = BTG.MatchItemFilter(daddy.itemlink)
 	if re.match then
 		if act == 1 then
-			local isay = "BTG :: "..zo_strformat("<<!aC:1>>", daddy.username).." !!  Can I offer $"..zo_strformat("<<!aC:1>>", re.price).." to buy your "..zo_strformat("<<!aC:1>>", daddy.itemlink).." ?"
+			local isay = "BTG :: "..zo_strformat("<<!aC:1>>", daddy.username).." !!  Can I offer $"..zo_strformat("<<!aC:1>>", re.price).." to buy your "..zo_strformat("<<!aC:1>>", daddy.itemlink).." if you don't need ?"
 			local channel = IsUnitGrouped('player') and "/p " or "/say "
 
 			isayToChat(channel..isay)
