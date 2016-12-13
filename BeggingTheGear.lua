@@ -34,7 +34,7 @@ local ValueList_WeaponType = {1,2,3,4,5,6,8,9,11,12,13,14,15}
 local ValueList_WeaponTrait = {1,2,3,4,5,6,7,8,26}
 local W_width = 0
 local BTG_max_left = 0
-local debug_mode = true
+local debug_mode = false
 
 
 
