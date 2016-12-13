@@ -312,9 +312,13 @@ function BTG.OnFilterClick(tar , filterType , filterId)
 end
 
 
-function BTG.GearListInputTip(type , tar)
+function BTG.GearListInputTip(type , tar , msg)
 	if type == 1 then
-		ZO_Tooltips_ShowTextTooltip(tar, BOTTOM, 'press enter to save')
+		if msg ~= '' and msg ~= nil then
+			ZO_Tooltips_ShowTextTooltip(tar, BOTTOM, msg)
+		else
+			ZO_Tooltips_ShowTextTooltip(tar, BOTTOM, 'press enter to save')
+		end
 	end
 	if type == 0 then
 		ZO_Tooltips_HideTextTooltip()

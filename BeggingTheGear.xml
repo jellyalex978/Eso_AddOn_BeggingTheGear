@@ -171,6 +171,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/medium_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'EType' , 1)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Head')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -182,6 +184,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/chest_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'EType' , 3)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Chest')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -193,6 +197,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/shoulders_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'EType' , 4)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Shoulders')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -204,6 +210,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/belt_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'EType' , 8)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Waist')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -215,6 +223,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/legs_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'EType' , 9)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Legs')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -226,6 +236,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/feet_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'EType' , 10)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Feet')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -237,6 +249,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/hands_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'EType' , 13)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Hands')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -249,6 +263,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/neck_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'EType' , 2)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Neck')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -260,6 +276,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/ring_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'EType' , 12)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Ring')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -277,6 +295,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_runecrafter_plug_component_002.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 11)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Sturdy')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -288,6 +308,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_jewelry_base_diamond_r3.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 12)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Impenetrable')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -299,6 +321,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_enchantment_base_sardonyx_r2.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 13)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Reinforced')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -310,6 +334,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_accessory_sp_names_002.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 14)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Well')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -321,6 +347,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_jewelry_base_emerald_r2.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 15)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Training')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -332,6 +360,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_enchantment_baxe_bloodstone_r2.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 16)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Infused')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -343,6 +373,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_jewelry_base_garnet_r3.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 17)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Prosperous')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -354,6 +386,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_accessory_sp_names_001.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 18)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Divines')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -365,6 +399,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_potent_nirncrux_stone.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'ETrait' , 25)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Nirnhoned')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -382,6 +418,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/dagger_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 11)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Dagger')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -393,6 +431,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/axe_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 1)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Axe')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -404,6 +444,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/mace_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 2)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Mace')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -415,6 +457,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/twohand_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 3)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Sword')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -426,6 +470,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/shield_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 14)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Shield')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -438,6 +484,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/bow_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 8)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Bow')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -449,6 +497,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/fire_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 12)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Inferno Staff')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -460,6 +510,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/ice_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 13)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Ice Staff')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -471,6 +523,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/lightning_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 15)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Lighting Staff')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -482,6 +536,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/restoration_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 9)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Restoration Staff')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -494,6 +550,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/axe_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 5)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Battle Axe')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -505,6 +563,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/mace_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 6)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Maul')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -516,6 +576,8 @@
                                     <AnchorFill/>
                                     <Textures normal="BeggingTheGear/images/AwesomeGuildStore/twohand_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WType' , 4)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Greatsword')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -533,6 +595,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_runecrafter_potion_008.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 1)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Powered')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -544,6 +608,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_jewelry_base_amethyst_r3.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 2)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Charged')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -555,6 +621,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_jewelry_base_ruby_r3.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 3)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Precise')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -566,6 +634,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_enchantment_base_jade_r3.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 4)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Infused')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -577,6 +647,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_jewelry_base_turquoise_r3.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 5)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Defending')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -588,6 +660,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_runecrafter_armor_component_004.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 6)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Training')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -599,6 +673,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_enchantment_base_fire_opal_r3.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 7)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Sharpened')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -610,6 +686,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_smith_potion__sp_names_003.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 8)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Decisive')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -621,6 +699,8 @@
                                     <AnchorFill/>
                                     <Textures normal="/esoui/art/icons/crafting_potent_nirncrux_dust.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'WTrait' , 26)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Nirnhoned')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
@@ -641,8 +721,6 @@
                     <Dimensions x="300" y="30"/>
                     <OnInitialized>self:SetText('daddy')</OnInitialized>
                 </Label>
-
-
                 <Button name="$(parent)TxtItemlink" font="BTGFontSmall" >
                     <Anchor offsetX="10" offsetY="45" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="300" y="30"/>
@@ -650,19 +728,6 @@
                     <OnMouseEnter>BTG.DaddyOnMouseEnter(self)</OnMouseEnter>
                     <OnMouseExit>BTG.DaddyOnMouseExit(self)</OnMouseExit>
                 </Button>
-
-
-                <!--
-                <Label name="$(parent)TxtItemlink" color="FFFFFF" font="BTGFont">
-                    <Anchor offsetX="10" offsetY="45" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="300" y="30"/>
-                    <OnInitialized>self:SetText('itemlink')</OnInitialized>
-
-                </Label>
-                -->
-
-
-
                 <Button name="$(parent)BtnDel" clickSound="Click">
                     <Anchor offsetX="-4" offsetY="4" point="TOPRIGHT" relativePoint="TOPRIGHT" />
                     <Dimensions x="25" y="25"/>
@@ -670,7 +735,6 @@
                     <Textures mouseOver="esoui/art/buttons/cancel_over.dds" normal="esoui/art/buttons/cancel_up.dds" pressed="esoui/art/buttons/cancel_down.dds"/>
                     <OnClicked>BTG.DelDaddyListRow(self)</OnClicked>
                 </Button>
-
                 <Button name="$(parent)BtnBegging" text="Begging" inherits="ZO_DefaultButton" font="BTGFontSmall">
                     <Anchor offsetX="10" offsetY="80" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                     <Dimensions x="100" y="30"/>
