@@ -2,6 +2,7 @@
     <Font font="$(MEDIUM_FONT)|18" name="BTGFont"/>
     <Font font="$(BOLD_FONT)|14" name="BTGFontSmall"/>
     <Font font="$(BOLD_FONT)|22" name="BTGFontBold"/>
+    <Font font="$(MEDIUM_FONT)|18" name="BTGFontDaddyItem"/>
     <Font font="$(BOLD_FONT)|18|soft-shadow-thick" name="BTGFontBig"/>
     <Controls>
         <TopLevelControl name="BTGPanelView" hidden="true" allowBringToTop="true" clampedToScreen="true" mouseEnabled="true" movable="true">
@@ -89,17 +90,18 @@
                 </Control>
             </Controls>
         </TopLevelControl>
-        <TopLevelControl name="BTGLootTipView" hidden="true" allowBringToTop="true" clampedToScreen="true" mouseEnabled="true" movable="true">
+        <TopLevelControl name="BTGLootTipView" hidden="true" mouseEnabled="true" movable="true">
             <Anchor offsetX="-100" offsetY="-100" point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" relativeTo="GuiRoot"/>
-            <Dimensions x="80" y="80" />
+            <Dimensions x="50" y="50" />
             <OnMouseUp>BTG.OnUiPosSave('BTGLootTipView')</OnMouseUp>
             <Controls>
-                <Backdrop name="$(parent)Bg" inherits="ZO_DefaultBackdrop">
+                <Backdrop name="$(parent)Bg" centerColor="010101" edgeColor="6B613B" alpha="0.5">
                     <AnchorFill/>
+                    <Edge edgeSize="2"/>
                 </Backdrop>
                 <Backdrop name="$(parent)BtnBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor offsetX="0" offsetY="0" point="CENTER" relativePoint="CENTER" relativeTo="$(parent)" />
-                    <Dimensions x="50" y="50"/>
+                    <Dimensions x="40" y="40"/>
                     <Controls>
                         <Button clickSound="Click" name="$(parent)Btn">
                             <AnchorFill/>
@@ -721,7 +723,7 @@
                     <Dimensions x="300" y="30"/>
                     <OnInitialized>self:SetText('daddy')</OnInitialized>
                 </Label>
-                <Button name="$(parent)TxtItemlink" font="BTGFontSmall" >
+                <Button name="$(parent)TxtItemlink" font="BTGFontDaddyItem" >
                     <Anchor offsetX="10" offsetY="45" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="300" y="30"/>
                     <OnInitialized>self:SetText('itemlink')</OnInitialized>

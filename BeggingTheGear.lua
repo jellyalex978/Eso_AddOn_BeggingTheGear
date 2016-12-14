@@ -1,8 +1,6 @@
 BTG = {}
-
 BTG.ename = 'BTG'
-BTG.name = 'BeggingTheGear'
--- sugar daddy
+BTG.name = 'BeggingTheGear' -- sugar daddy
 BTG.version = '1.0'
 BTG.init = false
 BTG.savedata = {}
@@ -38,25 +36,17 @@ local BTG_max_left = 0
 local debug_mode = false
 
 
-
 function dev_reloadui()
     SLASH_COMMANDS["/reloadui"]()
 end
-local function GetColor(val,a)
+
+function GetColor(val,a)
 	local r,g = 0,0
 	if val >= 50 then r = 100-((val-50)*2); g = 100 else r = 100; g = val*2 end
 	return r/100, g/100, 0, a
 end
-local function printToChat(msg)
-	local msg = BTG.FormatMessage(msg or 'no message', 1)
-	-- We will print into first window of primary container
-	local pc = CHAT_SYSTEM.primaryContainer
-	pc.windows[1].buffer:AddMessage(msg)
-	if pc.windows[1].buffer == pc.currentBuffer then
-		pc:SyncScrollToBuffer()
-	end
-end
-local function isayToChat(msg)
+
+function isayToChat(msg)
 	CHAT_SYSTEM.textEntry:SetText( msg )
 	CHAT_SYSTEM:Maximize()
 	CHAT_SYSTEM.textEntry:Open()
@@ -92,91 +82,6 @@ function findArrThenBack( curl , arr , val )
 	end
 	return arr
 end
-
-function BTG.FormatMessage(msg, doTimestamp)
-	local msg = msg or ""
-	if doTimestamp then
-		--[[ Disabling this code, for now
-		-- We want to have timestamp of the same colour as the message
-		local timeStamp = '[' .. GetTimeString() .. '] '
-		if "|c" == strsub(msg, 0, 2) then
-			msg = strsub(msg, 0, 8) .. timeStamp .. strsub(msg, 9)
-		else
-			msg = timeStamp .. msg
-		end
-		]]-- Instead just put gray timestamp
-		msg = '|c666666[' .. GetTimeString() .. ']|r ' .. msg
-	end
-	return msg
-end
-
-function BTG:Initialize()
-
-	SLASH_COMMANDS["/j123"] = function()
-    	d('j123')
-    end
-
-	-- SM:RegisterTopLevel(BTGPanelView,false)
-	-- EM:UnregisterForEvent('AG4',EVENT_ADD_ON_LOADED)
-	-- EM:RegisterForEvent('AG4',EVENT_ACTION_SLOTS_FULL_UPDATE, AG.Swap)
-	-- EM:RegisterForEvent('AG4',EVENT_INVENTORY_FULL_UPDATE, function() PREBAG = nil end)
-
-
-	--local Storage = BTG.Storage
-	local SLGD = BTG.SLGD
-	local SLDD = BTG.SLDD
-
-
-	BTG.savedata = ZO_SavedVars:NewAccountWide('BTG_savedata',1,nil,init_savedef)
-    BTG.gearlistCTL = SLGD:New(BTG.savedata)
-    BTG.daddylistCTL = SLDD:New(BTG.savedata)
-
-
-	--local SLGD = SLGD:New(data_listgear);
-
-	-- local saveData = ZO_SavedVars:NewAccountWide("SimpleNotebook_Data", 1)
-    -- local storage = Storage:New(saveData)
-
-
-	--local storage = Storage:New(saveData)
-
-
-	-- key bind controls
-	ZO_CreateStringId("SI_BINDING_NAME_SHOW_BTGPanelView", "toggle ui")
-	ZO_CreateStringId("SI_BINDING_NAME_DEV_BTGReloadUi", "reload interface")
-
-
-	-- BTGPanelView gear list
-    BTG.gearlist_NOTE_TYPE = 1
-    ZO_ScrollList_AddDataType(BTGPanelViewListGertBox, BTG.gearlist_NOTE_TYPE, "ListGertTpl", 190 , BTG.ListGertInitializeRow)
-    BTG.gearlistCTL:RegisterCallback("OnKeysUpdated", BTG.UpdateListGertBox)
-    BTG.UpdateListGertBox()
-    -- BTGPanelView daddy list
-    BTG.daddylist_NOTE_TYPE = 1
-    ZO_ScrollList_AddDataType(BTGPanelViewListDaddyBox, BTG.daddylist_NOTE_TYPE, "ListDaddyTpl", 130 , BTG.ListDaddyInitializeRow)
-    BTG.daddylistCTL:RegisterCallback("OnKeysUpdated", BTG.UpdateListDaddyBox)
-    BTG.UpdateListDaddyBox()
-
-
-	-- for i, row in pairs(ZO_FriendsListList.activeControls) do
-	--    local button = CreateControlFromVirtual("DynamicButton", ZO_FriendsListList, "ZO_DefaultTextButton", i)
-	--    button:SetAnchor(RIGHT, row, LEFT, 50, 0)
-	--    button:SetText(tostring(i))
-	-- end
-
-	-- DynamicButton2:SetText("2")
-
-	EM:RegisterForEvent(self.ename, EVENT_LOOT_RECEIVED, self.OnLootReceived)
-	-- EVENT_MANAGER:UnregisterForEvent(moduleName, EVENT_LOOT_RECEIVED)
-
-	BTG:OnUiPosLoad()
-end
-
-
-
-
-
-
 
 ----------------------------------------
 -- ZO_ScrollList @ ListGert Start
@@ -325,12 +230,9 @@ function BTG.GearListInputTip(type , tar , msg)
 		ZO_Tooltips_HideTextTooltip()
 	end
 end
-
-
 ----------------------------------------
 -- ZO_ScrollList @ ListGert End
 ----------------------------------------
-
 
 
 ----------------------------------------
@@ -341,9 +243,12 @@ function BTG.ListDaddyInitializeRow(control, data)
 	-- 暫存著偷偷用
 	control.keyid = data.key
 	-- 初始 savedata 值
-	control:GetNamedChild("TxtDaddy"):SetText(daddy.username)
-	-- |t16:16:/esoui/art/icons/crafting_worms.dds|t icon
-	control:GetNamedChild("TxtItemlink"):SetText(daddy.itemlink)
+	local icon,_,_,_,_ = GetItemLinkInfo(daddy.itemlink)
+	local username = zo_strformat("<<1>>", daddy.username);
+	local itemlink = '|t22:22:'..icon..'|t' .. '|u5:0::|u' ..daddy.itemlink;
+	-- 塞值
+	control:GetNamedChild("TxtDaddy"):SetText(username)
+	control:GetNamedChild("TxtItemlink"):SetText(itemlink)
 end
 
 function BTG.UpdateListDaddyBox()
@@ -357,7 +262,6 @@ function BTG.UpdateListDaddyBox()
 end
 
 function BTG.AddDaddyListRow(user , itemlink)
-	if debug_mode then d('= AddDaddyListRow =') end
 	if user ~= '' and itemlink ~= '' then
 		local daddy = {
 			username = user,
@@ -385,7 +289,7 @@ function BTG.BeggingDaddyListRow(tar , act)
 	local keyid = tar:GetParent().keyid
 	local daddy = BTG.savedata.daddylist[keyid]
 	if act == 1 then
-		local isay = "BTG :: "..zo_strformat("<<!aC:1>>", daddy.username).." !!  Can I have your "..zo_strformat("<<!aC:1>>", daddy.itemlink).." if you don't need?"
+		local isay = "BTG :: "..zo_strformat("<<1>>", daddy.username).." !!  Can I have your "..zo_strformat("<<1>>", daddy.itemlink).." , if you don't need?"
 		local channel = IsUnitGrouped('player') and "/p " or "/say "
 
 		isayToChat(channel..isay)
@@ -393,6 +297,7 @@ function BTG.BeggingDaddyListRow(tar , act)
 		-- StartChatInput(isay, channel, target)
 	end
 end
+
 function BTG.PriceDaddyListRow(tar , act)
 	local keyid = tar:GetParent().keyid
 	local daddy = BTG.savedata.daddylist[keyid]
@@ -400,7 +305,7 @@ function BTG.PriceDaddyListRow(tar , act)
 	local re = BTG.MatchItemFilter(daddy.itemlink)
 	if re.match then
 		if act == 1 then
-			local isay = "BTG :: "..zo_strformat("<<!aC:1>>", daddy.username).." !!  Can I offer $"..zo_strformat("<<!aC:1>>", re.price).." to buy your "..zo_strformat("<<!aC:1>>", daddy.itemlink).." if you don't need ?"
+			local isay = "BTG :: "..zo_strformat("<<1>>", daddy.username).." !!  Can I offer $"..zo_strformat("<<1>>", re.price).." to buy your "..zo_strformat("<<1>>", daddy.itemlink).." , if you don't need ?"
 			local channel = IsUnitGrouped('player') and "/p " or "/say "
 
 			isayToChat(channel..isay)
@@ -409,6 +314,7 @@ function BTG.PriceDaddyListRow(tar , act)
 		end
 	end
 end
+
 function BTG.DaddyOnMouseEnter(tar)
 	local keyid = tar:GetParent().keyid
 	local daddy = BTG.savedata.daddylist[keyid]
@@ -423,6 +329,7 @@ function BTG.DaddyOnMouseEnter(tar)
 	end
 	BTGTooltip:SetLink(daddy.itemlink);
 end
+
 function BTG.DaddyOnMouseExit(tar)
 	ClearTooltip(BTGTooltip);
 end
@@ -454,15 +361,12 @@ function BTG.OnUiPosSave(tag)
 end
 
 function BTG.toggleBTGPanelView(open)
-	if open == 1 then
-		BTGPanelView:SetHidden(false)
-		BTGLootTipView:SetHidden(true)
-	else
-		if BTGPanelView:IsHidden() then
-			BTGPanelView:SetHidden(false)
-		else
-			BTGPanelView:SetHidden(true)
-		end
+	if open == nil then
+		SM:ToggleTopLevel(BTGPanelView)
+	elseif open == 1 then
+		SM:ShowTopLevel(BTGPanelView)
+	elseif open == 0 then
+		SM:HideTopLevel(BTGPanelView)
 	end
 end
 
@@ -474,12 +378,49 @@ function BTG.moveCloseBTGPanelView(eventCode)
 		BTGPanelView:SetHidden(true)
 	end
 end
+
+function BTG.setBTGPanelPos(parent,pos)
+	BTGPanelView:ClearAnchors()
+	BTGPanelView:SetAnchor(8,parent,2,pos,0)
+end
+
+function BTG.resetBTGPanelPos()
+	BTGPanelView:ClearAnchors()
+	BTGPanelView:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, BTG.savedata.gearlist_pos[0], BTG.savedata.gearlist_pos[1])
+end
+
+function BTG.toggleBTGLootTipView(open)
+	if open == nil then
+		if BTGLootTipView:IsHidden() then
+			BTGLootTipView:SetHidden(false)
+		else
+			BTGLootTipView:SetHidden(true)
+		end
+	elseif open == 1 then
+		BTGLootTipView:SetHidden(false)
+	elseif open == 0 then
+		BTGLootTipView:SetHidden(true)
+	end
+end
+
+function BTG.conmoveBTGLootTipView(status)
+	if status == 1 then
+		BTGLootTipViewBg:SetCenterColor(255,0,0,1)
+		-- BTGLootTipViewBg:SetEdgeColor(200,0,0,1)
+		WM:SetMouseCursor(MOUSE_CURSOR_PAN)
+	elseif status == 0 then
+		BTGLootTipViewBg:SetCenterColor(0,0,0,1)
+		-- BTGLootTipViewBg:SetEdgeColor(107,61,59,1)
+		WM:SetMouseCursor(MOUSE_CURSOR_DO_NOT_CARE)
+	end
+	-- btn:SetNormalTexture(textures.NORMAL)
+ 	-- btn:SetPressedTexture(textures.PRESSED)
+ 	-- btn:SetMouseOverTexture(textures.MOUSEOVER)
+ 	-- btn:SetDisabledTexture(textures.DISABLED)
+end
 ----------------------------------------
 -- UI CTRL End
 ----------------------------------------
-
-
-
 
 
 
@@ -487,10 +428,6 @@ end
 -- TEST Start
 ----------------------------------------
 function BTG.TestByJelly()
-	-- BTG.UpdateListGertBox()
-	-- d(BTG.savedata.gearlist)
-	-- BTG.UpdateListGertBox()
-	-- BTG.UpdateListDaddyBox()
 	local itemlink = BTGPanelViewInputTxtBoxInputTxt:GetText()
 	if itemlink == '' then
 		d(BTG.MatchItemFilter('|H1:item:97022:4:22:0:0:0:0:0:0:0:0:0:0:0:0:11:0:0:0:10000:0|h|h'))
@@ -503,10 +440,21 @@ end
 ----------------------------------------
 
 
-
-
-
-
+----------------------------------------
+-- listen Loot EVENT Start
+----------------------------------------
+function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound, lootType, lootedBySelf, isPickpocketLoot, questItemIcon, itemId)
+	-- 比對字串
+	local re = BTG.MatchItemFilter(itemName)
+	local name = 'yourself'
+	if receivedBy ~= nil then
+		name = receivedBy
+	end
+	if re.match then
+		BTG.AddDaddyListRow(name , itemName)
+		BTGLootTipView:SetHidden(false)
+	end
+end
 
 function BTG.MatchItemFilter(itemlink)
 	local findmax = 1
@@ -534,7 +482,6 @@ function BTG.MatchItemFilter(itemlink)
 
 	-- 不是 武器 裝備 不比對
 	if itemType == 1 or itemType == 2 then
-		if debug_mode then d('itemType :'..itemType) end
 		-- 輪巡 gearlist
 		for k,filter in pairs(BTG.savedata.gearlist) do
 			if findmax < 1 then break end -- 如果已經找到了 就不找了
@@ -564,7 +511,6 @@ function BTG.MatchItemFilter(itemlink)
 				re.match_keyword = (string.match(str_search, str_keyword) ~= nil)
 				-- 字串需要優先成立
 				if re.match_keyword then
-					if debug_mode then d('match_keyword : true , keyword = '..str_keyword) end
 					-- 裝備位置
 					if itemType == 1 then
 						if need_weapontype > 0 then
@@ -575,21 +521,12 @@ function BTG.MatchItemFilter(itemlink)
 						end
 					elseif itemType == 2 then
 						if need_equiptype > 0 then
-
 							re.match_equiptype = in_array( itemKind , filter.equiptype )
-							if re.debug_mode then d('equiptype : '..equiptype) end
-							if re.debug_mode then d('itemKind : '..itemKind) end
 						end
 						if need_equiptrait > 0 then
 							re.match_equiptrait = in_array( itemTrait , filter.equiptrait )
 						end
 					end
-					if debug_mode then
-						if re.match_equiptype then d('equiptype : Y') else d('equiptype : N') end
-						if re.match_equiptrait then d('equiptrait : Y') else d('equiptrait : N') end
-						if re.match_weapontype then d('weapontype : Y') else d('weapontype : N') end
-						if re.match_weapontrait then d('weapontrait : Y') else d('weapontrait : N') end
-					 end
 				end
 			end
 			-- 若全部成立 修改 match 值
@@ -608,102 +545,73 @@ function BTG.MatchItemFilter(itemlink)
 				re.filterid = ''
 				re.price = ''
 			end
-			if debug_mode then if re.match then d('match : Y') else d('match : N') end end
-			if debug_mode then d(' - - - - - - - - - - - ') end
 		end
 	end
-	if debug_mode then d('===============================') end
-	return re;
+	return re
 end
 ----------------------------------------
--- listen Loot EVENT , copy LuiExtended
+-- listen Loot EVENT End
 ----------------------------------------
-function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound, lootType, lootedBySelf, isPickpocketLoot, questItemIcon, itemId)
-	-- local icon
-	-- local equipType = 1
-	-- -- fix Icon for missing quest items
-	-- if lootType == LOOT_TYPE_QUEST_ITEM then
-	-- 	icon = questItemIcon
-	-- elseif lootType == LOOT_TYPE_COLLECTIBLE then
-	-- 	local collectibleId = GetCollectibleIdFromLink(itemName)
-	-- 	local _,_,collectibleIcon = GetCollectibleInfo(collectibleId)
-	-- 	icon = collectibleIcon
-	-- else
-	-- 	-- get Icon and Equipment Type
-	-- 	local itemIcon,_,_,itemEquipType,_ = GetItemLinkInfo(itemName)
-	-- 	icon = itemIcon
-	-- 	equipType = itemEquipType
-	-- end
-	-- -- create Icon string if icon exists and corresponding setting is ON
-	-- icon = ( 1 and icon and icon ~= '' ) and ('|t16:16:'..icon..'|t') or ''
-	-- if lootedBySelf then
-	-- 	-- Rough Ruby Ash
-	-- 	-- receivedBy = ojelly^Fx //JJ-L
-	-- 	-- receivedBy = rolycc^Fx //JJ-L
-	-- 	printToChat( strformat("|cff9900<<1>> [<<4>><<t:3>>|c0B610B]<<2[// x|cBEF781$d]>>|r", (receivedBy == nil) and "JJ-R" or isPickpocketLoot and "JJ-P" or "JJ-L", quantity, itemName, icon ) )
-	-- elseif 1 and lootType == LOOT_TYPE_ITEM then
-	-- 	local quality = GetItemLinkQuality(itemName)
-	-- 	if ( equipType ~= 0 ) and ( quality >= 3 ) then
-	-- 		printToChat( strformat("|cff9900<<1>> Got: [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
-	-- 	end
-	-- 	if ( equipType ~= 0 ) and ( quality == 0 ) then
-	-- 		printToChat( strformat("|cff9900<<1>> Q0 : [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
-	-- 	end
-	-- 	if ( equipType ~= 0 ) and ( quality == 1 ) then
-	-- 		-- 白的
-	-- 		printToChat( strformat("|cff9900<<1>> Q1 : [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
-	-- 	end
-	-- 	if ( equipType ~= 0 ) and ( quality == 2 ) then
-	-- 		-- 綠的
-	-- 		printToChat( strformat("|cff9900<<1>> Q2 : [<<4>><<t:3>>|c32CE41]<<2[// x|cBEF781$d]>>|r", receivedBy, quantity, itemName, icon ) )
-	-- 	end
-	-- end
-
-	-- d('test - '..itemName..' : '..itemId)
-	-- local str_itemName = GetItemLinkName(itemName);
-	-- d('str - '..str_itemName)
-
-	-- d(GetItemInfo(itemId)) -- ok
-	-- d(GetItemLinkInfo(itemName)) -- ok
-	-- BTGCombatTipViewLabel:SetText(itemName)
-	-- d(icon)
-
-	-- if str_itemName == 'rough ruby ash' then
-	-- 	d('yes loot him')
-	-- 	BTGCombatTipViewLabel:SetText('yes loot him')
-	-- end
-	-- if str_itemName == 'rubedite ore' then
-	-- 	d('yes loot rubedite')
-	-- 	BTGCombatTipViewLabel:SetText('yes loot rubedite')
-	-- end
 
 
+----------------------------------------
+-- INIT
+----------------------------------------
+function BTG:Initialize()
+	SM:RegisterTopLevel(BTGPanelView,false) -- 註冊最高層
 
-	-- 比對字串
-	local re = BTG.MatchItemFilter(itemName)
-	local name = 'yourself'
-	if receivedBy ~= nil then
-		name = receivedBy
-	end
-	if debug_mode then d('= = = = '..zo_strformat("<<1>>" , re.match)..' = = = =') end
-	if re.match then
-		BTG.AddDaddyListRow(name , itemName)
-		BTGLootTipView:SetHidden(false)
-	end
+	--local Storage = BTG.Storage
+	local SLGD = BTG.SLGD
+	local SLDD = BTG.SLDD
 
+	BTG.savedata = ZO_SavedVars:NewAccountWide('BTG_savedata',1,nil,init_savedef)
+    BTG.gearlistCTL = SLGD:New(BTG.savedata)
+    BTG.daddylistCTL = SLDD:New(BTG.savedata)
+
+	-- key bind controls
+	ZO_CreateStringId("SI_BINDING_NAME_SHOW_BTGPanelView", "toggle ui")
+	ZO_CreateStringId("SI_BINDING_NAME_DEV_BTGReloadUi", "reload interface")
+
+	-- BTGPanelView gear list
+    BTG.gearlist_NOTE_TYPE = 1
+    ZO_ScrollList_AddDataType(BTGPanelViewListGertBox, BTG.gearlist_NOTE_TYPE, "ListGertTpl", 190 , BTG.ListGertInitializeRow)
+    BTG.gearlistCTL:RegisterCallback("OnKeysUpdated", BTG.UpdateListGertBox)
+    BTG.UpdateListGertBox()
+    -- BTGPanelView daddy list
+    BTG.daddylist_NOTE_TYPE = 1
+    ZO_ScrollList_AddDataType(BTGPanelViewListDaddyBox, BTG.daddylist_NOTE_TYPE, "ListDaddyTpl", 130 , BTG.ListDaddyInitializeRow)
+    BTG.daddylistCTL:RegisterCallback("OnKeysUpdated", BTG.UpdateListDaddyBox)
+    BTG.UpdateListDaddyBox()
+
+	-- 物品撿取
+	EM:RegisterForEvent(self.ename, EVENT_LOOT_RECEIVED, self.OnLootReceived)
+	-- EVENT_MANAGER:UnregisterForEvent(moduleName, EVENT_LOOT_RECEIVED)
+
+	-- 一堆 TopLevel 視窗問題
+	EM:RegisterForEvent(self.ename,EVENT_NEW_MOVEMENT_IN_UI_MODE, function() BTG.toggleBTGPanelView(0) end)
+	ZO_PreHookHandler(ZO_PlayerInventory,'OnShow', function() BTG.setBTGPanelPos(ZO_PlayerInventory,-50) end)
+	ZO_PreHookHandler(ZO_PlayerInventory,'OnHide', BTG.resetBTGPanelPos)
+	ZO_PreHookHandler(ZO_Skills,'OnShow', function() BTG.toggleBTGPanelView(0) end)
+	ZO_PreHookHandler(ZO_ChampionPerks,'OnShow', function() BTG.toggleBTGPanelView(0) end)
+	ZO_PreHookHandler(BTGPanelView,'OnShow', function() BTG.toggleBTGLootTipView(0) end)
+	ZO_PreHookHandler(BTGPanelView,'OnHide', function() BTG.toggleBTGLootTipView(0) end)
+	ZO_PreHookHandler(BTGLootTipView,'OnMouseEnter', function() BTG.conmoveBTGLootTipView(1) end)
+	ZO_PreHookHandler(BTGLootTipView,'OnMouseExit', function() BTG.conmoveBTGLootTipView(0) end)
+	
+	-- 一些 SLASH COMMANDS 視窗問題
+	SLASH_COMMANDS["/btg"] = function()
+    	BTG.toggleBTGPanelView();
+    end
+    SLASH_COMMANDS["/btgt"] = function()
+    	BTG.toggleBTGLootTipView();
+    end
+	BTG:OnUiPosLoad()
 end
-
-
-
-
-
-
-
 
 function BTG.OnAddOnLoaded(event, addonName)
-	if addonName == BTG.name then
-		BTG:Initialize()
-	end
+	if addonName ~= BTG.name then return end
+	EM:UnregisterForEvent(BTG.ename,EVENT_ADD_ON_LOADED)
+	BTG:Initialize()
 end
 EM:RegisterForEvent(BTG.ename, EVENT_ADD_ON_LOADED, BTG.OnAddOnLoaded);
 
