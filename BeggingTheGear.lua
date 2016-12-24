@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.0'
+BTG.version = '1.0.1'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
