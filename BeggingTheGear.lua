@@ -430,7 +430,8 @@ end
 function BTG.TestByJelly()
 	local itemlink = BTGPanelViewInputTxtBoxInputTxt:GetText()
 	if itemlink == '' then
-		d(BTG.MatchItemFilter('|H1:item:97022:4:22:0:0:0:0:0:0:0:0:0:0:0:0:11:0:0:0:10000:0|h|h'))
+		BTG.toggleBTGLootTipView(1)
+		-- d(BTG.MatchItemFilter('|H1:item:97022:4:22:0:0:0:0:0:0:0:0:0:0:0:0:11:0:0:0:10000:0|h|h'))
 	else
 		d(BTG.MatchItemFilter(itemlink))
 	end
@@ -459,26 +460,32 @@ end
 function BTG.MatchItemFilter(itemlink)
 	local findmax = 1
 	local re = {
-		match_keyword = false,
-		match_equiptype = false,
-		match_equiptrait = false,
-		match_weapontype = false,
-		match_weapontrait = false,
-		match = false,
-		filterid = '',
+		match = false, -- 回傳 最終結果判斷
+		itemname = '',
+		itemtype = '',
+		itemkind = '',
+		itemtrait = '',
 		price = '',
+		filterid = '',
+		z_res = {},
 	}
 	-- 取得物品資料
 	local itemName = GetItemLinkName(itemlink)
+	re.itemname = itemName
 	local itemType = GetItemLinkItemType(itemlink) -- 1 武器 2 裝備
+	re.itemtype = itemType
 	local itemTrait = GetItemLinkTraitInfo(itemlink) -- 1 - 8 + 26 武器 11 - 18 + 25 裝備
+	re.itemtrait = itemTrait
+	local itemKind = 0
 	if itemType == 1 then
-		local itemKind = GetItemLinkWeaponType(itemlink) -- 1 單手斧 2 單手槌 3 單手劍 14 盾 11 匕首 8 弓 9 回杖 12 火杖 13 冰杖 15 電杖 4 雙手劍 5 雙手斧 6 雙手槌
+		itemKind = GetItemLinkWeaponType(itemlink) -- 1 單手斧 2 單手槌 3 單手劍 14 盾 11 匕首 8 弓 9 回杖 12 火杖 13 冰杖 15 電杖 4 雙手劍 5 雙手斧 6 雙手槌
 	elseif itemType == 2 then
-		local itemKind = GetItemLinkEquipType(itemlink) -- 1 頭 3 身 8 腰 9 褲 4 肩 10 腳 13 手 2 項鍊 12 戒指
+		itemKind = GetItemLinkEquipType(itemlink) -- 1 頭 3 身 8 腰 9 褲 4 肩 10 腳 13 手 2 項鍊 12 戒指
 	end
+	re.itemkind = itemKind
+
 	-- 整理資料
-	local str_search = string.lower(itemName)
+	local str2search = string.lower(itemName)
 
 	-- 不是 武器 裝備 不比對
 	if itemType == 1 or itemType == 2 then
@@ -487,60 +494,86 @@ function BTG.MatchItemFilter(itemlink)
 			if findmax < 1 then break end -- 如果已經找到了 就不找了
 
 			-- 整理資料
-			local str_keyword = string.lower(filter.keyword)
+			local str4keyword = string.lower(filter.keyword)
 			local need_equiptype = table.getn(filter.equiptype)
 			local need_equiptrait = table.getn(filter.equiptrait)
 			local need_weapontype = table.getn(filter.weapontype)
 			local need_weapontrait = table.getn(filter.weapontrait)
 
+			local match_1_keyword = false
+			local match_1_equiptype = false
+			local match_1_equiptrait = false
+			local match_1_weapontype = false
+			local match_1_weapontrait = false
+
+			local res = {
+				word = str2search,
+				key = str4keyword,
+				m_search = match_1_keyword,
+				m_e_type = match_1_equiptype,
+				m_e_trait = match_1_equiptrait,
+				m_w_type = match_1_weapontype,
+				m_w_trait = match_1_weapontrait,
+				n_e_type = need_equiptype,
+				n_e_trait = need_equiptrait,
+				n_w_type = need_weapontype,
+				n_w_trait = need_weapontrait,
+			}
+
 			-- 只處理 對應 如果沒有勾選 就直接當成比對成功
 			if itemType == 1 then
-				if need_weapontype == 0 then re.match_weapontype = true end
-				if need_weapontrait == 0 then re.match_weapontrait = true end
-				re.match_equiptype = true
-				re.match_equiptrait = true
+				if need_weapontype == 0 then match_1_weapontype = true end
+				if need_weapontrait == 0 then match_1_weapontrait = true end
+				match_1_equiptype = true
+				match_1_equiptrait = true
 			elseif itemType == 2 then
-				if need_equiptype == 0 then re.match_equiptype = true end
-				if need_equiptrait == 0 then re.match_equiptrait = true end
-				re.match_weapontype = true
-				re.match_weapontrait = true
+				if need_equiptype == 0 then match_1_equiptype = true end
+				if need_equiptrait == 0 then match_1_equiptrait = true end
+				match_1_weapontype = true
+				match_1_weapontrait = true
 			end
 
 			-- 只判斷有文字的
-			if filter.keyword ~= '' then
-				re.match_keyword = (string.match(str_search, str_keyword) ~= nil)
+			if str4keyword ~= '' then
+				match_1_keyword = (string.match(str2search, str4keyword) ~= nil)
+
 				-- 字串需要優先成立
-				if re.match_keyword then
+				if match_1_keyword then
 					-- 裝備位置
 					if itemType == 1 then
 						if need_weapontype > 0 then
-							re.match_weapontype = in_array( itemKind , filter.weapontype )
+							match_1_weapontype = in_array( itemKind , filter.weapontype )
 						end
 						if need_weapontrait > 0 then
-							re.match_weapontrait = in_array( itemTrait , filter.weapontrait )
+							match_1_weapontrait = in_array( itemTrait , filter.weapontrait )
 						end
 					elseif itemType == 2 then
 						if need_equiptype > 0 then
-							re.match_equiptype = in_array( itemKind , filter.equiptype )
+							match_1_equiptype = in_array( itemKind , filter.equiptype )
 						end
 						if need_equiptrait > 0 then
-							re.match_equiptrait = in_array( itemTrait , filter.equiptrait )
+							match_1_equiptrait = in_array( itemTrait , filter.equiptrait )
 						end
 					end
 				end
 			end
+
+			-- 存單一比對狀態
+			res.m_search = match_1_keyword
+			res.m_e_type = match_1_equiptype
+			res.m_e_trait = match_1_equiptrait
+			res.m_w_type = match_1_weapontype
+			res.m_w_trait = match_1_weapontrait
+			table.insert(re.z_res, res)
+
 			-- 若全部成立 修改 match 值
-			if re.match_keyword and  re.match_equiptype and  re.match_equiptrait and  re.match_weapontype and  re.match_weapontrait then
+			if match_1_keyword and match_1_equiptype and match_1_equiptrait and match_1_weapontype and match_1_weapontrait then
 				re.match = true
 				re.filterid = k
 				re.price = filter.price
 				findmax = 0
 			else
 				-- 洗掉
-				re.match_equiptype = false
-				re.match_equiptrait = false
-				re.match_weapontype = false
-				re.match_weapontrait = false
 				re.match = false
 				re.filterid = ''
 				re.price = ''
