@@ -494,6 +494,7 @@ function BTG.MatchItemFilter(itemlink)
 			if findmax < 1 then break end -- 如果已經找到了 就不找了
 
 			-- 整理資料
+			-- organized materials (@Rhyono)
 			local str4keyword = string.lower(filter.keyword)
 			local need_equiptype = table.getn(filter.equiptype)
 			local need_equiptrait = table.getn(filter.equiptrait)
@@ -521,25 +522,55 @@ function BTG.MatchItemFilter(itemlink)
 			}
 
 			-- 只處理 對應 如果沒有勾選 就直接當成比對成功
+			--  Only deal with the corresponding check if there is no direct success as a match (@Rhyono)
 			if itemType == 1 then
-				if need_weapontype == 0 then match_1_weapontype = true end
+				-- if need_weapontype == 0 then match_1_weapontype = true end (@Jelly ! bug)
+
+				--Check if any equipment is set; skip auto match weapon (@Rhyono)
+				if need_weapontype == 0 and need_equiptype ~= 0 then
+					--If any weapon traits set, still set true (@Rhyono)
+					if need_weapontrait ~= 0 then
+						match_1_weapontype = true
+					else	
+						match_1_weapontype = false
+					end	
+				else
+					match_1_weapontype = true
+				end	
+				
 				if need_weapontrait == 0 then match_1_weapontrait = true end
 				match_1_equiptype = true
 				match_1_equiptrait = true
 			elseif itemType == 2 then
-				if need_equiptype == 0 then match_1_equiptype = true end
+				--if need_equiptype == 0 then match_1_equiptype = true end (@Jelly ! bug)
+
+				--Check if any weapon is set; skip auto match equipment (@Rhyono)
+				if need_weapontype ~= 0 and need_equiptype == 0 then 
+					--If any equipment traits set, still set true (@Rhyono)
+					if need_equiptrait ~= 0 then
+						match_1_equiptype = true
+					else	
+						match_1_equiptype = false
+					end						
+				else
+					match_1_equiptype = true
+				end
+
 				if need_equiptrait == 0 then match_1_equiptrait = true end
 				match_1_weapontype = true
 				match_1_weapontrait = true
 			end
 
 			-- 只判斷有文字的
+			-- Only judge the text (@Rhyono)
 			if str4keyword ~= '' then
 				match_1_keyword = (string.match(str2search, str4keyword) ~= nil)
 
 				-- 字串需要優先成立
+				-- String needs priority (@Rhyono)
 				if match_1_keyword then
 					-- 裝備位置
+					-- Equipment location (@Rhyono)
 					if itemType == 1 then
 						if need_weapontype > 0 then
 							match_1_weapontype = in_array( itemKind , filter.weapontype )
@@ -559,6 +590,7 @@ function BTG.MatchItemFilter(itemlink)
 			end
 
 			-- 存單一比對狀態
+			-- Save a single match state (@Rhyono)
 			res.m_search = match_1_keyword
 			res.m_e_type = match_1_equiptype
 			res.m_e_trait = match_1_equiptrait
