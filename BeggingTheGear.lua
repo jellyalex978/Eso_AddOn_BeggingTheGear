@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.0.2'
+BTG.version = '1.0.4'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -472,6 +472,8 @@ function BTG.MatchItemFilter(itemlink)
 	-- 取得物品資料
 	local itemName = GetItemLinkName(itemlink)
 	re.itemname = itemName
+	-- re.itemQuality = GetItemLinkQuality(itemlink) -- 1白 2綠 3 藍 4紫 5 金
+	-- re.itemQuality = GetString('SI_ITEMQUALITY',GetItemLinkQuality(itemlink))
 	local itemType = GetItemLinkItemType(itemlink) -- 1 武器 2 裝備
 	re.itemtype = itemType
 	local itemTrait = GetItemLinkTraitInfo(itemlink) -- 1 - 8 + 26 武器 11 - 18 + 25 裝備
