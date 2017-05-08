@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.1.0'
+BTG.version = '1.1.1'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -531,6 +531,7 @@ function BTG.TestByJelly()
 		local str = table2string(tbl).."\n"
 		str = str.."match : "..tostring(tbl.match).."\n"
 		str = str.."filterid : "..tostring(tbl.filterid).."\n"
+		str = str.."filterkeyword : "..tostring(tbl.filterkeyword).."\n"
 		BTGPanelViewLogTxtBoxVal:SetText(str)
 		BTGPanelViewLogTxtBox:SetHidden(false)
 	end
@@ -566,6 +567,7 @@ function BTG.MatchItemFilter(itemlink)
 		itemtrait = '', -- 物品特性
 		price = '', -- 設定金額
 		filterid = '', -- 和第幾項比對成功
+		filterkeyword = '', -- 和第幾項字串成功
 		itemstring = '', -- 物品名稱轉小寫比對用
 		z_res = {}, -- 比對歷程
 	}
@@ -610,10 +612,12 @@ function BTG.MatchItemFilter(itemlink)
 			-- 判斷資料 不須判斷的 直接設定成比對成功
 			if re.itemtype == 1 then
 				-- 如果 沒選武器 直接比對成功
-				if res.n_w_type == 0 then
+				if res.n_w_type == 0 and res.n_e_type == 0 and res.n_e_trait == 0 then
 					res.m_w_type = true
 				end
-
+				if res.n_w_type == 0 and res.n_w_trait ~= 0 then
+					res.m_w_type = true
+				end
 				if re.itemkind == 14 then
 					-- 盾的特性判斷 裝備
 					if res.n_e_trait == 0 then
@@ -629,10 +633,12 @@ function BTG.MatchItemFilter(itemlink)
 				res.m_e_type = true
 			elseif re.itemtype == 2 then
 				-- 如果 沒選裝備 直接比對成功
-				if res.n_e_type == 0 then
+				if res.n_e_type == 0 and res.n_w_type == 0 and res.n_w_trait == 0 then
 					res.m_e_type = true
 				end
-
+				if res.n_e_type == 0 and res.n_e_trait ~= 0 then
+					res.m_e_type = true
+				end
 				if re.itemkind == 2 or re.itemkind == 12 then
 					-- 如果 是 項鍊 戒指 裝備特性 直接比對成功
 					res.m_e_trait = true
@@ -673,12 +679,14 @@ function BTG.MatchItemFilter(itemlink)
 			if res.m_k_word and res.m_e_type and res.m_e_trait and res.m_w_type and res.m_w_trait then
 				re.match = true
 				re.filterid = k
+				re.filterkeyword = res.m_k_word
 				re.price = filter.price
 				findmax = 0
 			else
 				-- 洗掉
 				re.match = false
 				re.filterid = ''
+				re.filterkeyword = ''
 				re.price = ''
 			end
 		end
