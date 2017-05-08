@@ -4,6 +4,9 @@
 			<Action name="SHOW_BTGPanelView">
 				<Down>BTG.toggleBTGPanelView()</Down>
 			</Action>
+			<Action name="SHOW_BTGLootTipView">
+				<Down>BTG.toggleBTGLootTipView()</Down>
+			</Action>
 			<Action name="DEV_BTGReloadUi">
                 <Down>dev_reloadui()</Down>
             </Action>

@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.0.4'
+BTG.version = '1.1.0'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -82,6 +82,100 @@ function findArrThenBack( curl , arr , val )
 	end
 	return arr
 end
+-- tab 轉 字串
+-- http://stackoverflow.com/questions/9168058/how-to-dump-a-table-to-console
+-- Alundaio @ answered Feb 6 at 7:23
+function table2string(node)
+    -- to make output beautiful
+    local function tab(amt)
+        local str = ""
+        for i=1,amt do
+            str = str .. "--"
+        end
+        return str
+    end
+
+    local cache, stack, output = {},{},{}
+    local depth = 1
+    local output_str = "{\n"
+
+    while true do
+        local size = 0
+        for k,v in pairs(node) do
+            size = size + 1
+        end
+
+        local cur_index = 1
+        for k,v in pairs(node) do
+            if (cache[node] == nil) or (cur_index >= cache[node]) then
+
+                if (string.find(output_str,"}",output_str:len())) then
+                    output_str = output_str .. ",\n"
+                elseif not (string.find(output_str,"\n",output_str:len())) then
+                    output_str = output_str .. "\n"
+                end
+
+                -- This is necessary for working with HUGE tables otherwise we run out of memory using concat on huge strings
+                table.insert(output,output_str)
+                output_str = ""
+
+                local key
+                if (type(k) == "number" or type(k) == "boolean") then
+                    key = "["..tostring(k).."]"
+                else
+                    key = "['"..tostring(k).."']"
+                end
+
+                if (type(v) == "number" or type(v) == "boolean") then
+                    output_str = output_str .. tab(depth) .. key .. " = "..tostring(v)
+                elseif (type(v) == "table") then
+                    output_str = output_str .. tab(depth) .. key .. " = {\n"
+                    table.insert(stack,node)
+                    table.insert(stack,v)
+                    cache[node] = cur_index+1
+                    break
+                else
+                    output_str = output_str .. tab(depth) .. key .. " = '"..tostring(v).."'"
+                end
+
+                if (cur_index == size) then
+                    output_str = output_str .. "\n" .. tab(depth-1) .. "}"
+                else
+                    output_str = output_str .. ","
+                end
+            else
+                -- close the table
+                if (cur_index == size) then
+                    output_str = output_str .. "\n" .. tab(depth-1) .. "}"
+                end
+            end
+
+            cur_index = cur_index + 1
+        end
+
+        if (size == 0) then
+            output_str = output_str .. "\n" .. tab(depth-1) .. "}"
+        end
+
+        if (#stack > 0) then
+            node = stack[#stack]
+            stack[#stack] = nil
+            depth = cache[node] == nil and depth + 1 or depth - 1
+        else
+            break
+        end
+    end
+
+    -- This is necessary for working with HUGE tables otherwise we run out of memory using concat on huge strings
+    table.insert(output,output_str)
+    output_str = table.concat(output)
+
+    return output_str
+end
+
+
+
+
 
 ----------------------------------------
 -- ZO_ScrollList @ ListGert Start
@@ -433,7 +527,12 @@ function BTG.TestByJelly()
 		BTG.toggleBTGLootTipView(1)
 		-- d(BTG.MatchItemFilter('|H1:item:97022:4:22:0:0:0:0:0:0:0:0:0:0:0:0:11:0:0:0:10000:0|h|h'))
 	else
-		d(BTG.MatchItemFilter(itemlink))
+		local tbl = BTG.MatchItemFilter(itemlink)
+		local str = table2string(tbl).."\n"
+		str = str.."match : "..tostring(tbl.match).."\n"
+		str = str.."filterid : "..tostring(tbl.filterid).."\n"
+		BTGPanelViewLogTxtBoxVal:SetText(str)
+		BTGPanelViewLogTxtBox:SetHidden(false)
 	end
 end
 ----------------------------------------
@@ -458,150 +557,120 @@ function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound
 end
 
 function BTG.MatchItemFilter(itemlink)
-	local findmax = 1
+	local findmax = 1 -- 最多比對成功次數
 	local re = {
 		match = false, -- 回傳 最終結果判斷
-		itemname = '',
-		itemtype = '',
-		itemkind = '',
-		itemtrait = '',
-		price = '',
-		filterid = '',
-		z_res = {},
+		itemname = '', -- 物品名稱
+		itemtype = '', -- 物品分類
+		itemkind = '', -- 物品部位或種類
+		itemtrait = '', -- 物品特性
+		price = '', -- 設定金額
+		filterid = '', -- 和第幾項比對成功
+		itemstring = '', -- 物品名稱轉小寫比對用
+		z_res = {}, -- 比對歷程
 	}
+
 	-- 取得物品資料
-	local itemName = GetItemLinkName(itemlink)
-	re.itemname = itemName
+	re.itemname = GetItemLinkName(itemlink)
+	re.itemstring = string.lower(re.itemname) -- 物品字串轉小寫來比對
 	-- re.itemQuality = GetItemLinkQuality(itemlink) -- 1白 2綠 3 藍 4紫 5 金
 	-- re.itemQuality = GetString('SI_ITEMQUALITY',GetItemLinkQuality(itemlink))
-	local itemType = GetItemLinkItemType(itemlink) -- 1 武器 2 裝備
-	re.itemtype = itemType
-	local itemTrait = GetItemLinkTraitInfo(itemlink) -- 1 - 8 + 26 武器 11 - 18 + 25 裝備
-	re.itemtrait = itemTrait
-	local itemKind = 0
-	if itemType == 1 then
-		itemKind = GetItemLinkWeaponType(itemlink) -- 1 單手斧 2 單手槌 3 單手劍 14 盾 11 匕首 8 弓 9 回杖 12 火杖 13 冰杖 15 電杖 4 雙手劍 5 雙手斧 6 雙手槌
-	elseif itemType == 2 then
-		itemKind = GetItemLinkEquipType(itemlink) -- 1 頭 3 身 8 腰 9 褲 4 肩 10 腳 13 手 2 項鍊 12 戒指
+	re.itemtype = GetItemLinkItemType(itemlink) -- 1 武器 2 裝備
+	re.itemtrait = GetItemLinkTraitInfo(itemlink) -- 1 - 8 + 26 武器 11 - 18 + 25 裝備
+	if re.itemtype == 1 then
+		re.itemkind = GetItemLinkWeaponType(itemlink) -- 1 單手斧 2 單手槌 3 單手劍 14 盾 11 匕首 8 弓 9 回杖 12 火杖 13 冰杖 15 電杖 4 雙手劍 5 雙手斧 6 雙手槌
+	elseif re.itemtype == 2 then
+		re.itemkind = GetItemLinkEquipType(itemlink) -- 1 頭 3 身 8 腰 9 褲 4 肩 10 腳 13 手 2 項鍊 12 戒指
 	end
-	re.itemkind = itemKind
-
-	-- 整理資料
-	local str2search = string.lower(itemName)
 
 	-- 不是 武器 裝備 不比對
-	if itemType == 1 or itemType == 2 then
+	if re.itemtype == 1 or re.itemtype == 2 then
 		-- 輪巡 gearlist
 		for k,filter in pairs(BTG.savedata.gearlist) do
 			if findmax < 1 then break end -- 如果已經找到了 就不找了
 
-			-- 整理資料
-			-- organized materials (@Rhyono)
-			local str4keyword = string.lower(filter.keyword)
-			local need_equiptype = table.getn(filter.equiptype)
-			local need_equiptrait = table.getn(filter.equiptrait)
-			local need_weapontype = table.getn(filter.weapontype)
-			local need_weapontrait = table.getn(filter.weapontrait)
-
-			local match_1_keyword = false
-			local match_1_equiptype = false
-			local match_1_equiptrait = false
-			local match_1_weapontype = false
-			local match_1_weapontrait = false
-
+			-- 預設比對資料
 			local res = {
-				word = str2search,
-				key = str4keyword,
-				m_search = match_1_keyword,
-				m_e_type = match_1_equiptype,
-				m_e_trait = match_1_equiptrait,
-				m_w_type = match_1_weapontype,
-				m_w_trait = match_1_weapontrait,
-				n_e_type = need_equiptype,
-				n_e_trait = need_equiptrait,
-				n_w_type = need_weapontype,
-				n_w_trait = need_weapontrait,
+				keyword = string.lower(filter.keyword),
+				m_k_word = false, -- 字串 比對結果
+				n_e_type = 0, --要比對的 裝備分類 總數
+				m_e_type = false, -- 裝備分類 比對結果
+				n_e_trait = 0, --要比對的 裝備特性 總數
+				m_e_trait = false, -- 裝備特性 比對結果
+				n_w_type = 0, --要比對的 武器分類 總數
+				m_w_type = false, -- 武器分類 比對結果
+				n_w_trait = 0, --要比對的 武器特性 總數
+				m_w_trait = false, -- 武器特性 比對結果
 			}
+			res.n_e_type = table.getn(filter.equiptype) --要比對的 裝備分類 總數
+			res.n_e_trait = table.getn(filter.equiptrait) --要比對的 裝備特性 總數
+			res.n_w_type = table.getn(filter.weapontype) --要比對的 武器分類 總數
+			res.n_w_trait = table.getn(filter.weapontrait) --要比對的 武器特性 總數
 
-			-- 只處理 對應 如果沒有勾選 就直接當成比對成功
-			--  Only deal with the corresponding check if there is no direct success as a match (@Rhyono)
-			if itemType == 1 then
-				-- if need_weapontype == 0 then match_1_weapontype = true end (@Jelly ! bug)
-
-				--Check if any equipment is set; skip auto match weapon (@Rhyono)
-				if need_weapontype == 0 and need_equiptype ~= 0 then
-					--If any weapon traits set, still set true (@Rhyono)
-					if need_weapontrait ~= 0 then
-						match_1_weapontype = true
-					else	
-						match_1_weapontype = false
-					end	
-				else
-					match_1_weapontype = true
-				end	
-				
-				if need_weapontrait == 0 then match_1_weapontrait = true end
-				match_1_equiptype = true
-				match_1_equiptrait = true
-			elseif itemType == 2 then
-				--if need_equiptype == 0 then match_1_equiptype = true end (@Jelly ! bug)
-
-				--Check if any weapon is set; skip auto match equipment (@Rhyono)
-				if need_weapontype ~= 0 and need_equiptype == 0 then 
-					--If any equipment traits set, still set true (@Rhyono)
-					if need_equiptrait ~= 0 then
-						match_1_equiptype = true
-					else	
-						match_1_equiptype = false
-					end						
-				else
-					match_1_equiptype = true
+			-- 判斷資料 不須判斷的 直接設定成比對成功
+			if re.itemtype == 1 then
+				-- 如果 沒選武器 直接比對成功
+				if res.n_w_type == 0 then
+					res.m_w_type = true
 				end
 
-				if need_equiptrait == 0 then match_1_equiptrait = true end
-				match_1_weapontype = true
-				match_1_weapontrait = true
+				if re.itemkind == 14 then
+					-- 盾的特性判斷 裝備
+					if res.n_e_trait == 0 then
+						res.m_e_trait = true
+					end
+					res.m_w_trait = true
+				else	
+					if res.n_w_trait == 0 then
+						res.m_w_trait = true
+					end
+					res.m_e_trait = true
+				end	
+				res.m_e_type = true
+			elseif re.itemtype == 2 then
+				-- 如果 沒選裝備 直接比對成功
+				if res.n_e_type == 0 then
+					res.m_e_type = true
+				end
+
+				if re.itemkind == 2 or re.itemkind == 12 then
+					-- 如果 是 項鍊 戒指 裝備特性 直接比對成功
+					res.m_e_trait = true
+				else
+					if res.n_e_trait == 0 then
+						res.m_e_trait = true
+					end
+				end
+				res.m_w_type = true
+				res.m_w_trait = true
 			end
 
 			-- 只判斷有文字的
-			-- Only judge the text (@Rhyono)
-			if str4keyword ~= '' then
-				match_1_keyword = (string.match(str2search, str4keyword) ~= nil)
-
-				-- 字串需要優先成立
-				-- String needs priority (@Rhyono)
-				if match_1_keyword then
-					-- 裝備位置
-					-- Equipment location (@Rhyono)
-					if itemType == 1 then
-						if need_weapontype > 0 then
-							match_1_weapontype = in_array( itemKind , filter.weapontype )
-						end
-						if need_weapontrait > 0 then
-							match_1_weapontrait = in_array( itemTrait , filter.weapontrait )
-						end
-					elseif itemType == 2 then
-						if need_equiptype > 0 then
-							match_1_equiptype = in_array( itemKind , filter.equiptype )
-						end
-						if need_equiptrait > 0 then
-							match_1_equiptrait = in_array( itemTrait , filter.equiptrait )
-						end
+			if res.keyword ~= '' then
+				res.m_k_word = (string.match(re.itemstring, res.keyword) ~= nil)
+				-- 字串需要優先成立 才比對其他
+				if res.m_k_word then
+					-- 比對 需求 > 0 + 尚未確定比對結果的
+					if res.n_e_type > 0 and res.m_e_type == false then
+						res.m_e_type = in_array( re.itemkind , filter.equiptype )
+					end
+					if res.n_e_trait > 0 and res.m_e_trait == false then
+						res.m_e_trait = in_array( re.itemtrait , filter.equiptrait )
+					end
+					if res.n_w_type > 0 and res.m_w_type == false then
+						res.m_w_type = in_array( re.itemkind , filter.weapontype )
+					end
+					if res.n_w_trait > 0 and res.m_w_trait == false then
+						res.m_w_trait = in_array( re.itemtrait , filter.weapontrait )
 					end
 				end
 			end
 
-			-- 存單一比對狀態
-			-- Save a single match state (@Rhyono)
-			res.m_search = match_1_keyword
-			res.m_e_type = match_1_equiptype
-			res.m_e_trait = match_1_equiptrait
-			res.m_w_type = match_1_weapontype
-			res.m_w_trait = match_1_weapontrait
+			-- 存 log
 			table.insert(re.z_res, res)
 
 			-- 若全部成立 修改 match 值
-			if match_1_keyword and match_1_equiptype and match_1_equiptrait and match_1_weapontype and match_1_weapontrait then
+			if res.m_k_word and res.m_e_type and res.m_e_trait and res.m_w_type and res.m_w_trait then
 				re.match = true
 				re.filterid = k
 				re.price = filter.price
@@ -637,6 +706,7 @@ function BTG:Initialize()
 
 	-- key bind controls
 	ZO_CreateStringId("SI_BINDING_NAME_SHOW_BTGPanelView", "toggle ui")
+	ZO_CreateStringId("SI_BINDING_NAME_SHOW_BTGLootTipView", "toggle alert icon")
 	ZO_CreateStringId("SI_BINDING_NAME_DEV_BTGReloadUi", "reload interface")
 
 	-- BTGPanelView gear list
@@ -661,7 +731,9 @@ function BTG:Initialize()
 	ZO_PreHookHandler(ZO_Skills,'OnShow', function() BTG.toggleBTGPanelView(0) end)
 	ZO_PreHookHandler(ZO_ChampionPerks,'OnShow', function() BTG.toggleBTGPanelView(0) end)
 	ZO_PreHookHandler(BTGPanelView,'OnShow', function() BTG.toggleBTGLootTipView(0) end)
-	ZO_PreHookHandler(BTGPanelView,'OnHide', function() BTG.toggleBTGLootTipView(0) end)
+	ZO_PreHookHandler(BTGPanelView,'OnHide', function() BTG.toggleBTGLootTipView(0); BTGPanelViewLogTxtBox:SetHidden(true); end)
+	
+
 	ZO_PreHookHandler(BTGLootTipView,'OnMouseEnter', function() BTG.conmoveBTGLootTipView(1) end)
 	ZO_PreHookHandler(BTGLootTipView,'OnMouseExit', function() BTG.conmoveBTGLootTipView(0) end)
 	
@@ -679,6 +751,10 @@ function BTG.OnAddOnLoaded(event, addonName)
 	if addonName ~= BTG.name then return end
 	EM:UnregisterForEvent(BTG.ename,EVENT_ADD_ON_LOADED)
 	BTG:Initialize()
+
+	SLASH_COMMANDS["/j1"] = function()
+        d('OnAddOnLoaded')
+    end
 end
 EM:RegisterForEvent(BTG.ename, EVENT_ADD_ON_LOADED, BTG.OnAddOnLoaded);
 

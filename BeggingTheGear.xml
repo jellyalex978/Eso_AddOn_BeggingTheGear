@@ -18,7 +18,7 @@
                     <Anchor offsetX="0" offsetY="45" point="BOTTOMRIGHT" relativePoint="TOPRIGHT" />
                     <Controls>
                         <Label name="$(parent)Title" color="FFFFFF" font="BTGFont">
-                            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Anchor offsetX="10" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                             <OnInitialized>self:SetText(&quot;|cFFAA33&quot;..BTG.name..&quot;|r &quot;..BTG.version)</OnInitialized>
                         </Label>
                         <Backdrop name="$(parent)CloseBox" centerColor="00000000" edgeColor="00000000">
@@ -37,7 +37,7 @@
                             </Controls>
                         </Backdrop>
                         <Button name="$(parent)BtnTest" clickSound="Click" tier="1">
-                            <Anchor offsetX="-28" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Anchor offsetX="-30" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                             <Dimensions x="25" y="25"/>
                             <Textures normal="esoui\art\icons\mapkey\mapkey_areaofinterest.dds"/>
                             <OnClicked>BTG.TestByJelly()</OnClicked>
@@ -70,6 +70,11 @@
                         </Button>
                     </Controls>
                 </Backdrop>
+                <Button name="$(parent)BtnAlertIcon" text="AlertIcon" inherits="ZO_DefaultButton" font="BTGFontSmall" >
+                    <Anchor offsetX="-90" offsetY="15" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
+                    <Dimensions x="80" y="30"/>
+                    <OnClicked>BTG.toggleBTGLootTipView()</OnClicked>
+                </Button>
                 <Button name="$(parent)BtnDelListGert" text="Clear All" inherits="ZO_DefaultButton" font="BTGFontSmall" >
                     <Anchor offsetX="5" offsetY="15" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                     <Dimensions x="100" y="30"/>
@@ -80,14 +85,28 @@
                     <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" offsetX="420" offsetY="-10" />
                 </Control>
                 <Button name="$(parent)BtnDelListDaddy" text="Clear All" inherits="ZO_DefaultButton" font="BTGFontSmall" >
-                    <Anchor offsetX="-15" offsetY="15" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
-                    <Dimensions x="100" y="30"/>
+                    <Anchor offsetX="0" offsetY="15" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
+                    <Dimensions x="80" y="30"/>
                     <OnClicked>BTG.DelAllDaddyListRow()</OnClicked>
                 </Button>
                 <Control name="$(parent)ListDaddyBox" inherits="ZO_ScrollList">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="425" offsetY="55" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" offsetX="-10" offsetY="-10" />
                 </Control>
+                <Backdrop name="$(parent)LogTxtBox" hidden="true" centerColor="00000000" edgeColor="00000000">
+                    <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPRIGHT" />
+                    <Anchor offsetX="300" offsetY="0" point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
+                    <Controls>
+                        <Backdrop name="$(parent)Bg" centerColor="43443D" edgeColor="00000000" alpha="0.9">
+                            <AnchorFill/>
+                            <Edge edgeSize="1"/>
+                        </Backdrop>
+                        <EditBox name="$(parent)Val" color="FFFFFF" font="BTGFont" horizontalAlignment="LEFT" verticalAlignment="CENTER" text="" editEnabled="true" maxInputCharacters="10000" multiLine="true" newLineEnabled="true" inherits="ZO_DefaultEditMultiLineForBackdrop">
+                            <Anchor offsetX="5" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" />
+                            <Anchor offsetX="5" offsetY="5" point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
+                        </EditBox>
+                    </Controls>
+                </Backdrop>
             </Controls>
         </TopLevelControl>
         <TopLevelControl name="BTGLootTipView" hidden="true" mouseEnabled="true" movable="true">
@@ -112,7 +131,6 @@
                 </Backdrop>
             </Controls>
         </TopLevelControl>
-        
         <TopLevelControl name="BTGTooltipTopLevel" inherits="TooltipTopLevel">
             <Controls>
                 <Tooltip name="BTGTooltip" inherits="ZO_ItemIconTooltip" />
