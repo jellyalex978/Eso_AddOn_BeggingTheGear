@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.1.1'
+BTG.version = '1.2.1'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -67,6 +67,15 @@ function in_array( val , arr )
 		end
 	end
 	return findstatus
+end
+-- 亂摳一個排序
+function sortByFilterKeyword(a, b)
+	return a.keyword < b.keyword
+-- 　if a.level == b.level then
+-- 　　return a.　keyword < b.　keyword
+-- 　else
+-- 　　return a.level < b.level
+-- 　end
 end
 -- 亂寫一個n陣列處理
 function findArrThenBack( curl , arr , val )
@@ -243,6 +252,7 @@ function BTG.AddGearListFilter()
 		}
 		filter.keyword = keyword
 		table.insert(BTG.savedata.gearlist , filter)
+		table.sort(BTG.savedata.gearlist, sortByFilterKeyword)
 		BTG.UpdateListGertBox()
 	end
 	BTGPanelViewInputTxtBoxInputTxt:LoseFocus()
@@ -251,6 +261,7 @@ end
 function BTG.DelGearListFilter(tar)
 	local keyid = tar:GetParent().keyid
 	table.remove(BTG.savedata.gearlist , keyid)
+	table.sort(BTG.savedata.gearlist, sortByFilterKeyword)
 	BTG.UpdateListGertBox()
 end
 
@@ -258,6 +269,7 @@ function BTG.DelAllGearListFilter()
 	for i=1,table.getn(BTG.savedata.gearlist) do
 		table.remove(BTG.savedata.gearlist , 1)
 	end
+	table.sort(BTG.savedata.gearlist, sortByFilterKeyword)
 	BTG.UpdateListGertBox()
 end
 
@@ -268,6 +280,7 @@ function BTG.UpdateGearListKeyword(tar)
 		BTG.savedata.gearlist[keyid].keyword = keyword
 	else
 		table.remove(BTG.savedata.gearlist , keyid)
+		table.sort(BTG.savedata.gearlist, sortByFilterKeyword)
 		BTG.UpdateListGertBox()
 	end
 	tar:LoseFocus()
