@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.2.1'
+BTG.version = '1.3.0'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -369,6 +369,7 @@ function BTG.UpdateListDaddyBox()
 end
 
 function BTG.AddDaddyListRow(user , itemlink)
+	d(user)
 	if user ~= '' and itemlink ~= '' then
 		local daddy = {
 			username = user,
@@ -395,10 +396,20 @@ end
 function BTG.BeggingDaddyListRow(tar , act)
 	local keyid = tar:GetParent().keyid
 	local daddy = BTG.savedata.daddylist[keyid]
+	local isay = ''
+	local channel = '/say'
 	if act == 1 then
-		local isay = "BTG :: "..zo_strformat("<<1>>", daddy.username).." !!  Can I have your "..zo_strformat("<<1>>", daddy.itemlink).." , if you don't need?"
-		local channel = IsUnitGrouped('player') and "/p " or "/say "
-
+		--if( IsUnitGrouped('player') ) then
+		if( IsUnitGrouped('player') ) then
+			isay = "BTG :: "..zo_strformat("<<1>>", daddy.username).." !!  Can I have your "..zo_strformat("<<1>>", daddy.itemlink).." , if you don't need?"
+			channel = "/p "
+		else
+			-- @SilverWF idea , notwork
+			-- isay = " BTG :: Can I have your "..zo_strformat("<<1>>", daddy.itemlink)..", if you don't need it, please?"
+			-- channel = "/w "..zo_strformat("<<1>>", daddy.username)
+			isay = "BTG :: "..zo_strformat("<<1>>", daddy.username).." !!  Can I have your "..zo_strformat("<<1>>", daddy.itemlink).." , if you don't need?"
+			channel = "/say "
+		end
 		isayToChat(channel..isay)
 	else
 		-- StartChatInput(isay, channel, target)
@@ -408,13 +419,21 @@ end
 function BTG.PriceDaddyListRow(tar , act)
 	local keyid = tar:GetParent().keyid
 	local daddy = BTG.savedata.daddylist[keyid]
-
 	local re = BTG.MatchItemFilter(daddy.itemlink)
+	local isay = ''
+	local channel = '/say'
 	if re.match then
 		if act == 1 then
-			local isay = "BTG :: "..zo_strformat("<<1>>", daddy.username).." !!  Can I offer $"..zo_strformat("<<1>>", re.price).." to buy your "..zo_strformat("<<1>>", daddy.itemlink).." , if you don't need ?"
-			local channel = IsUnitGrouped('player') and "/p " or "/say "
-
+			if( IsUnitGrouped('player') ) then
+				isay = "BTG :: "..zo_strformat("<<1>>", daddy.username).." !!  Can I offer $"..zo_strformat("<<1>>", re.price).." to buy your "..zo_strformat("<<1>>", daddy.itemlink).." , if you don't need ?"
+				channel = "/p "
+			else
+				-- @SilverWF idea , notwork
+				-- isay = " BTG :: Can I offer $"..zo_strformat("<<1>>", re.price).." to buy your "..zo_strformat("<<1>>", daddy.itemlink).." , if you don't need ?"
+				-- channel = "/w "..zo_strformat("<<1>>", daddy.username)
+				isay = "BTG :: "..zo_strformat("<<1>>", daddy.username).." !!  Can I offer $"..zo_strformat("<<1>>", re.price).." to buy your "..zo_strformat("<<1>>", daddy.itemlink).." , if you don't need ?"
+				channel = "/say "
+			end
 			isayToChat(channel..isay)
 		else
 			-- StartChatInput(isay, channel, target)
