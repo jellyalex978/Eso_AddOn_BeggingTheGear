@@ -179,6 +179,32 @@
                     <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
                     <OnEnter>BTG.UpdateGearListPrice(self)</OnEnter>
                 </EditBox>
+                
+
+
+                <Backdrop name="$(parent)FilterThingBox" centerColor="00000000" edgeColor="00000000">
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="0" offsetY="35" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="TOPLEFT" offsetX="35" offsetY="35" />
+                    <Controls>
+                        <Backdrop name="$(parent)ThingType_999" centerColor="00000000" edgeColor="00000000">
+                            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Dimensions x="30" y="30"/>
+                            <Controls>
+                                <Button clickSound="Click" name="$(parent)Btn">
+                                    <AnchorFill/>
+                                    <Textures normal="esoui/art/inventory/inventory_all_tabicon_inactive.dds" />
+                                    <OnClicked>BTG.OnFilterClick(self , 'TType' , 999)</OnClicked>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'check item too')</OnMouseEnter>
+                                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+                                </Button>
+                            </Controls>
+                        </Backdrop>
+                    </Controls>
+                </Backdrop>
+
+
+
+
                 <Backdrop name="$(parent)FilterGearBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="35" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="65" />
