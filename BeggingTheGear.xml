@@ -154,15 +154,22 @@
                 </Button>
                 <Backdrop name="$(parent)InputKeywordBg" centerColor="43443D" edgeColor="00000000">
                     <Anchor offsetX="35" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="215" y="30"/>
+                    <Dimensions x="190" y="30"/>
                 </Backdrop>
                 <EditBox name="$(parent)InputKeyword" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
                     <Anchor offsetX="45" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
-                    <Dimensions x="195" y="30"/>
+                    <Dimensions x="170" y="30"/>
                     <OnFocusGained>BTG.GearListInputTip(1 , self)</OnFocusGained>
                     <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
                     <OnEnter>BTG.UpdateGearListKeyword(self)</OnEnter>
                 </EditBox>
+                <Button name="$(parent)CallIIfA" clickSound="Click">
+                    <Anchor offsetX="230" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="25" y="25"/>
+                    <Textures normal="esoui/art/inventory/inventory_tabicon_all_up.dds" />
+                    <Textures mouseOver="/esoui/art/inventory/inventory_tabicon_all_over.dds" normal="esoui/art/inventory/inventory_tabicon_all_up.dds" pressed="/esoui/art/inventory/inventory_tabicon_all_down.dds"/>
+                    <OnClicked>BTG.CallIIfA2showme(self)</OnClicked>
+                </Button>
                 <Button name="$(parent)IconPrice" clickSound="Click">
                     <Anchor offsetX="255" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="25" y="25"/>

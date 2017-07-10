@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.5.0'
+BTG.version = '1.6.0'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -286,6 +286,21 @@ function BTG.DelGearListFilter(tar)
 	table.remove(BTG.savedata.gearlist , keyid)
 	table.sort(BTG.savedata.gearlist, sortByFilterKeyword)
 	BTG.UpdateListGertBox()
+end
+
+function BTG.CallIIfA2showme(tar)
+	if IIfA ~= nil then
+		local keyid = tar:GetParent().keyid
+		local keyword = BTG.savedata.gearlist[keyid].keyword
+		IIFA_GUI_SearchBox:SetText(keyword)
+
+		if IIFA_GUI:IsHidden() then
+			IIfA:ToggleInventoryFrame()
+		end
+	else
+		d('please install addon : Inventory Insight (3.0)')
+		d('http://www.esoui.com/downloads/info731-InventoryInsight.html')
+	end
 end
 
 function BTG.DelAllGearListFilter()
