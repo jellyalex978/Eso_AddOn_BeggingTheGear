@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.6.0'
+BTG.version = '1.7.0'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -300,6 +300,43 @@ function BTG.CallIIfA2showme(tar)
 	else
 		d('please install addon : Inventory Insight (3.0)')
 		d('http://www.esoui.com/downloads/info731-InventoryInsight.html')
+	end
+end
+--jellyIIFAMenuOption
+function BTG:showItemName2IIFA(itemLink)
+	itemname = GetItemLinkName(itemLink)
+	if IIfA ~= nil then
+		IIFA_GUI_SearchBox:SetText(itemname)
+		if IIFA_GUI:IsHidden() then
+			IIfA:ToggleInventoryFrame()
+		end
+	else
+		d('please install addon : Inventory Insight (3.0)')
+		d('http://www.esoui.com/downloads/info731-InventoryInsight.html')
+	end
+end
+function BTG:copyItemName2IIFA(inventorySlot)
+	if IIfA ~= nil then
+		local st = ZO_InventorySlot_GetType(inventorySlot)
+	    link = nil
+	    if st == SLOT_TYPE_ITEM or st == SLOT_TYPE_EQUIPMENT or st == SLOT_TYPE_BANK_ITEM or st == SLOT_TYPE_GUILD_BANK_ITEM or 
+	       st == SLOT_TYPE_TRADING_HOUSE_POST_ITEM or st == SLOT_TYPE_REPAIR or st == SLOT_TYPE_CRAFTING_COMPONENT or st == SLOT_TYPE_PENDING_CRAFTING_COMPONENT or 
+	       st == SLOT_TYPE_PENDING_CRAFTING_COMPONENT or st == SLOT_TYPE_PENDING_CRAFTING_COMPONENT or st == SLOT_TYPE_CRAFT_BAG_ITEM then
+	        local bag, index = ZO_Inventory_GetBagAndIndex(inventorySlot)
+	        link = GetItemLink(bag, index)
+	    end
+	    if st == SLOT_TYPE_TRADING_HOUSE_ITEM_RESULT then
+	        link = GetTradingHouseSearchResultItemLink(ZO_Inventory_GetSlotIndex(inventorySlot))
+	    end
+	    if st == SLOT_TYPE_TRADING_HOUSE_ITEM_LISTING then
+	        link = GetTradingHouseListingItemLink(ZO_Inventory_GetSlotIndex(inventorySlot), linkStyle)
+	    end
+	    if (link and string.match(link, '|H.-:item:(.-):')) then 
+			zo_callLater(function() 
+				AddMenuItem('BTG-Check IIFA', function() BTG:showItemName2IIFA(link) end, MENU_ADD_OPTION_LABEL)
+	            ShowMenu(self) 
+	        end, 50)
+	    end
 	end
 end
 
@@ -848,6 +885,9 @@ function BTG:Initialize()
 	ZO_PreHookHandler(BTGLootTipView,'OnMouseEnter', function() BTG.conmoveBTGLootTipView(1) end)
 	ZO_PreHookHandler(BTGLootTipView,'OnMouseExit', function() BTG.conmoveBTGLootTipView(0) end)
 
+	--jelly add menu opt item to iifa
+    ZO_PreHook('ZO_InventorySlot_ShowContextMenu', function(rowControl) BTG:copyItemName2IIFA(rowControl) end)
+
 	-- 一些 SLASH COMMANDS 視窗問題
 	SLASH_COMMANDS["/btg"] = function()
     	BTG.toggleBTGPanelView();
@@ -876,3 +916,9 @@ EM:RegisterForEvent(BTG.ename, EVENT_ADD_ON_LOADED, BTG.OnAddOnLoaded);
 
 
 
+
+
+
+
+
+        
