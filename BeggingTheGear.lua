@@ -555,7 +555,6 @@ function BTG:OnUiPosLoad()
 	BTGPanelView:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, BTG.savedata.gearlist_pos[0], BTG.savedata.gearlist_pos[1])
 	BTGLootTipView:ClearAnchors()
 	BTGLootTipView:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, BTG.savedata.combattip_pos[0], BTG.savedata.combattip_pos[1])
-    BTG.toggleBTGPanelView()
 end
 
 function BTG.OnUiPosSave(tag)
