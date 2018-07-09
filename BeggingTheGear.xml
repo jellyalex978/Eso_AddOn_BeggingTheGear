@@ -114,7 +114,7 @@
                             <AnchorFill/>
                             <Edge edgeSize="1"/>
                         </Backdrop>
-                        <EditBox name="$(parent)Val" color="FFFFFF" font="BTGFont" horizontalAlignment="LEFT" verticalAlignment="CENTER" text="" editEnabled="true" maxInputCharacters="10000" multiLine="true" newLineEnabled="true" inherits="ZO_DefaultEditMultiLineForBackdrop">
+                        <EditBox name="$(parent)Val" color="FFFFFF" font="BTGFont" horizontalAlignment="LEFT" verticalAlignment="CENTER" text="" editEnabled="true" maxInputCharacters="256" multiLine="true" newLineEnabled="true" inherits="ZO_DefaultEditMultiLineForBackdrop">
                             <Anchor offsetX="5" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" />
                             <Anchor offsetX="5" offsetY="5" point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
                         </EditBox>

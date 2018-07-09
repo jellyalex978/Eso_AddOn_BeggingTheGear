@@ -666,6 +666,9 @@ function BTG.TestByJelly()
 		str = str.."match : "..tostring(tbl.match).."\n"
 		str = str.."filterid : "..tostring(tbl.filterid).."\n"
 		str = str.."filterkeyword : "..tostring(tbl.filterkeyword).."\n"
+
+        local length = ZoUTF8StringLength(str) + 1000
+        BTGPanelViewLogTxtBoxVal:SetMaxInputChars(length)
 		BTGPanelViewLogTxtBoxVal:SetText(str)
 		BTGPanelViewLogTxtBox:SetHidden(false)
 	end
