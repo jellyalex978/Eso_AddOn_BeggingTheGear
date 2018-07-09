@@ -1,7 +1,7 @@
-## Title: |cFF9900BeggingTheGear|r 1.8.3
+## Title: |cFF9900BeggingTheGear|r 1.9.0
 ## APIVersion: 100023
-## Version: 1.8.3
-## Author: oJelly
+## Version: 1.9.0
+## Author: oJelly, SilverWF
 ## Description: This addon allows you to Spy on your teammates, plunder them or spend gold to conquer them!
 ## SavedVariables: BTG_savedata
 ##
