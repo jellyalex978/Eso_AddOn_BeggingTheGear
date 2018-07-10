@@ -720,13 +720,15 @@ function BTG.MatchItemFilter(itemlink)
 		re.keyWordCheck = BTG.MatchKeyWord(itemlink, filter)
 		if re.keyWordCheck then 
 			re.itemCheck = BTG.ItemCheck(itemlink, filter)
-			local equipLType = GetItemLinkEquipType(itemlink) -- EQUIP_TYPE_ (look below). Non gear items: 0 - INVALID, 11 - COSTUME, 15 - POISON 
-			if not re.itemCheck and (equipLType == 5 or equipLType == 6 or equipLType == 7 or equipLType == 14) then -- Weapons: 5 ONE_HAND, 6 TWO_HAND, 7 OFF_HAND, 14 MAIN_HAND
-				re.weaponCheck = BTG.WeaponCheck(itemlink, filter)
-			elseif not re.itemCheck and (equipLType == 2 or equipLType == 12) then -- Jewelry: 2 NECK, 12 RING
-				re.jewelryCheck = BTG.JewelryCheck(itemlink, filter, equipLType)
-			elseif not re.itemCheck and (equipLType == 1 or equipLType == 3 or equipLType == 4 or equipLType == 8 or equipLType == 9 or equipLType == 10 or equipLType == 13) then -- Armor: 1 HEAD, 3 CHEST, 4 SHOULDERS, 8 WAIST, 9 LEGS, 10 FEET, 13 HAND
-				re.armorCheck = BTG.ArmorCheck(itemlink, filter, equipLType)
+			if not re.itemCheck then
+				local equipLType = GetItemLinkEquipType(itemlink) -- EQUIP_TYPE_ (look below). Non gear items: 0 - INVALID, 11 - COSTUME, 15 - POISON 
+				if equipLType == 5 or equipLType == 6 or equipLType == 7 or equipLType == 14 then -- Weapons: 5 ONE_HAND, 6 TWO_HAND, 7 OFF_HAND, 14 MAIN_HAND
+					re.weaponCheck = BTG.WeaponCheck(itemlink, filter)
+				elseif equipLType == 2 or equipLType == 12 then -- Jewelry: 2 NECK, 12 RING
+					re.jewelryCheck = BTG.JewelryCheck(itemlink, filter, equipLType)
+				elseif equipLType == 1 or equipLType == 3 or equipLType == 4 or equipLType == 8 or equipLType == 9 or equipLType == 10 or equipLType == 13 then -- Armor: 1 HEAD, 3 CHEST, 4 SHOULDERS, 8 WAIST, 9 LEGS, 10 FEET, 13 HAND
+					re.armorCheck = BTG.ArmorCheck(itemlink, filter, equipLType)
+				end
 			end
 		end
 		
@@ -890,8 +892,7 @@ function BTG:Initialize()
 	for k,filter in pairs(BTG.savedata.gearlist) do
 		for k2,filterfield in pairs(init_savedef.def_gearlist) do
 			if filter[k2] == nil then
-				--BTG.savedata.gearlist[k] = {k2=filterfield} -- SilverWF: I am totally fucked up here. Have no idea what does it doing, but, at least, it doesn't produce errors and not ruin variables :D
-				filter[k2] = ZO_DeepTableCopy(filterfield) -- Old version of that string, it doesn't works, because old user variables doesn't has new values and this script just fucks up.
+				filter[k2] = ZO_DeepTableCopy(filterfield) -- Works fine now.
 			end
 		end
 		BTG.savedata.gearlist[k] = filter
