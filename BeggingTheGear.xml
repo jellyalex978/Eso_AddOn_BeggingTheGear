@@ -114,7 +114,7 @@
                             <AnchorFill/>
                             <Edge edgeSize="1"/>
                         </Backdrop>
-                        <EditBox name="$(parent)Val" color="FFFFFF" font="BTGFont" horizontalAlignment="LEFT" verticalAlignment="CENTER" text="" editEnabled="true" maxInputCharacters="256" multiLine="true" newLineEnabled="true" inherits="ZO_DefaultEditMultiLineForBackdrop">
+                        <EditBox name="$(parent)Val" color="FFFFFF" font="BTGFont" horizontalAlignment="LEFT" verticalAlignment="CENTER" text="" editEnabled="true" maxInputCharacters="10000" multiLine="true" newLineEnabled="true" inherits="ZO_DefaultEditMultiLineForBackdrop">
                             <Anchor offsetX="5" offsetY="5" point="TOPLEFT" relativePoint="TOPLEFT" />
                             <Anchor offsetX="5" offsetY="5" point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
                         </EditBox>
@@ -160,92 +160,132 @@
                 <Backdrop name="$(parent)Bg" centerColor="232323" edgeColor="00000000" alpha="0.9">
                     <AnchorFill/>
                 </Backdrop>
-                <Button name="$(parent)BtnDel" clickSound="Click">
-                    <Anchor offsetX="4" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="25" y="25"/>
-                    <Textures normal="esoui/art/buttons/cancel_up.dds" />
-                    <Textures mouseOver="esoui/art/buttons/cancel_over.dds" normal="esoui/art/buttons/cancel_up.dds" pressed="esoui/art/buttons/cancel_down.dds"/>
-                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Delete this Filter')</OnMouseEnter>
-                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
-                    <OnClicked>BTG.DelGearListFilter(self)</OnClicked>
-                </Button>
-                <Backdrop name="$(parent)InputKeywordBg" centerColor="43443D" edgeColor="00000000">
-                    <Anchor offsetX="35" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="205" y="30"/>
-                </Backdrop>
-                <EditBox name="$(parent)InputKeyword" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
-                    <Anchor offsetX="45" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
-                    <Dimensions x="185" y="30"/>
-                    <OnFocusGained>BTG.GearListInputTip(1 , self , 'Press Enter to update Keyword')</OnFocusGained>
-                    <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
-                    <OnEnter>BTG.UpdateGearListKeyword(self)</OnEnter>
-                </EditBox>
-                <Button name="$(parent)CallIIfA" clickSound="Click">
-                    <Anchor offsetX="247" offsetY="-1" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="35" y="35"/>
-                    <Textures normal="esoui/art/tradinghouse/tradinghouse_browse_tabicon_up.dds" />
-                    <Textures mouseOver="esoui/art/tradinghouse/tradinghouse_browse_tabicon_over.dds" normal="esoui/art/tradinghouse/tradinghouse_browse_tabicon_up.dds" pressed="esoui/art/tradinghouse/tradinghouse_browse_tabicon_down.dds"/>
-                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Check this Keyword in the Inventory Insight addon')</OnMouseEnter>
-                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
-                    <OnClicked>BTG.CallIIfA2showme(self)</OnClicked>
-                </Button>
-                <Button name="$(parent)IconPrice" clickSound="Click">
-                    <Anchor offsetX="287" offsetY="-1" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="35" y="35"/>
-                    <Textures normal="esoui/art/guild/guildhistory_indexicon_guildstore_up.dds" />
-                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Set the value of your offer')</OnMouseEnter>
-                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
-                </Button>
-                <Backdrop name="$(parent)InputPriceBg" centerColor="43443D" edgeColor="00000000">
-                    <Anchor offsetX="320" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="135" y="30"/>
-                </Backdrop>
-                <EditBox name="$(parent)InputPrice" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
-                    <Anchor offsetX="330" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
-                    <Dimensions x="115" y="30"/>
-                    <OnFocusGained>BTG.GearListInputTip(1 , self , 'Press Enter to update offer value')</OnFocusGained>
-                    <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
-                    <OnEnter>BTG.UpdateGearListPrice(self)</OnEnter>
-                </EditBox>
-                <!--
-                <Button name="$(parent)IconCPlevel" clickSound="Click">
-                    <Anchor offsetX="457" offsetY="-1" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="35" y="35"/>
-                    <Textures normal="esoui/art/mainmenu/menubar_champion_up.dds" />
-                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Gear with lower CP level would be ignored')</OnMouseEnter>
-                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
-                </Button>
-                <Backdrop name="$(parent)InputCPlevelBg" centerColor="43443D" edgeColor="00000000">
-                    <Anchor offsetX="490" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="100" y="30"/>
-                </Backdrop>
-                <EditBox name="$(parent)InputCPlevel" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="3" >
-                    <Anchor offsetX="500" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
-                    <Dimensions x="80" y="30"/>
-                    <OnFocusGained>BTG.GearListInputTip(1 , self , 'Press Enter to update min CP lvl')</OnFocusGained>
-                    <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
-                    <OnEnter>BTG.UpdateGearListCPlevel(self)</OnEnter>
-                </EditBox>
-                -->
+<!-- Any items filter -->	
                 <Backdrop name="$(parent)FilterThingBox" centerColor="00000000" edgeColor="00000000">
-                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="0" offsetY="35" />
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPLEFT" offsetX="35" offsetY="35" />
                     <Controls>
                         <Backdrop name="$(parent)ThingType_999" centerColor="00000000" edgeColor="00000000">
-                            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
+                            <Anchor offsetX="0" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
                             <Dimensions x="30" y="30"/>
                             <Controls>
                                 <Button clickSound="Click" name="$(parent)Btn">
                                     <AnchorFill/>
-                                    <Textures normal="esoui/art/inventory/inventory_all_tabicon_inactive.dds" />
+                                    <Textures normal="esoui/art/inventory/inventory_tabicon_all_up.dds" />
                                     <OnClicked>BTG.OnFilterClick(self , 'TType' , 999)</OnClicked>
-                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Check all items')</OnMouseEnter>
+                                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Check loot by keyword only')</OnMouseEnter>
                                     <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                                 </Button>
                             </Controls>
                         </Backdrop>
                     </Controls>
                 </Backdrop>
+<!-- KeyWord filter -->				
+                <Button name="$(parent)IconKeyword" clickSound="Click">
+                    <Anchor offsetX="42" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="30" y="30"/>
+                    <Textures normal="esoui/art/worldmap/map_indexicon_filters_up.dds" />
+                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Set the keyword to look for')</OnMouseEnter>
+                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+                </Button>	
+                <Backdrop name="$(parent)InputKeywordBg" centerColor="43443D" edgeColor="00000000">
+                    <Anchor offsetX="75" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="250" y="28"/>
+                </Backdrop>				
+                <EditBox name="$(parent)InputKeyword" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
+                    <Anchor offsetX="77" offsetY="3" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                    <Dimensions x="248" y="30"/>
+                    <OnFocusGained>BTG.GearListInputTip(1 , self , 'Press Enter to update Keyword')</OnFocusGained>
+                    <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
+                    <OnEnter>BTG.UpdateGearListKeyword(self)</OnEnter>
+                </EditBox>
+<!-- Inventory Insight Button -->				
+                <Button name="$(parent)CallIIfA" clickSound="Click">
+                    <Anchor offsetX="330" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="30" y="30"/>
+                    <Textures normal="esoui/art/tradinghouse/tradinghouse_browse_tabicon_up.dds" />
+                    <Textures mouseOver="esoui/art/tradinghouse/tradinghouse_browse_tabicon_over.dds" normal="esoui/art/tradinghouse/tradinghouse_browse_tabicon_up.dds" pressed="esoui/art/tradinghouse/tradinghouse_browse_tabicon_down.dds"/>
+                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Check this Keyword in the Inventory Insight addon')</OnMouseEnter>
+                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+                    <OnClicked>BTG.CallIIfA2showme(self)</OnClicked>
+                </Button>
+<!-- Offer value field -->				
+                <Button name="$(parent)IconPrice" clickSound="Click">
+                    <Anchor offsetX="368" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="30" y="30"/>
+                    <Textures normal="esoui/art/guild/guildhistory_indexicon_guildstore_up.dds" />
+                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Set the value of your offer')</OnMouseEnter>
+                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+                </Button>
+                <Backdrop name="$(parent)InputPriceBg" centerColor="43443D" edgeColor="00000000">
+                    <Anchor offsetX="400" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="100" y="28"/>
+                </Backdrop>
+                <EditBox name="$(parent)InputPrice" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="10" >
+                    <Anchor offsetX="402" offsetY="3" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                    <Dimensions x="98" y="30"/>
+                    <OnFocusGained>BTG.GearListInputTip(1 , self , 'Press Enter to update offer value')</OnFocusGained>
+                    <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
+                    <OnEnter>BTG.UpdateGearListPrice(self)</OnEnter>
+                </EditBox>
+<!-- Delete filter button -->				
+				<Button name="$(parent)BtnDel" clickSound="Click">
+                    <Anchor offsetX="603" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Dimensions x="30" y="30"/>
+                    <Textures normal="esoui/art/buttons/cancel_up.dds" />
+                    <Textures mouseOver="esoui/art/buttons/cancel_over.dds" normal="esoui/art/buttons/cancel_up.dds" pressed="esoui/art/buttons/cancel_down.dds"/>
+                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Delete this Filter')</OnMouseEnter>
+                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+                    <OnClicked>BTG.DelGearListFilter(self)</OnClicked>
+                </Button>
+<!-- Weight armor filter -->			
+                <Backdrop name="$(parent)FilterWeightBox" centerColor="00000000" edgeColor="00000000">
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="TOPLEFT" offsetX="35" offsetY="600" />
+                    <Controls>
+						<Backdrop name="$(parent)EquipWeight_1" centerColor="00000000" edgeColor="00000000">
+							<Anchor offsetX="0" offsetY="35" point="TOPLEFT" relativePoint="TOPLEFT" />
+							<Dimensions x="30" y="30"/>
+							<Controls>
+								<Button clickSound="Click" name="$(parent)Btn">
+									<AnchorFill/>
+									<Textures normal="/esoui/art/icons/progression_tabicon_armorlight_up.dds" />
+									<OnClicked>BTG.OnFilterClick(self , 'EWeight' , 1)</OnClicked>
+									<OnMouseEnter>BTG.GearListInputTip(1 , self , 'Light armor')</OnMouseEnter>
+									<OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+								</Button>
+							</Controls>
+						</Backdrop>
+						<Backdrop name="$(parent)EquipWeight_2" centerColor="00000000" edgeColor="00000000">
+							<Anchor offsetX="0" offsetY="70" point="TOPLEFT" relativePoint="TOPLEFT" />
+							<Dimensions x="30" y="30"/>
+							<Controls>
+								<Button clickSound="Click" name="$(parent)Btn">
+									<AnchorFill/>
+									<Textures normal="/esoui/art/icons/progression_tabicon_armormedium_up.dds" />
+									<OnClicked>BTG.OnFilterClick(self , 'EWeight' , 2)</OnClicked>
+									<OnMouseEnter>BTG.GearListInputTip(1 , self , 'Medium armor')</OnMouseEnter>
+									<OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+								</Button>
+							</Controls>
+						</Backdrop>
+						<Backdrop name="$(parent)EquipWeight_3" centerColor="00000000" edgeColor="00000000">
+							<Anchor offsetX="0" offsetY="105" point="TOPLEFT" relativePoint="TOPLEFT"/>
+							<Dimensions x="30" y="30"/>
+							<Controls>
+								<Button clickSound="Click" name="$(parent)Btn">
+									<AnchorFill/>
+									<Textures normal="/esoui/art/icons/progression_tabicon_armorheavy_up.dds" />
+									<OnClicked>BTG.OnFilterClick(self , 'EWeight' , 3)</OnClicked>
+									<OnMouseEnter>BTG.GearListInputTip(1 , self , 'Heavy armor')</OnMouseEnter>
+									<OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+								</Button>
+							</Controls>
+						</Backdrop>
+                    </Controls>
+                </Backdrop>				
+
+<!-- Armor type filter -->					
                 <Backdrop name="$(parent)FilterGearBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="35" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="100" />
@@ -341,6 +381,7 @@
                                 </Button>
                             </Controls>
                         </Backdrop>
+<!-- Jewelry type filter -->							
                         <Backdrop name="$(parent)EquipType_2" centerColor="00000000" edgeColor="00000000">
                             <Anchor offsetX="465" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
                             <Dimensions x="30" y="30"/>
@@ -369,6 +410,7 @@
                         </Backdrop>
                     </Controls>
                 </Backdrop>
+<!-- Armor trait filter -->					
                 <Backdrop name="$(parent)FilterGearTraitBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="140" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="100" />
@@ -492,6 +534,7 @@
                         </Backdrop>
                     </Controls>
                 </Backdrop>
+<!-- Weapon type filter -->					
                 <Backdrop name="$(parent)FilterWeaponBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="250" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="100" />
@@ -667,6 +710,7 @@
                         </Backdrop>
                     </Controls>
                 </Backdrop>
+<!-- Weapon trait filter -->					
                 <Backdrop name="$(parent)FilterWeaponTraitBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="390" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="100" />
@@ -790,6 +834,7 @@
                         </Backdrop>
                     </Controls>
                 </Backdrop>
+<!-- Jewelry trait filter -->					
                 <Backdrop name="$(parent)FilterJewelryTraitBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="535" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="100" />
