@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.9.0'
+BTG.version = '1.9.1'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -14,9 +14,10 @@ local init_savedef = {
 	gearlist_pos = {500,500,955,670}, -- wx y w h
 	def_gearlist = {
 		keyword = '',
-		price = '1K',
+		price = '1k',
 		equiptype = {},
 		equiptrait = {},
+		equipweight = {},		
 		jewelrytrait = {},
 		weapontype = {},
 		weapontrait = {},
@@ -32,6 +33,7 @@ local init_savedef = {
 }
 local ValueList_EquipType = {1,2,3,4,8,9,10,12,13}
 local ValueList_EquipTrait = {11,12,13,14,15,16,17,18,25}
+local ValueList_EquipWeight = {1,2,3}
 local ValueList_JewelryTrait = {22,21,23,30,33,32,28,29,31}
 local ValueList_WeaponType = {1,2,3,4,5,6,8,9,11,12,13,14,15}
 local ValueList_WeaponTrait = {1,2,3,4,5,6,7,8,26}
@@ -215,6 +217,10 @@ function BTG.ListGertInitializeRow(control, data)
 		control:GetNamedChild("FilterGearTraitBoxEquipTrait_"..val):SetCenterColor(0,0,0,0)
         control:GetNamedChild("FilterGearTraitBoxEquipTrait_"..val.."Btn").status = 0
 	end
+	for key, val in pairs(ValueList_EquipWeight) do
+		control:GetNamedChild("FilterWeightBoxEquipWeight_"..val):SetCenterColor(0,0,0,0)
+        control:GetNamedChild("FilterWeightBoxEquipWeight_"..val.."Btn").status = 0
+	end
     for key, val in pairs(ValueList_JewelryTrait) do
         control:GetNamedChild("FilterJewelryTraitBoxJewelryTrait_"..val):SetCenterColor(0,0,0,0)
         control:GetNamedChild("FilterJewelryTraitBoxJewelryTrait_"..val.."Btn").status = 0
@@ -237,7 +243,6 @@ function BTG.ListGertInitializeRow(control, data)
 	-- 因為 2017 05 29 增加新判斷 導致舊用戶 缺資料
 	control:GetNamedChild("InputKeyword"):SetText(filter.keyword)
 	control:GetNamedChild("InputPrice"):SetText(filter.price)
-	--control:GetNamedChild("InputCPlevel"):SetText(filter.cplevel)
 	for key, val in pairs(filter.equiptype) do
 		control:GetNamedChild("FilterGearBoxEquipType_"..val):SetCenterColor(255,134,0,1)
 		control:GetNamedChild("FilterGearBoxEquipType_"..val.."Btn").status = 1
@@ -245,6 +250,10 @@ function BTG.ListGertInitializeRow(control, data)
 	for key, val in pairs(filter.equiptrait) do
 		control:GetNamedChild("FilterGearTraitBoxEquipTrait_"..val):SetCenterColor(255,134,0,1)
 		control:GetNamedChild("FilterGearTraitBoxEquipTrait_"..val.."Btn").status = 1
+	end
+	for key, val in pairs(filter.equipweight) do
+		control:GetNamedChild("FilterWeightBoxEquipWeight_"..val):SetCenterColor(255,134,0,1)
+		control:GetNamedChild("FilterWeightBoxEquipWeight_"..val.."Btn").status = 1
 	end
     for key, val in pairs(filter.jewelrytrait) do
         control:GetNamedChild("FilterJewelryTraitBoxJewelryTrait_"..val):SetCenterColor(255,134,0,1)
@@ -374,13 +383,6 @@ function BTG.UpdateGearListPrice(tar)
 	tar:LoseFocus()
 end
 
-function BTG.UpdateGearListCPlevel(tar)
-	local keyid = tar:GetParent().keyid
-	local cplevel = tar:GetText()
-	BTG.savedata.gearlist[keyid].cplevel = cplevel
-	tar:LoseFocus()
-end
-
 function BTG.OnFilterClick(tar , filterType , filterId)
 	local keyid = tar:GetParent():GetParent():GetParent().keyid
 	local status = tar.status
@@ -403,6 +405,9 @@ function BTG.OnFilterClick(tar , filterType , filterId)
 	end
 	if filterType == 'ETrait' then
 		BTG.savedata.gearlist[keyid].equiptrait = findArrThenBack( findArrThenBack_curl , BTG.savedata.gearlist[keyid].equiptrait , filterId )
+	end
+	if filterType == 'EWeight' then
+		BTG.savedata.gearlist[keyid].equipweight = findArrThenBack( findArrThenBack_curl , BTG.savedata.gearlist[keyid].equipweight , filterId )
 	end
     if filterType == 'JTrait' then
         BTG.savedata.gearlist[keyid].jewelrytrait = findArrThenBack( findArrThenBack_curl , BTG.savedata.gearlist[keyid].jewelrytrait , filterId )
@@ -462,11 +467,12 @@ function BTG.UpdateListDaddyBox()
     ZO_ScrollList_Commit(BTGPanelViewListDaddyBox)
 end
 
-function BTG.AddDaddyListRow(user , itemlink)
+function BTG.AddDaddyListRow(user, itemlink, price)
 	if user ~= '' and itemlink ~= '' then
 		local daddy = {
 			username = user,
 			itemlink = itemlink,
+			price = price,
 		}
 		table.insert(BTG.savedata.daddylist , daddy)
 		BTG.UpdateListDaddyBox()
@@ -490,20 +496,18 @@ function BTG.BeggingDaddyListRow(tar , act)
 	local keyid = tar:GetParent().keyid
 	local daddy = BTG.savedata.daddylist[keyid]
 	local daddyName = zo_strformat("<<1>>", daddy.username)
-    local daddyTrait = GetString("SI_ITEMTRAITTYPE", GetItemLinkTraitInfo (daddy.itemlink))
 	local isay = ''
 	local channel = '/say'
 	if act == 1 then
 		if( findDaddy4Group(daddyName) ) then
-			isay = "BTG: "..daddyName..", may I have your "..zo_strformat("<<1>>", daddy.itemlink).." ("..zo_strformat("<<1>>", daddyTrait).."), if you don't need it, please?"
+			isay = "BTG: "..daddyName..", may I have your "..zo_strformat("<<1>>", daddy.itemlink)..", if you don't need it, please?"
 			channel = "/p "
 		else
-			isay = daddyName..", BTG: may I have your "..zo_strformat("<<1>>", daddy.itemlink).." ("..zo_strformat("<<1>>", daddyTrait).."), if you don't need it, please?"
+			isay = daddyName..", BTG: may I have your "..zo_strformat("<<1>>", daddy.itemlink)..", if you don't need it, please?"
 			channel = "/w "
 		end
 		isayToChat(channel..isay)
 	else
-		-- StartChatInput(isay, channel, target)
 	end
 end
 
@@ -511,26 +515,21 @@ function BTG.PriceDaddyListRow(tar , act)
 	local keyid = tar:GetParent().keyid
 	local daddy = BTG.savedata.daddylist[keyid]
 	local daddyName = zo_strformat("<<1>>", daddy.username)
-    local daddyTrait = GetString("SI_ITEMTRAITTYPE", GetItemLinkTraitInfo (daddy.itemlink))
-	local re = BTG.MatchItemFilter(daddy.itemlink,false) -- why you need match again ?
+	local daddyOffer = (daddy.price and zo_strformat("<<1>>", daddy.price) or 'tons')
 	local isay = ''
 	local channel = '/say'
-    if re.match then
-    	if act == 1 then
-    		if( findDaddy4Group(daddyName) ) then
-    			isay = "BTG: "..daddyName..", I offer "..zo_strformat("<<1>>", re.price).." g. for your "..zo_strformat("<<1>>", daddy.itemlink).." ("..zo_strformat("<<1>>", daddyTrait).."), agreed?"
-    			channel = "/p "
-    		else
-    			isay = daddyName..", BTG: I offer "..zo_strformat("<<1>>", re.price).." g. for your "..zo_strformat("<<1>>", daddy.itemlink).." ("..zo_strformat("<<1>>", daddyTrait).."), agreed?"
-    			channel = "/w "
-    		end
-    		isayToChat(channel..isay)
-    	else
-    		-- StartChatInput(isay, channel, target)
-        end
-    else
-        d('BTG can\'t find filter price')
-    end
+	if act == 1 then
+		if( findDaddy4Group(daddyName) ) then
+			isay = "BTG: "..daddyName..", I offer "..daddyOffer.." g. for your "..zo_strformat("<<1>>", daddy.itemlink)", agreed?"
+			channel = "/p "
+			else
+			isay = daddyName..", BTG: I offer "..daddyOffer.." g. for your "..zo_strformat("<<1>>", daddy.itemlink)..", agreed?"
+			channel = "/w "
+		end
+		isayToChat(channel..isay)
+	else
+		-- StartChatInput(isay, channel, target)
+	end
 end
 
 function BTG.DaddyOnMouseEnter(tar)
@@ -666,9 +665,6 @@ function BTG.TestByJelly()
 		str = str.."match : "..tostring(tbl.match).."\n"
 		str = str.."filterid : "..tostring(tbl.filterid).."\n"
 		str = str.."filterkeyword : "..tostring(tbl.filterkeyword).."\n"
-
-        local length = ZoUTF8StringLength(str) + 1000
-        BTGPanelViewLogTxtBoxVal:SetMaxInputChars(length)
 		BTGPanelViewLogTxtBoxVal:SetText(str)
 		BTGPanelViewLogTxtBox:SetHidden(false)
 	end
@@ -691,221 +687,195 @@ end
 
 
 ----------------------------------------
--- listen Loot EVENT Start
+-- Loot Recieved handler
 ----------------------------------------
 function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound, lootType, lootedBySelf, isPickpocketLoot, questItemIcon, itemId)
-    -- 比對字串
-    local re = BTG.MatchItemFilter(itemName,false)
-    local name = 'yourself'
-    if receivedBy ~= nil then
-        name = receivedBy
-    end
-    if re.match then
-        BTG.AddDaddyListRow(name , itemName)
-        BTGLootTipView:SetHidden(false)
-    end
+	local re = BTG.MatchItemFilter(itemName)
+	local name = 'yourself'
+	if receivedBy ~= nil then
+		name = receivedBy
+	end
+	if re.match then
+		BTG.AddDaddyListRow(name , itemName, re.price)
+		BTGLootTipView:SetHidden(false)
+	end
 end
 
-function BTG.MatchItemFilter(itemlink , debug)
-	local findmax = 1 -- 最多比對成功次數
+----------------------------------------
+-- Loot Check Main function
+----------------------------------------
+function BTG.MatchItemFilter(itemlink)
 	local re = {
-		match = false, -- 回傳 最終結果判斷
-		itemname = '', -- Name of the item
-        itemstring = '', -- 物品名稱轉小寫比對用
-		itemsetname = '', -- Name of the set
-        itemsetstring = '', -- 套裝名稱轉小寫比對用
-        itemtype = '', -- 物品分類
-        itemkind = '', -- 物品部位或種類
-        itemtrait = '', -- 物品特性
-        cplevel = '0', -- CP level
-        price = '', -- 設定金額
-        filterid = '', -- 和第幾項比對成功
-        filterkeyword = '', -- 和第幾項字串成功
-		z_res = {}, -- 比對歷程
+		match = false,
+		price = '',
+		filterid = '',
+		filterkeyword = '',
+		keyWordCheck = false,
+		itemCheck = false,
+		jewelryCheck = false,
+		armorCheck = false,
+		weaponCheck = false,		
 	}
-
-    -- 取得物品資料
-    re.itemname = GetItemLinkName(itemlink)
-    re.itemstring = string.lower(re.itemname) -- 物品字串轉小寫來比對
-    _, re.itemsetname, _, _, _, _ = GetItemLinkSetInfo(itemlink) -- Get the name of set
-    re.itemsetstring = string.lower(re.itemsetname) --
-    -- re.itemQuality = GetItemLinkQuality(itemlink) -- 1白 2綠 3 藍 4紫 5 金
-    -- re.itemQuality = GetString('SI_ITEMQUALITY',GetItemLinkQuality(itemlink))
-    re.itemtype = GetItemLinkItemType(itemlink) -- 1 武器 2 裝備
-    re.itemtrait = GetItemLinkTraitInfo(itemlink) -- 1 - 8 + 26 武器, 11 - 18 + 25 裝備, 21~33 -25 - 26 飾品 http://wiki.esoui.com/Constant_Values#ITEM_TRAIT_TYPE_JEWELRY_ARCANE
-    if re.itemtype == 1 then
-        re.itemkind = GetItemLinkWeaponType(itemlink) -- 1 單手斧 2 單手槌 3 單手劍 14 盾 11 匕首 8 弓 9 回杖 12 火杖 13 冰杖 15 電杖 4 雙手劍 5 雙手斧 6 雙手槌
-    elseif re.itemtype == 2 then
-        re.itemkind = GetItemLinkEquipType(itemlink) -- 1 頭 3 身 8 腰 9 褲 4 肩 10 腳 13 手 2 項鍊 12 戒指
-    end
-	re.cplevel = GetItemLinkRequiredChampionPoints(itemlink)
-
-	-- 輪巡 gearlist
-	for k,filter in pairs(BTG.savedata.gearlist) do
-		if findmax < 1 then break end -- 如果已經找到了 就不找了
-
-        -- 預設比對資料
-        local res = {
-            keyword = string.lower(filter.keyword),
-            m_k_word = false, -- 字串 比對結果
-            n_e_type = 0, --要比對的 裝備分類 總數
-            m_e_type = false, -- 裝備分類 比對結果
-            n_e_trait = 0, --要比對的 裝備特性 總數
-            m_e_trait = false, -- 裝備特性 比對結果
-            n_j_trait = 0, --要比對的 飾品特性 總數
-            m_j_trait = false, -- 飾品特性 比對結果
-            n_w_type = 0, --要比對的 武器分類 總數
-            m_w_type = false, -- 武器分類 比對結果
-            n_w_trait = 0, --要比對的 武器特性 總數
-            m_w_trait = false, -- 武器特性 比對結果
-            n_t_type = 0, --要比對的 道具分類 總數
-            m_t_type = false, -- 道具分類 比對結果
-            n_l_cplevel = 160, --  CP level
-            m_l_cplevel = false, --  CP level
-        }
-		res.n_e_type = table.getn(filter.equiptype) --要比對的 裝備分類 總數
-		res.n_e_trait = table.getn(filter.equiptrait) --要比對的 裝備特性 總數
-		res.n_j_trait = table.getn(filter.jewelrytrait) --要比對的 飾品特性 總數
-		res.n_w_type = table.getn(filter.weapontype) --要比對的 武器分類 總數
-		res.n_w_trait = table.getn(filter.weapontrait) --要比對的 武器特性 總數
-		res.n_t_type = table.getn(filter.thingtype) --要比對的 其他道具 總數
-
-        -- step1 : check keyword to skip all if else if else balabala
-        if res.keyword ~= '' then
-            res.m_k_word = (string.match(re.itemsetstring, res.keyword) ~= nil) -- Compare keyword with the set name
-            if not res.m_k_word then -- If set name comparison was failed, then compare with the item name
-                res.m_k_word = (string.match(re.itemstring, res.keyword) ~= nil)
-            end
-        end
-        -- step2 : check cplevel to skip all if else if else balabala
-        if re.itemtype == 1 or re.itemtype == 2 then
-            if re.cplevel >= res.n_l_cplevel then
-                res.m_l_cplevel = true
-            end
-        else
-            res.m_l_cplevel = true
-        end
-
-        if (res.m_k_word and res.m_l_cplevel) or debug then
-            -- 判斷資料 不須判斷的 直接設定成比對成功
-            if re.itemtype == 1 then
-                -- 除武器特性外 通通沒選就 直接比對成功
-                if res.n_w_type == 0 and res.n_e_type == 0 and res.n_e_trait == 0 and res.n_j_trait == 0 then
-                    res.m_w_type = true
-                end
-                if res.n_w_type == 0 and res.n_w_trait ~= 0 then
-                    res.m_w_type = true
-                end
-                -- 判斷特性
-                if re.itemkind == 14 then
-                    -- 盾的特性判斷 裝備
-                    if res.n_e_trait == 0 then
-                        res.m_e_trait = true
-                    end
-                    res.m_w_trait = true
-                else
-                    if res.n_w_trait == 0 then
-                        res.m_w_trait = true
-                    end
-                    res.m_e_trait = true
-                end
-                res.m_e_type = true
-                res.m_j_trait = true
-                res.m_t_type = true
-            elseif re.itemtype == 2 then
-                -- 如果 沒選裝備 直接比對成功
-                if res.n_e_type == 0 and res.n_w_type == 0 and res.n_w_trait == 0 then
-                    res.m_e_type = true
-                end
-                if res.n_e_type == 0 and res.n_e_trait ~= 0 then
-                    res.m_e_type = true
-                end
-                -- 判斷特性
-                if re.itemkind == 2 or re.itemkind == 12 then
-                    -- 如果 是 項鍊 戒指 裝備特性 直接比對成功
-                    if res.n_j_trait == 0 and res.n_e_trait == 0 then
-                        res.m_j_trait = true
-                    end
-                    if res.n_j_trait == 0 and res.n_e_type ~= 0 and res.n_e_trait ~= 0 then
-                        res.m_j_trait = true
-                    end
-                    res.m_e_trait = true
-                else
-                    if res.n_e_trait == 0 and res.n_j_trait == 0 then
-                        res.m_e_trait = true
-                    end
-                    if res.n_e_trait == 0 and res.n_e_type ~= 0 and res.n_j_trait ~= 0 then
-                        res.m_e_trait = true
-                    end
-                    res.m_j_trait = true
-                end
-                res.m_w_type = true
-                res.m_w_trait = true
-                res.m_t_type = true
-            else
-                -- 目前只有單選不考慮
-                -- if res.n_t_type == 0 then
-                --  res.m_t_type = true
-                -- end
-                -- 非裝備可否直接 pass 那堆
-                res.m_e_type = true
-                res.m_e_trait = true
-                res.m_j_trait = true
-                res.m_w_type = true
-                res.m_w_trait = true
-            end
-
-            -- 比對 需求 > 0 + 尚未確定比對結果的
-            if res.n_e_type > 0 and res.m_e_type == false then
-                res.m_e_type = in_array( re.itemkind , filter.equiptype )
-            end
-            if res.n_e_trait > 0 and res.m_e_trait == false then
-                res.m_e_trait = in_array( re.itemtrait , filter.equiptrait )
-            end
-            if res.n_j_trait > 0 and res.m_j_trait == false then
-                res.m_j_trait = in_array( re.itemtrait , filter.jewelrytrait )
-            end
-            if res.n_w_type > 0 and res.m_w_type == false then
-                res.m_w_type = in_array( re.itemkind , filter.weapontype )
-            end
-            if res.n_w_trait > 0 and res.m_w_trait == false then
-                res.m_w_trait = in_array( re.itemtrait , filter.weapontrait )
-            end
-            if res.n_t_type > 0 and res.m_t_type == false then
-                --res.m_t_type = in_array( xxxxx , filter.thingtype )
-                res.m_t_type = in_array( 999 , filter.thingtype )
-            end
-        else
-            -- 不比對
-        end
-
-		if debug then
-            -- 存 log
-    		table.insert(re.z_res, res)
-        end
-
-		-- 若全部成立 修改 match 值
-		if res.m_k_word and res.m_e_type and res.m_e_trait and res.m_j_trait and res.m_w_type and res.m_w_trait and res.m_t_type and res.m_l_cplevel then
+	for k,filter in pairs (BTG.savedata.gearlist) do
+		re.keyWordCheck = BTG.MatchKeyWord(itemlink, filter)
+		if re.keyWordCheck then 
+			re.itemCheck = BTG.ItemCheck(itemlink, filter)
+			if not re.itemCheck then
+				local equipLType = GetItemLinkEquipType(itemlink) -- EQUIP_TYPE_ (look below). Non gear items: 0 - INVALID, 11 - COSTUME, 15 - POISON 
+				if equipLType == 5 or equipLType == 6 or equipLType == 7 or equipLType == 14 then -- Weapons: 5 ONE_HAND, 6 TWO_HAND, 7 OFF_HAND, 14 MAIN_HAND
+					re.weaponCheck = BTG.WeaponCheck(itemlink, filter)
+				elseif equipLType == 2 or equipLType == 12 then -- Jewelry: 2 NECK, 12 RING
+					re.jewelryCheck = BTG.JewelryCheck(itemlink, filter, equipLType)
+				elseif equipLType == 1 or equipLType == 3 or equipLType == 4 or equipLType == 8 or equipLType == 9 or equipLType == 10 or equipLType == 13 then -- Armor: 1 HEAD, 3 CHEST, 4 SHOULDERS, 8 WAIST, 9 LEGS, 10 FEET, 13 HAND
+					re.armorCheck = BTG.ArmorCheck(itemlink, filter, equipLType)
+				end
+			end
+		end
+		
+		if re.keyWordCheck and (re.itemCheck or re.weaponCheck or re.jewelryCheck or re.armorCheck) then
 			re.match = true
 			re.filterid = k
-			re.filterkeyword = res.m_k_word
 			re.price = filter.price
-			findmax = 0
+			break
 		else
-			-- 洗掉
 			re.match = false
-			re.filterid = ''
-			re.filterkeyword = ''
-			re.price = ''
-		end
+		end		
+		
 	end
 
 	return re
 end
 ----------------------------------------
--- listen Loot EVENT End
+-- Loot Check Support functions
 ----------------------------------------
+function BTG.MatchKeyWord(itemlink, filterid)
+	local keyCheck = false
+	local _, lootSetname, _, _, _, _ = GetItemLinkSetInfo(itemlink) -- Get the name of set
+	local lootName = GetItemLinkName(itemlink)  -- Get the name of the item
+	local lootString = string.lower(lootName)
+	local lootSetstring = string.lower(lootSetname) -- 
+	local filterKey = string.lower(filterid.keyword)
+	if filterKey ~= '' then
+		keyCheck = (string.match(lootSetstring, filterKey) ~= nil)
+		if not keyCheck then
+			keyCheck = (string.match(lootString, filterKey) ~= nil)
+		end 
+	end
+	return keyCheck
+end
 
+function BTG.ItemCheck(itemlink, filterid)
+	local itemCheck = false
+	local filterType = filterid.thingtype
+	if table.getn (filterType) > 0 then
+		itemCheck = in_array(999 , filterType)
+	end
+	return itemCheck
+end
+
+function BTG.JewelryCheck(itemlink, filterid, equiptype)
+	local cplevel = GetItemLinkRequiredChampionPoints(itemlink)
+	if not cplevel or cplevel < 160 then return false end
+	--
+	local jewelryCheck = false
+	local typeCheck = false
+	local traitCheck = false
+	local lootedType = equiptype
+	local lootedTrait = GetItemLinkTraitInfo(itemlink) -- ITEM_TRAIT_TYPE_JEWELRY_: 21 HEALTHY, 22 ARCANE, 23 ROBUST, 24 ORNATE, 27 INTRICATE, 28 SWIFT, 29 HARMONY, 30 TRIUNE, 31 BLOODTHIRSTY, 32 PROTECTIVE, 33 INFUSED
+	local filterType = filterid.equiptype
+	local filterTrait = jewelrytrait
+	--  
+	if table.getn (filterType) > 0 then
+		typeCheck = in_array(lootedType , filterType)
+		else return false
+	end
+	if typeCheck then 
+		if table.getn (filterTrait) > 0 then
+			traitCheck = in_array(lootedTrait , filterTrait)
+			else 
+			traitCheck = true
+		end
+	end
+
+	if typeCheck and traitCheck then
+		jewelryCheck = true
+	end
+
+	return jewelryCheck
+end
+
+function BTG.WeaponCheck(itemlink, filterid)
+	local cplevel = GetItemLinkRequiredChampionPoints(itemlink)
+	if not cplevel or cplevel < 160 then return false end
+	--
+	local weaponCheck = false
+	local typeCheck = false
+	local traitCheck = false
+	local lootedType =  GetItemLinkWeaponType(itemlink) -- WEAPONTYPE_: 0 NONE, 1 AXE, 2 HAMMER, 3 SWORD, 4 TWO_HANDED_SWORD, 5 TWO_HANDED_AXE, 6 TWO_HANDED_HAMMER, 7 PROP, 8 BOW, 9 HEALING_STAFF, 10 RUNE, 11 DAGGER, 12 FIRE_STAFF, 13 FROST_STAFF, 14 SHIELD, 15 LIGHTNING_STAFF
+	local lootedTrait = GetItemLinkTraitInfo(itemlink) -- ITEM_TRAIT_TYPE_WEAPON_: 1 POWERED, 2 CHARGED, 3 PRECISE, 4 INFUSED, 5 DEFENDING, 6 TRAINING, 7 SHARPENED, 8 DECISIVE or WEIGHTED, 9 INTRICATE, 10 ORNATE, 26 NIRNHONED
+	local filterType = filterid.weapontype
+	local filterTrait = filterid.weapontrait
+	if lootedType == 14 then
+		filterTrait = filterid.equiptrait 
+	end
+	--  
+	if table.getn (filterType) > 0 then
+		typeCheck = in_array(lootedType , filterType)
+		else return false
+	end
+	if typeCheck then 
+		if table.getn (filterTrait) > 0 then
+			traitCheck = in_array(lootedTrait , filterTrait)
+			else 
+			traitCheck = true
+		end
+	end
+
+	if typeCheck and traitCheck then
+		weaponCheck = true
+	end
+
+	return weaponCheck
+end
+
+function BTG.ArmorCheck(itemlink, filterid, equiptype)
+	local cplevel = GetItemLinkRequiredChampionPoints(itemlink)
+	if not cplevel or cplevel < 160 then return false end
+	--
+	local armorCheck = false
+	local typeCheck = false
+	local traitCheck = false
+	local weightCheck = false
+	local lootedType =  equiptype
+	local lootedTrait = GetItemLinkTraitInfo(itemlink) -- ITEM_TRAIT_TYPE_ARMOR_: 11 STURDY, 12 IMPENETRABLE, 13 REINFORCED, 14 WELL_FITTED, 15 TRAINING, 16 INFUSED, 17 PROSPEROUS or EXPLORATION, 18 DIVINES, 19 ORNATE, 20 INTRICATE, 25 NIRNHONED
+	local lootedWeight = GetItemLinkArmorType(itemlink)  -- ARMORTYPE_: 0 NONE, 1 LIGHT, 2 MEDIUM, 3 HEAVY
+	local filterType = filterid.equiptype
+	local filterTrait = filterid.equiptrait
+	local filterWeight = filterid.equipweight
+	--  
+	if table.getn (filterType) > 0 then
+		typeCheck = in_array(lootedType , filterType)
+		else return false
+	end
+	if typeCheck then 
+		if table.getn (filterTrait) > 0 then
+			traitCheck = in_array(lootedTrait , filterTrait)
+			else 
+			traitCheck = true
+		end
+		if table.getn (filterWeight) > 0 then
+			weightCheck = in_array(lootedWeight , filterWeight)
+			else 
+			weightCheck = true
+		end
+	end
+
+	if typeCheck and traitCheck and weightCheck then
+		armorCheck = true
+	end
+
+	return armorCheck
+end
 
 ----------------------------------------
 -- INIT
@@ -922,8 +892,7 @@ function BTG:Initialize()
 	for k,filter in pairs(BTG.savedata.gearlist) do
 		for k2,filterfield in pairs(init_savedef.def_gearlist) do
 			if filter[k2] == nil then
-				BTG.savedata.gearlist[k] = {k2=filterfield} -- SilverWF: I am totally fucked up here. Have no idea what does it doing, but, at least, it doesn't produce errors and not ruin variables :D
-				--filter[k2] = ZO_DeepTableCopy(filterfield) -- Old version of that string, it doesn't works, because old user variables doesn't has CP level value and this script just fucks up.
+				filter[k2] = ZO_DeepTableCopy(filterfield) -- Works fine now.
 			end
 		end
 		BTG.savedata.gearlist[k] = filter
