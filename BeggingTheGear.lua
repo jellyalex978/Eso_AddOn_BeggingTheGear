@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.9.1'
+BTG.version = '1.9.2'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -783,7 +783,7 @@ function BTG.JewelryCheck(itemlink, filterid, equiptype)
 	local lootedType = equiptype
 	local lootedTrait = GetItemLinkTraitInfo(itemlink) -- ITEM_TRAIT_TYPE_JEWELRY_: 21 HEALTHY, 22 ARCANE, 23 ROBUST, 24 ORNATE, 27 INTRICATE, 28 SWIFT, 29 HARMONY, 30 TRIUNE, 31 BLOODTHIRSTY, 32 PROTECTIVE, 33 INFUSED
 	local filterType = filterid.equiptype
-	local filterTrait = jewelrytrait
+	local filterTrait = filterid.jewelrytrait
 	--  
 	if table.getn (filterType) > 0 then
 		typeCheck = in_array(lootedType , filterType)
