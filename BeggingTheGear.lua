@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.9.2'
+BTG.version = '1.9.3'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -21,7 +21,7 @@ local init_savedef = {
 		jewelrytrait = {},
 		weapontype = {},
 		weapontrait = {},
-		thingtype = {},
+		thingtype = {999},
 		--cplevel = '160',
 	},
 	def_daddylist = {
