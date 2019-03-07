@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.9.5'
+BTG.version = '1.9.7'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -307,8 +307,7 @@ function BTG.CallIIfA2showme(tar)
 	if IIfA ~= nil then
 		local keyid = tar:GetParent().keyid
 		local keyword = BTG.savedata.gearlist[keyid].keyword
-		IIFA_GUI_SearchBox:SetText(keyword)
-
+        IIFA_GUI_SearchBackdropBox:SetText(keyword)
 		if IIFA_GUI:IsHidden() then
 			IIfA:ToggleInventoryFrame()
 		end
@@ -321,7 +320,7 @@ end
 function BTG:showItemName2IIFA(itemLink)
 	itemname = GetItemLinkName(itemLink)
 	if IIfA ~= nil then
-		IIFA_GUI_SearchBox:SetText(itemname)
+		IIFA_GUI_SearchBackdropBox:SetText(itemname)
 		if IIFA_GUI:IsHidden() then
 			IIfA:ToggleInventoryFrame()
 		end
