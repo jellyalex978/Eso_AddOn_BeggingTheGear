@@ -1,7 +1,7 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '1.9.7'
+BTG.version = '2.0.0'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -10,6 +10,7 @@ local SM = SCENE_MANAGER
 local CM = CALLBACK_MANAGER
 local strformat = zo_strformat
 local init_savedef = {
+    alwayswhisper = false,
 	combattip_pos = {500,500}, -- x y
 	gearlist_pos = {500,500,955,670}, -- wx y w h
 	def_gearlist = {
@@ -42,6 +43,7 @@ local W_width = 0
 local BTG_max_left = 0
 local debug_mode = false
 
+local LAM2 = LibStub:GetLibrary("LibAddonMenu-2.0")
 
 function dev_reloadui()
     SLASH_COMMANDS["/reloadui"]()
@@ -199,6 +201,50 @@ function findDaddy4Group (daddyName)
         end
     end
     return daddyhere
+end
+
+
+----------------------------------------
+-- setting
+----------------------------------------
+local function createLAM2Panel()
+    local panelData = {
+        type = "panel",
+        name = 'BeggingTheGear',
+        displayName = ZO_HIGHLIGHT_TEXT:Colorize('BeggingTheGear'),
+        author = "|cFFAA33"..OJTOP.author.."|r",
+        version = OJTOP.version,
+        registerForRefresh = true,
+    }
+    local optionsData = {
+        -- [tpl] = {
+        --     type = "checkbox",
+        --     name = 'show TxtOutput status icon',
+        --     tooltip = 'show the status ui when you trun off auto show',
+        --     getFunc = function() 
+        --         return OJTOP.savedata.aleryuistatus
+        --     end,
+        --     setFunc = function(val) 
+        --         OJTOP.savedata.autoshowstatus = val
+        --         OJTOP.toggleOJTOPStatusView(open)
+        --     end,
+        --     default = OJTOP.savedata.aleryuistatus,
+        -- },
+        [1] = {
+            type = "checkbox",
+            name = 'Always use whisper',
+            tooltip = 'On : Always use whisper\nOff : Use whisper when you leave group',
+            getFunc = function() 
+                return BTG.savedata.alwayswhisper
+            end,
+            setFunc = function(val) 
+                BTG.savedata.alwayswhisper = val
+            end,
+            default = BTG.savedata.alwayswhisper,
+        },
+    }
+    local myPanel = LAM2:RegisterAddonPanel(BTG.name.."LAM2Options", panelData)
+    LAM2:RegisterOptionControls(BTG.name.."LAM2Options", optionsData)
 end
 ----------------------------------------
 -- ZO_ScrollList @ ListGert Start
@@ -499,8 +545,13 @@ function BTG.BeggingDaddyListRow(tar , act)
 	local channel = '/say'
 	if act == 1 then
 		if( findDaddy4Group(daddyName) ) then
-			isay = "BTG: "..daddyName..", may I have your "..zo_strformat("<<1>>", daddy.itemlink)..", if you don't need it, please?"
-			channel = "/p "
+            if BTG.savedata.alwayswhisper then
+                isay = daddyName..", BTG: may I have your "..zo_strformat("<<1>>", daddy.itemlink)..", if you don't need it, please?"
+                channel = "/w "
+            else
+    			isay = "BTG: "..daddyName..", may I have your "..zo_strformat("<<1>>", daddy.itemlink)..", if you don't need it, please?"
+    			channel = "/p "
+            end
 		else
 			isay = daddyName..", BTG: may I have your "..zo_strformat("<<1>>", daddy.itemlink)..", if you don't need it, please?"
 			channel = "/w "
@@ -561,7 +612,7 @@ end
 function BTG:OnUiPosLoad()
 	BTGPanelView:ClearAnchors()
 	BTGPanelView:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, BTG.savedata.gearlist_pos[0], BTG.savedata.gearlist_pos[1])
-    BTGPanelView:SetWidth(BTG.savedata.gearlist_pos[2])
+    BTGPanelView:SetWidth(300)
     BTGPanelView:SetHeight(BTG.savedata.gearlist_pos[3])
     BTG.UpdateListDaddyBox()
     BTG.UpdateListGertBox()
@@ -574,7 +625,7 @@ function BTG.OnUiPosSave(tag)
 	if tag == 'BTGPanelView' then
 		BTG.savedata.gearlist_pos[0] = BTGPanelView:GetLeft()
 		BTG.savedata.gearlist_pos[1] = BTGPanelView:GetTop()
-        BTG.savedata.gearlist_pos[2] = BTGPanelView:GetWidth()
+        BTG.savedata.gearlist_pos[2] = 300
         BTG.savedata.gearlist_pos[3] = BTGPanelView:GetHeight()
         BTG.UpdateListDaddyBox()
         BTG.UpdateListGertBox()
@@ -593,6 +644,27 @@ function BTG.toggleBTGPanelView(open)
 	elseif open == 0 then
 		SM:HideTopLevel(BTGPanelView)
 	end
+end
+function BTG.toggleBTGFilterView(open)
+    if BTGPanelViewListGertBox:IsHidden() then
+        BTGPanelViewListDaddyBox:SetHidden(true)
+        BTGPanelViewBtnDelListDaddy:SetHidden(true)
+        BTGPanelViewHeaderBtnShowFilter:SetHidden(true)
+        BTGPanelViewInputTxtBox:SetHidden(false)
+        BTGPanelView:SetWidth(670)
+        BTGPanelViewListGertBox:SetHidden(false)
+        BTGPanelViewBtnDelListGert:SetHidden(false)
+        BTGPanelViewHeaderBtnHideFilter:SetHidden(false)
+    else
+        BTGPanelViewListDaddyBox:SetHidden(false)
+        BTGPanelViewBtnDelListDaddy:SetHidden(false)
+        BTGPanelViewHeaderBtnShowFilter:SetHidden(false)
+        BTGPanelViewInputTxtBox:SetHidden(true)
+        BTGPanelView:SetWidth(300)
+        BTGPanelViewListGertBox:SetHidden(true)
+        BTGPanelViewBtnDelListGert:SetHidden(true)
+        BTGPanelViewHeaderBtnHideFilter:SetHidden(true)
+    end
 end
 
 function BTG.moveCloseBTGPanelView(eventCode)
@@ -928,12 +1000,14 @@ function BTG:Initialize()
 	ZO_PreHookHandler(BTGPanelView,'OnShow', function() BTG.toggleBTGLootTipView(0) end)
 	ZO_PreHookHandler(BTGPanelView,'OnHide', function() BTG.toggleBTGLootTipView(0); BTGPanelViewLogTxtBox:SetHidden(true); end)
 
-
 	ZO_PreHookHandler(BTGLootTipView,'OnMouseEnter', function() BTG.conmoveBTGLootTipView(1) end)
 	ZO_PreHookHandler(BTGLootTipView,'OnMouseExit', function() BTG.conmoveBTGLootTipView(0) end)
 
 	--jelly add menu opt item to iifa
     ZO_PreHook('ZO_InventorySlot_ShowContextMenu', function(rowControl) BTG:copyItemName2IIFA(rowControl) end)
+
+    -- setting page
+    createLAM2Panel()
 
 	-- 一些 SLASH COMMANDS 視窗問題
 	SLASH_COMMANDS["/btg"] = function()

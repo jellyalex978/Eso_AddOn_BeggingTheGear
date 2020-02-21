@@ -7,50 +7,65 @@
     <Font font="$(MEDIUM_FONT)|16" name="BTGbegoffer"/>
     <Controls>
 <!-- main window -->
-        <TopLevelControl name="BTGPanelView" hidden="true" allowBringToTop="true" clampedToScreen="true" mouseEnabled="true" movable="true" resizeHandleSize="10">
+        <TopLevelControl name="BTGPanelView" hidden="true" allowBringToTop="true" clampedToScreen="true" mouseEnabled="true" movable="true" resizeHandleSize="5">
             <Anchor point="CENTER" relativePoint="CENTER" relativeTo="GuiRoot"/>
-            <DimensionConstraints minX="955" minY="360" />
+            <DimensionConstraints minX="300" minY="360" />
             <OnMoveStop>BTG.OnUiPosSave('BTGPanelView')</OnMoveStop>
             <OnResizeStop>BTG.OnUiPosSave('BTGPanelView')</OnResizeStop>
             <Controls>
                 <Backdrop name="$(parent)Bg" inherits="ZO_DefaultBackdrop">
                     <AnchorFill/>
                 </Backdrop>
+                <!-- 標題 -->
                 <Backdrop name="$(parent)Header" centerColor="00000000" edgeColor="00000000">
-                    <Anchor offsetX="590" offsetY="18" point="TOPLEFT" relativePoint="TOPLEFT" />
+                    <Anchor offsetX="0" offsetY="18" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Anchor offsetX="0" offsetY="48" point="BOTTOMRIGHT" relativePoint="TOPRIGHT" />
                     <Controls>
                         <Label name="$(parent)Title" color="FFFFFF" font="BTGFont">
-                            <Anchor offsetX="10" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Anchor offsetX="70" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                             <OnInitialized>self:SetText(&quot;|cFFAA33&quot;..BTG.name..&quot;|r &quot;..BTG.version)</OnInitialized>
                         </Label>
-                        <Backdrop name="$(parent)CloseBox" centerColor="00000000" edgeColor="00000000">
-                            <Anchor offsetX="0" offsetY="-40" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)" />
-                            <Dimensions x="27" y="27"/>
-                            <Controls>
-                                <Backdrop name="$(parent)Bg" inherits="ZO_DefaultBackdrop">
-                                    <AnchorFill/>
-                                </Backdrop>
-                                <Button clickSound="Click" name="$(parent)Btn">
-                                    <Anchor offsetX="-1" offsetY="0" point="CENTER" relativePoint="CENTER" relativeTo="$(parent)"/>
-                                    <Dimensions x="25" y="25"/>
-                                    <Textures mouseOver="esoui/art/buttons/decline_over.dds" normal="esoui/art/buttons/decline_up.dds" pressed="esoui/art/buttons/decline_down.dds"/>
-                                    <OnClicked>BTG.toggleBTGPanelView()</OnClicked>
-                                </Button>
-                            </Controls>
-                        </Backdrop>
                         <Button name="$(parent)BtnTest" clickSound="Click" tier="1">
-                            <Anchor offsetX="-30" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Anchor offsetX="10" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                             <Dimensions x="25" y="25"/>
                             <Textures normal="esoui\art\icons\mapkey\mapkey_areaofinterest.dds"/>
                             <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Show Alert Icon')</OnMouseEnter>
                             <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                             <OnClicked>BTG.TestByJelly()</OnClicked>
                         </Button>
+                        <Button name="$(parent)BtnShowFilter" hidden="false" clickSound="Click" tier="1">
+                            <Anchor offsetX="260" offsetY="-5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Dimensions x="35" y="35"/>
+                            <Textures normal="esoui/art/chatwindow/chat_options_up.dds" pressed="esoui/art/chatwindow/chat_options_down.dds" mouseOver="esoui/art/chatwindow/chat_options_over.dds"/>
+                            <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Show Filter Window')</OnMouseEnter>
+                            <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+                            <OnClicked>BTG.toggleBTGFilterView()</OnClicked>
+                        </Button>
+                        <Button name="$(parent)BtnHideFilter" hidden="true" clickSound="Click" tier="1">
+                            <Anchor offsetX="265" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Dimensions x="25" y="25"/>
+                            <Textures normal="esoui/art/tradinghouse/tradinghouse_listings_tabicon_up.dds" pressed="esoui/art/tradinghouse/tradinghouse_listings_tabicon_down.dds" mouseOver="esoui/art/tradinghouse/tradinghouse_listings_tabicon_over.dds"/>
+                            <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Hide Filter Window')</OnMouseEnter>
+                            <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+                            <OnClicked>BTG.toggleBTGFilterView()</OnClicked>
+                        </Button>
+                        <!--
+                        <Button name="$(parent)CloseBox" clickSound="Click" tier="1">
+                            <Anchor offsetX="-10" offsetY="0" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
+                            <Dimensions x="25" y="25"/>
+                            <Textures mouseOver="esoui/art/buttons/decline_over.dds" normal="esoui/art/buttons/decline_up.dds" pressed="esoui/art/buttons/decline_down.dds"/>
+                            <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Close Window')</OnMouseEnter>
+                            <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+                            <OnClicked>BTG.toggleBTGPanelView()</OnClicked>
+                        </Button>
+                        -->
                     </Controls>
                 </Backdrop>
-                <Backdrop name="$(parent)InputTxtBox" centerColor="00000000" edgeColor="00000000">
-                    <Anchor offsetX="350" offsetY="15" point="TOPLEFT" relativePoint="TOPLEFT" />
+
+
+                <!-- 新增過濾輸入框 -->
+                <Backdrop name="$(parent)InputTxtBox" hidden="true" centerColor="00000000" edgeColor="00000000">
+                    <Anchor offsetX="478" offsetY="15" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="184" y="30"/>
                     <Edge edgeSize="1"/>
                     <Controls>
@@ -58,8 +73,8 @@
                             <AnchorFill/>
                             <Edge edgeSize="1"/>
                         </Backdrop>
-                        <Label name="$(parent)Title" text="Enter Keyword here >" color="FFFFFF" font="BTGFont">
-                            <Anchor offsetX="-215" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                        <Label name="$(parent)Title" text="Add Keyword here >" color="FFFFFF" font="BTGFont">
+                            <Anchor offsetX="-155" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                             <Dimensions x="215" y="30"/>
                         </Label>
                         <EditBox name="$(parent)InputTxt" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
@@ -77,35 +92,39 @@
                         </Button>
                     </Controls>
                 </Backdrop>
-                <Button name="$(parent)BtnAlertIcon" text="AlertIcon" inherits="ZO_DefaultButton" font="BTGFontSmall" >
-                    <Anchor offsetX="-90" offsetY="15" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
-                    <Dimensions x="80" y="30"/>
-                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Show Alert Icon')</OnMouseEnter>
-                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
-                    <OnClicked>BTG.toggleBTGLootTipView()</OnClicked>
-                </Button>
-                <Button name="$(parent)BtnDelListGert" text="Clear All" inherits="ZO_DefaultButton" font="BTGFontSmall" >
-                    <Anchor offsetX="5" offsetY="15" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
-                    <Dimensions x="100" y="30"/>
-                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Delete all Filters')</OnMouseEnter>
-                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
-                    <OnClicked>BTG.DelAllGearListFilter()</OnClicked>
-                </Button>
-                <Control name="$(parent)ListGertBox" inherits="ZO_ScrollList">
+
+
+                <!-- 爸爸 區塊 -->
+                <Control name="$(parent)ListDaddyBox" inherits="ZO_ScrollList">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="10" offsetY="55" />
-                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" offsetX="665" offsetY="-10" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" offsetX="295" offsetY="-65" />
                 </Control>
-                <Button name="$(parent)BtnDelListDaddy" text="Clear All" inherits="ZO_DefaultButton" font="BTGFontSmall" >
-                    <Anchor offsetX="0" offsetY="15" point="TOPRIGHT" relativePoint="TOPRIGHT" relativeTo="$(parent)"/>
-                    <Dimensions x="80" y="30"/>
+                <!-- 清空 爸爸 按鈕 -->
+                <Button name="$(parent)BtnDelListDaddy" text="Clear All Begging Log" inherits="ZO_DefaultButton" font="BTGFontSmall" >
+                    <Anchor offsetX="5" offsetY="-50" point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$(parent)"/>
+                    <Dimensions x="290" y="30"/>
                     <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Delete all entries from Begging log')</OnMouseEnter>
                     <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                     <OnClicked>BTG.DelAllDaddyListRow()</OnClicked>
                 </Button>
-                <Control name="$(parent)ListDaddyBox" inherits="ZO_ScrollList">
-                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="675" offsetY="55" />
-                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" offsetX="-10" offsetY="-10" />
+
+
+                <!-- filter 區塊 -->
+                <Control name="$(parent)ListGertBox" hidden="true" inherits="ZO_ScrollList">
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="10" offsetY="55" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" offsetX="665" offsetY="-65" />
                 </Control>
+                <!-- 清空 filter 按鈕 -->
+                <Button name="$(parent)BtnDelListGert" hidden="true" text="Clear All Begging Log" inherits="ZO_DefaultButton" font="BTGFontSmall" >
+                    <Anchor offsetX="180" offsetY="-50" point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$(parent)"/>
+                    <Dimensions x="290" y="30"/>
+                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Delete all Filters')</OnMouseEnter>
+                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+                    <OnClicked>BTG.DelAllGearListFilter()</OnClicked>
+                </Button>
+
+
+                <!-- 測試用 debug 區塊 -->
                 <Backdrop name="$(parent)LogTxtBox" hidden="true" centerColor="00000000" edgeColor="00000000">
                     <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPRIGHT" />
                     <Anchor offsetX="300" offsetY="0" point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" />
@@ -160,7 +179,7 @@
                 <Backdrop name="$(parent)Bg" centerColor="232323" edgeColor="00000000" alpha="0.9">
                     <AnchorFill/>
                 </Backdrop>
-<!-- Any items filter -->	
+<!-- Any items filter -->
                 <Backdrop name="$(parent)FilterThingBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPLEFT" offsetX="35" offsetY="35" />
@@ -180,18 +199,18 @@
                         </Backdrop>
                     </Controls>
                 </Backdrop>
-<!-- KeyWord filter -->				
+<!-- KeyWord filter -->
                 <Button name="$(parent)IconKeyword" clickSound="Click">
                     <Anchor offsetX="42" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="30" y="30"/>
                     <Textures normal="esoui/art/worldmap/map_indexicon_filters_up.dds" />
                     <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Set the keyword to look for')</OnMouseEnter>
                     <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
-                </Button>	
+                </Button>
                 <Backdrop name="$(parent)InputKeywordBg" centerColor="43443D" edgeColor="00000000">
                     <Anchor offsetX="75" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="250" y="28"/>
-                </Backdrop>				
+                </Backdrop>
                 <EditBox name="$(parent)InputKeyword" color="FFFFFF" font="BTGFont" inherits="ZO_DefaultEditForBackdrop ZO_EditDefaultText" maxInputCharacters="100" >
                     <Anchor offsetX="77" offsetY="3" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                     <Dimensions x="248" y="30"/>
@@ -199,7 +218,7 @@
                     <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
                     <OnEnter>BTG.UpdateGearListKeyword(self)</OnEnter>
                 </EditBox>
-<!-- Inventory Insight Button -->				
+<!-- Inventory Insight Button -->
                 <Button name="$(parent)CallIIfA" clickSound="Click">
                     <Anchor offsetX="330" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="30" y="30"/>
@@ -209,7 +228,7 @@
                     <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                     <OnClicked>BTG.CallIIfA2showme(self)</OnClicked>
                 </Button>
-<!-- Offer value field -->				
+<!-- Offer value field -->
                 <Button name="$(parent)IconPrice" clickSound="Click">
                     <Anchor offsetX="368" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="30" y="30"/>
@@ -228,7 +247,7 @@
                     <OnFocusLost>BTG.GearListInputTip(0)</OnFocusLost>
                     <OnEnter>BTG.UpdateGearListPrice(self)</OnEnter>
                 </EditBox>
-<!-- Delete filter button -->				
+<!-- Delete filter button -->
 				<Button name="$(parent)BtnDel" clickSound="Click">
                     <Anchor offsetX="603" offsetY="2" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="30" y="30"/>
@@ -238,7 +257,7 @@
                     <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                     <OnClicked>BTG.DelGearListFilter(self)</OnClicked>
                 </Button>
-<!-- Weight armor filter -->			
+<!-- Weight armor filter -->
                 <Backdrop name="$(parent)FilterWeightBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPLEFT" offsetX="35" offsetY="600" />
@@ -283,9 +302,9 @@
 							</Controls>
 						</Backdrop>
                     </Controls>
-                </Backdrop>				
+                </Backdrop>
 
-<!-- Armor type filter -->					
+<!-- Armor type filter -->
                 <Backdrop name="$(parent)FilterGearBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="35" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="100" />
@@ -381,7 +400,7 @@
                                 </Button>
                             </Controls>
                         </Backdrop>
-<!-- Jewelry type filter -->							
+<!-- Jewelry type filter -->
                         <Backdrop name="$(parent)EquipType_2" centerColor="00000000" edgeColor="00000000">
                             <Anchor offsetX="465" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)" />
                             <Dimensions x="30" y="30"/>
@@ -410,7 +429,7 @@
                         </Backdrop>
                     </Controls>
                 </Backdrop>
-<!-- Armor trait filter -->					
+<!-- Armor trait filter -->
                 <Backdrop name="$(parent)FilterGearTraitBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="140" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="100" />
@@ -534,7 +553,7 @@
                         </Backdrop>
                     </Controls>
                 </Backdrop>
-<!-- Weapon type filter -->					
+<!-- Weapon type filter -->
                 <Backdrop name="$(parent)FilterWeaponBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="250" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="100" />
@@ -710,7 +729,7 @@
                         </Backdrop>
                     </Controls>
                 </Backdrop>
-<!-- Weapon trait filter -->					
+<!-- Weapon trait filter -->
                 <Backdrop name="$(parent)FilterWeaponTraitBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="390" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="100" />
@@ -834,7 +853,7 @@
                         </Backdrop>
                     </Controls>
                 </Backdrop>
-<!-- Jewelry trait filter -->					
+<!-- Jewelry trait filter -->
                 <Backdrop name="$(parent)FilterJewelryTraitBox" centerColor="00000000" edgeColor="00000000">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="535" offsetY="35" />
                     <Anchor point="BOTTOMRIGHT" relativePoint="TOPRIGHT" offsetX="0" offsetY="100" />
@@ -960,10 +979,10 @@
                 </Backdrop>
             </Controls>
         </Backdrop>
-<!-- luckyman template -->        
+<!-- luckyman template -->
         <Backdrop name="ListDaddyTpl" virtual="true" centerColor="00000000" edgeColor="00000000" >
-            <Anchor offsetX="0" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" />
-            <Dimensions x="200" y="60"/>
+            <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="0" offsetY="0" />
+            <Dimensions x="1" y="60"/>
             <Edge edgeSize="1"/>
             <Controls>
                 <Backdrop name="$(parent)Bg" centerColor="232323" edgeColor="00000000" alpha="0.9">
@@ -1000,8 +1019,8 @@
                     <OnClicked>BTG.PriceDaddyListRow(self , 1)</OnClicked>
                 </Button>
                 <Button name="$(parent)TxtItemlink" font="BTGFontDaddyItem" horizontalAlignment="LEFT" >
-                    <Anchor offsetX="4" offsetY="33" point="TOPLEFT" relativePoint="TOPLEFT" />
-                    <Dimensions x="245" y="30"/>
+                    <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="0" offsetY="33" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" offsetX="0" offsetY="0" />
                     <OnInitialized>self:SetText('itemlink')</OnInitialized>
                     <OnMouseEnter>BTG.DaddyOnMouseEnter(self)</OnMouseEnter>
                     <OnMouseExit>BTG.DaddyOnMouseExit(self)</OnMouseExit>
