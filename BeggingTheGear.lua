@@ -1,7 +1,8 @@
 BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
-BTG.version = '2.0.0'
+BTG.author = 'oJelly'
+BTG.version = '2.0.2'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -212,8 +213,8 @@ local function createLAM2Panel()
         type = "panel",
         name = 'BeggingTheGear',
         displayName = ZO_HIGHLIGHT_TEXT:Colorize('BeggingTheGear'),
-        author = "|cFFAA33"..OJTOP.author.."|r",
-        version = OJTOP.version,
+        author = "|cFFAA33"..BTG.author.."|r",
+        version = BTG.version,
         registerForRefresh = true,
     }
     local optionsData = {
