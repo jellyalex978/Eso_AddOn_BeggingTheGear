@@ -2,7 +2,7 @@ BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
 BTG.author = 'oJelly'
-BTG.version = '2.1.1'
+BTG.version = '2.2.1'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -44,7 +44,38 @@ local W_width = 0
 local BTG_max_left = 0
 local debug_mode = false
 
-local LAM2 = LibStub:GetLibrary("LibAddonMenu-2.0")
+local LAM2 = LibStub("LibAddonMenu-2.0")
+
+local ICON_PATH = {}
+    ICON_PATH[ITEM_TRAIT_TYPE_ARMOR_STURDY] = 'crafting_runecrafter_plug_component_002'
+    ICON_PATH[ITEM_TRAIT_TYPE_ARMOR_IMPENETRABLE] = 'crafting_jewelry_base_diamond_r3'
+    ICON_PATH[ITEM_TRAIT_TYPE_ARMOR_REINFORCED] = 'crafting_enchantment_base_sardonyx_r2'
+    ICON_PATH[ITEM_TRAIT_TYPE_ARMOR_WELL_FITTED] = 'crafting_accessory_sp_names_002'
+    ICON_PATH[ITEM_TRAIT_TYPE_ARMOR_TRAINING] = 'crafting_jewelry_base_emerald_r2'
+    ICON_PATH[ITEM_TRAIT_TYPE_ARMOR_INFUSED] = 'crafting_enchantment_baxe_bloodstone_r2'
+    ICON_PATH[ITEM_TRAIT_TYPE_ARMOR_EXPLORATION] = 'crafting_jewelry_base_garnet_r3'
+    ICON_PATH[ITEM_TRAIT_TYPE_ARMOR_DIVINES] = 'crafting_accessory_sp_names_001'
+    ICON_PATH[ITEM_TRAIT_TYPE_ARMOR_NIRNHONED] = 'crafting_potent_nirncrux_stone'
+
+    ICON_PATH[ITEM_TRAIT_TYPE_WEAPON_POWERED] = 'crafting_runecrafter_potion_008'
+    ICON_PATH[ITEM_TRAIT_TYPE_WEAPON_CHARGED] = 'crafting_jewelry_base_amethyst_r3'
+    ICON_PATH[ITEM_TRAIT_TYPE_WEAPON_PRECISE] = 'crafting_jewelry_base_ruby_r3'
+    ICON_PATH[ITEM_TRAIT_TYPE_WEAPON_INFUSED] = 'crafting_enchantment_base_jade_r3'
+    ICON_PATH[ITEM_TRAIT_TYPE_WEAPON_DEFENDING] = 'crafting_jewelry_base_turquoise_r3'
+    ICON_PATH[ITEM_TRAIT_TYPE_WEAPON_TRAINING] = 'crafting_runecrafter_armor_component_004'
+    ICON_PATH[ITEM_TRAIT_TYPE_WEAPON_SHARPENED] = 'crafting_enchantment_base_fire_opal_r3'
+    ICON_PATH[ITEM_TRAIT_TYPE_WEAPON_DECISIVE] = 'crafting_smith_potion__sp_names_003'
+    ICON_PATH[ITEM_TRAIT_TYPE_WEAPON_NIRNHONED] = 'crafting_potent_nirncrux_dust'
+
+    ICON_PATH[ITEM_TRAIT_TYPE_JEWELRY_ARCANE] = 'jewelrycrafting_trait_refined_cobalt'
+    ICON_PATH[ITEM_TRAIT_TYPE_JEWELRY_HEALTHY] = 'jewelrycrafting_trait_refined_antimony'
+    ICON_PATH[ITEM_TRAIT_TYPE_JEWELRY_ROBUST] = 'jewelrycrafting_trait_refined_zinc'
+    ICON_PATH[ITEM_TRAIT_TYPE_JEWELRY_TRIUNE] = 'jewelrycrafting_trait_refined_dawnprism'
+    ICON_PATH[ITEM_TRAIT_TYPE_JEWELRY_INFUSED] = 'crafting_enchantment_base_jade_r1'
+    ICON_PATH[ITEM_TRAIT_TYPE_JEWELRY_PROTECTIVE] = 'crafting_runecrafter_armor_component_006'
+    ICON_PATH[ITEM_TRAIT_TYPE_JEWELRY_SWIFT] = 'crafting_outfitter_plug_component_002'
+    ICON_PATH[ITEM_TRAIT_TYPE_JEWELRY_HARMONY] = 'crafting_metals_tin'
+    ICON_PATH[ITEM_TRAIT_TYPE_JEWELRY_BLOODTHIRSTY] = 'crafting_enchantment_baxe_bloodstone_r1'
 
 function dev_reloadui()
     SLASH_COMMANDS["/reloadui"]()
@@ -244,7 +275,7 @@ local function createLAM2Panel()
             default = BTG.savedata.alwayswhisper,
         },
     }
-    local myPanel = LAM2:RegisterAddonPanel(BTG.name.."LAM2Options", panelData)
+    LAM2:RegisterAddonPanel(BTG.name.."LAM2Options", panelData)
     LAM2:RegisterOptionControls(BTG.name.."LAM2Options", optionsData)
 end
 ----------------------------------------
@@ -433,7 +464,13 @@ end
 
 function BTG.GearListInputTip(type , tar , msg)
     if type == 1 then
-        if msg ~= '' and msg ~= nil then
+        if msg == 'showDaddyID' then
+            local keyid = tar:GetParent().keyid
+            local daddy = BTG.savedata.daddylist[keyid]
+            if daddy.userid ~= nil and daddy.userid ~= '' then
+                ZO_Tooltips_ShowTextTooltip(tar, LEFT, daddy.userid)
+            end 
+        elseif msg ~= '' and msg ~= nil then
             ZO_Tooltips_ShowTextTooltip(tar, BOTTOM, msg)
         else
             ZO_Tooltips_ShowTextTooltip(tar, BOTTOM, 'press enter to save')
@@ -451,14 +488,21 @@ end
 ----------------------------------------
 -- ZO_ScrollList @ ListDaddy Start
 ----------------------------------------
+
 function BTG.ListDaddyInitializeRow(control, data)
     local daddy = BTG.savedata.daddylist[data.key]
     -- 暫存著偷偷用
     control.keyid = data.key
     -- 初始 savedata 值
     local icon,_,_,_,_ = GetItemLinkInfo(daddy.itemlink)
-    local username = zo_strformat("<<1>>", daddy.username);
-    local itemlink = '|t22:22:'..icon..'|t' .. '|u5:0::|u' ..daddy.itemlink;
+    local imgItem = '|t22:22:'..icon..'|t'
+    local username = '|c5EB9D7' .. zo_strformat("<<1>>", daddy.username) .. '|r';
+    local itemTrait = GetItemLinkTraitInfo(daddy.itemlink)
+    local imgTrait = '' -- '|t22:22:/esoui/art/icons/'..ICON_PATH[itemTrait]..'.dds|t'
+    if ICON_PATH[itemTrait] ~= nil then
+        imgTrait = '|t22:22:/esoui/art/icons/'..ICON_PATH[itemTrait]..'.dds|t'
+    end
+    local itemlink = imgItem .. imgTrait .. '|u3:0::|u' .. daddy.itemlink;
     -- 塞值
     control:GetNamedChild("TxtDaddy"):SetText(username)
     control:GetNamedChild("TxtItemlink"):SetText(itemlink)
@@ -474,9 +518,22 @@ function BTG.UpdateListDaddyBox()
     ZO_ScrollList_Commit(BTGPanelViewListDaddyBox)
 end
 
-function BTG.AddDaddyListRow(user, itemlink, price)
+function BTG.AddDaddyListRow(filterid , user, itemlink, price)
     if user ~= '' and itemlink ~= '' then
+        local userid = ''
+        -- 巡一遍 group list 找到比對撿到的人
+        local gs = GetGroupSize();
+        local unitTag
+        for i = 1, gs do
+            unitTag = GetGroupUnitTagByIndex(i);
+            if user == GetRawUnitName(unitTag) then
+                userid = GetUnitDisplayName(unitTag)
+            end
+        end
+        -- 存下爸爸資料
         local daddy = {
+            filterid = filterid,
+            userid = userid,
             username = user,
             itemlink = itemlink,
             price = price,
@@ -549,6 +606,20 @@ function BTG.PriceDaddyListRow(tar , act)
     end
 end
 
+-- click daddy item list , show keyword on IIFA
+function BTG.DaddyOnClicked(tar)
+    if IIfA ~= nil then
+        local keyid = tar:GetParent().keyid
+        local daddy = BTG.savedata.daddylist[keyid]
+        if daddy.filterid ~= nil and daddy.filterid ~= '' then
+            local keyword = BTG.savedata.gearlist[daddy.filterid].keyword
+            IIFA_GUI_SearchBackdropBox:SetText(keyword)
+            if IIFA_GUI:IsHidden() then
+                IIfA:ToggleInventoryFrame()
+            end   
+        end
+    end 
+end
 function BTG.DaddyOnMouseEnter(tar)
     local keyid = tar:GetParent().keyid
     local daddy = BTG.savedata.daddylist[keyid]
@@ -563,7 +634,6 @@ function BTG.DaddyOnMouseEnter(tar)
     end
     BTGTooltip:SetLink(daddy.itemlink);
 end
-
 function BTG.DaddyOnMouseExit(tar)
     ClearTooltip(BTGTooltip);
 end
@@ -579,7 +649,7 @@ end
 function BTG:OnUiPosLoad()
     BTGPanelView:ClearAnchors()
     BTGPanelView:SetAnchor(TOPLEFT, GuiRoot, TOPLEFT, BTG.savedata.gearlist_pos[0], BTG.savedata.gearlist_pos[1])
-    BTGPanelView:SetWidth(300)
+    BTGPanelView:SetWidth(350)
     BTGPanelView:SetHeight(BTG.savedata.gearlist_pos[3])
     BTG.UpdateListDaddyBox()
     BTG.UpdateListGertBox()
@@ -734,7 +804,7 @@ function BTG.OnLootReceived(eventCode, receivedBy, itemName, quantity, itemSound
         name = receivedBy
     end
     if re.match then
-        BTG.AddDaddyListRow(name , itemName, re.price)
+        BTG.AddDaddyListRow(re.filterid , name , itemName, re.price)
         BTGLootTipView:SetHidden(false)
     end
 end

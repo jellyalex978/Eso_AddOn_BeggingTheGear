@@ -9,7 +9,7 @@
 <!-- main window -->
         <TopLevelControl name="BTGPanelView" hidden="true" allowBringToTop="true" clampedToScreen="true" mouseEnabled="true" movable="true" resizeHandleSize="5">
             <Anchor point="CENTER" relativePoint="CENTER" relativeTo="GuiRoot"/>
-            <DimensionConstraints minX="300" minY="360" />
+            <DimensionConstraints minX="350" minY="360" />
             <OnMoveStop>BTG.OnUiPosSave('BTGPanelView')</OnMoveStop>
             <OnResizeStop>BTG.OnUiPosSave('BTGPanelView')</OnResizeStop>
             <Controls>
@@ -34,7 +34,7 @@
                             <OnClicked>BTG.TestByJelly()</OnClicked>
                         </Button>
                         <Button name="$(parent)BtnShowFilter" hidden="false" clickSound="Click" tier="1">
-                            <Anchor offsetX="260" offsetY="-5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Anchor offsetX="290" offsetY="-5" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                             <Dimensions x="35" y="35"/>
                             <Textures normal="esoui/art/chatwindow/chat_options_up.dds" pressed="esoui/art/chatwindow/chat_options_down.dds" mouseOver="esoui/art/chatwindow/chat_options_over.dds"/>
                             <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Show Filter Window')</OnMouseEnter>
@@ -42,7 +42,7 @@
                             <OnClicked>BTG.toggleBTGFilterView()</OnClicked>
                         </Button>
                         <Button name="$(parent)BtnHideFilter" hidden="true" clickSound="Click" tier="1">
-                            <Anchor offsetX="265" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
+                            <Anchor offsetX="295" offsetY="0" point="TOPLEFT" relativePoint="TOPLEFT" relativeTo="$(parent)"/>
                             <Dimensions x="25" y="25"/>
                             <Textures normal="esoui/art/tradinghouse/tradinghouse_listings_tabicon_up.dds" pressed="esoui/art/tradinghouse/tradinghouse_listings_tabicon_down.dds" mouseOver="esoui/art/tradinghouse/tradinghouse_listings_tabicon_over.dds"/>
                             <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Hide Filter Window')</OnMouseEnter>
@@ -97,12 +97,12 @@
                 <!-- 爸爸 區塊 -->
                 <Control name="$(parent)ListDaddyBox" inherits="ZO_ScrollList">
                     <Anchor point="TOPLEFT" relativePoint="TOPLEFT" offsetX="10" offsetY="55" />
-                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" offsetX="295" offsetY="-65" />
+                    <Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMLEFT" offsetX="345" offsetY="-65" />
                 </Control>
                 <!-- 清空 爸爸 按鈕 -->
                 <Button name="$(parent)BtnDelListDaddy" text="Clear All Begging Log" inherits="ZO_DefaultButton" font="BTGFontSmall" >
                     <Anchor offsetX="5" offsetY="-50" point="TOPLEFT" relativePoint="BOTTOMLEFT" relativeTo="$(parent)"/>
-                    <Dimensions x="290" y="30"/>
+                    <Dimensions x="345" y="30"/>
                     <OnMouseEnter>BTG.GearListInputTip(1 , self , 'Delete all entries from Begging log')</OnMouseEnter>
                     <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                     <OnClicked>BTG.DelAllDaddyListRow()</OnClicked>
@@ -997,11 +997,13 @@
                     <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
                     <OnClicked>BTG.DelDaddyListRow(self)</OnClicked>
                 </Button>
-                <Label name="$(parent)TxtDaddy" color="5EB9D7" font="BTGFont">
+                <Button name="$(parent)TxtDaddy" text="showDaddyID" font="BTGFont" horizontalAlignment="LEFT">
                     <Anchor offsetX="33" offsetY="4" point="TOPLEFT" relativePoint="TOPLEFT" />
                     <Dimensions x="130" y="30"/>
                     <OnInitialized>self:SetText('daddy')</OnInitialized>
-                </Label>
+                    <OnMouseEnter>BTG.GearListInputTip(1 , self , 'showDaddyID')</OnMouseEnter>
+                    <OnMouseExit>BTG.GearListInputTip(0)</OnMouseExit>
+                </Button>
                 <Button name="$(parent)BtnBegging" text="Beg" font="BTGbegoffer">
                     <Anchor offsetX="-55" offsetY="5" point="TOPRIGHT" relativePoint="TOPRIGHT" />
                     <Dimensions x="35" y="30"/>
@@ -1024,6 +1026,7 @@
                     <OnInitialized>self:SetText('itemlink')</OnInitialized>
                     <OnMouseEnter>BTG.DaddyOnMouseEnter(self)</OnMouseEnter>
                     <OnMouseExit>BTG.DaddyOnMouseExit(self)</OnMouseExit>
+                    <OnClicked>BTG.DaddyOnClicked(self)</OnClicked>
                 </Button>
             </Controls>
         </Backdrop>
