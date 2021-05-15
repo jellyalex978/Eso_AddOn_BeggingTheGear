@@ -2,7 +2,7 @@ BTG = {}
 BTG.ename = 'BTG'
 BTG.name = 'BeggingTheGear' -- sugar daddy
 BTG.author = 'oJelly'
-BTG.version = '2.2.1'
+BTG.version = '2.2.2'
 BTG.init = false
 BTG.savedata = {}
 local WM = WINDOW_MANAGER
@@ -44,7 +44,7 @@ local W_width = 0
 local BTG_max_left = 0
 local debug_mode = false
 
-local LAM2 = LibStub("LibAddonMenu-2.0")
+local LAM2 = LibAddonMenu2
 
 local ICON_PATH = {}
     ICON_PATH[ITEM_TRAIT_TYPE_ARMOR_STURDY] = 'crafting_runecrafter_plug_component_002'
